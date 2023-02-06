@@ -17,13 +17,21 @@ builder.Services.AddControllers();
 //Connecting DBContext
 var conString = builder.Configuration["ConnectionStrings:default"];
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(conString));
+
 //Adding Fluent Validations
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<SliderHomeValidator>();
-//Adding injections
+
+//Adding Repository injections
 builder.Services.AddScoped<ISliderHomeRepository, SliderHomeRepository>();
+builder.Services.AddScoped<IWhyUsRepository, WhyUsRepository>();
+
+
+//Adding Service Injections
 builder.Services.AddScoped<ISliderHomeService, SliderHomeService>();
+builder.Services.AddScoped<IWhyUsService, WhyUsService>();
+
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

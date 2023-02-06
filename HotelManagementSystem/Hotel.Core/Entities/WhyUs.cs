@@ -1,14 +1,13 @@
-﻿using Hotel.Business.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Hotel.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Business.DTOs.SliderHomeDTOs
+namespace Hotel.Core.Entities
 {
-	public class SliderHomeDto : IDto
+	public class WhyUs:IEntity
 	{
 		public int Id { get; set; }
 		public string? Title { get; set; }

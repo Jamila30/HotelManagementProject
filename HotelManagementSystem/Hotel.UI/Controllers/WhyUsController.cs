@@ -1,21 +1,21 @@
 ﻿using Hotel.Business.DTOs.SliderHomeDTOs;
+using Hotel.Business.DTOs.WhyUsDTOs;
 using Hotel.Business.Exceptions;
 using Hotel.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class SliderHomeController : ControllerBase
+	public class WhyUsController : ControllerBase
 	{
-		private readonly ISliderHomeService _sliderHomeService;
-		public SliderHomeController(ISliderHomeService sliderHomeService)
+		private readonly IWhyUsService _whyUsService;
+		public WhyUsController(IWhyUsService whyUsService)
 		{
-			_sliderHomeService = sliderHomeService;
+			_whyUsService = whyUsService;
 		}
 
 		[HttpGet("")]
@@ -23,7 +23,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var list = await _sliderHomeService.GetAllAsync();
+				var list = await _whyUsService.GetAllAsync();
 				return Ok(list);
 			}
 			catch (Exception ex)
@@ -36,7 +36,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var slider = await _sliderHomeService.GetByCondition(x => x.Title == title);
+				var slider = await _whyUsService.GetByCondition(x => x.Title!=null? x.Title.Contains(title):true);
 				return Ok(slider);
 			}
 			catch (Exception ex)
@@ -51,7 +51,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var slider = await _sliderHomeService.GetByIdAsync(id);
+				var slider = await _whyUsService.GetByIdAsync(id);
 				return Ok(slider);
 			}
 			catch (NotFoundException ex)
@@ -63,11 +63,11 @@ namespace Hotel.UI.Controllers
 
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateSliderHomeDto sliderHomeDto)
+		public async Task<IActionResult> Post([FromForm] CreateWhyUsDto  createWhyUs)
 		{
 			try
 			{
-				await _sliderHomeService.Create(sliderHomeDto);
+				await _whyUsService.Create(createWhyUs);
 				return Ok("Created");
 			}
 			catch (IncorrectFileSizeException ex)
@@ -84,13 +84,13 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		
+
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm]UpdateSliderHomeDto updateSlider)
+		public async Task<IActionResult> Put(int id, [FromForm] UpdateWhyUsDto updateWhyUs)
 		{
 			try
 			{
-				await _sliderHomeService.UpdateAsync(id, updateSlider);
+				await _whyUsService.UpdateAsync(id, updateWhyUs);
 				return Ok("Updated");
 			}
 			catch (IncorrectFileSizeException ex)
@@ -118,18 +118,18 @@ namespace Hotel.UI.Controllers
 
 		}
 
-		
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
 			try
 			{
-				await _sliderHomeService.Delete(id);
+				await _whyUsService.Delete(id);
 				return Ok("Deleted");
 			}
 			catch (NotFoundException ex)
 			{
-				return NotFound(ex.Message);	
+				return NotFound(ex.Message);
 			}
 			catch (Exception)
 			{

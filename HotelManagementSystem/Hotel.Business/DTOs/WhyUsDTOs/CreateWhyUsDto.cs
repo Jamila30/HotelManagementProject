@@ -1,9 +1,9 @@
 ﻿using Hotel.Business.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Hotel.Business.DTOs.SliderHomeDTOs
+namespace Hotel.Business.DTOs.WhyUsDTOs
 {
-	public class CreateSliderHomeDto:IDto
+	public class CreateWhyUsDto : IDto
 	{
 		public string? Title { get; set; }
 		public string? Description { get; set; }

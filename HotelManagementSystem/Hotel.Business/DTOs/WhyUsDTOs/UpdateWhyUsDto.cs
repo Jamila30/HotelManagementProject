@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Business.DTOs.SliderHomeDTOs
+namespace Hotel.Business.DTOs.WhyUsDTOs
 {
-	public class SliderHomeDto : IDto
+	public class UpdateWhyUsDto:IDto
 	{
 		public int Id { get; set; }
 		public string? Title { get; set; }
 		public string? Description { get; set; }
-		public string? Image { get; set; }
+		public IFormFile? Image { get; set; }
 	}
 }

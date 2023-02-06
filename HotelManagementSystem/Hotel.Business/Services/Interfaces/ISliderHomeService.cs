@@ -15,8 +15,8 @@ namespace Hotel.Business.Services.Interfaces
 		Task<List<SliderHomeDto>> GetByCondition(Expression<Func<SliderHome, bool>> expression);
 		Task<SliderHomeDto?> GetByIdAsync(int id);
 		Task Create(CreateSliderHomeDto entity);
-		void Upate(SliderHome entity);
-		void Delete(SliderHome entity);
+		Task UpdateAsync(int id,UpdateSliderHomeDto entity);
+		Task Delete(int id);
 
 	}
 }

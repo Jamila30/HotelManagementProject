@@ -22,5 +22,6 @@ namespace Hotel.DataAccess.Contexts
 		}
 
 		public DbSet<SliderHome> SliderHomes { get; set; } = null!;
+		public DbSet<WhyUs> WhyUs { get; set; } = null!;
 	}
 }

@@ -1,52 +1,59 @@
 ﻿using AutoMapper;
 using Hotel.Business.DTOs.SliderHomeDTOs;
+using Hotel.Business.DTOs.WhyUsDTOs;
 using Hotel.Business.Exceptions;
 using Hotel.Business.Services.Interfaces;
 using Hotel.Business.Utilities;
 using Hotel.Core.Entities;
 using Hotel.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Hotel.Business.Services.Implementations
 {
-	public class SliderHomeService : ISliderHomeService
+	public class WhyUsService : IWhyUsService
 	{
-		private readonly ISliderHomeRepository _repository;
+
+		private readonly IWhyUsRepository _repository;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public SliderHomeService(ISliderHomeRepository repository, IMapper mapper, IWebHostEnvironment env)
+		public WhyUsService(IWhyUsRepository repository, IMapper mapper, IWebHostEnvironment env)
 		{
 			_repository = repository;
 			_mapper = mapper;
 			_env = env;
 		}
 
-		public  async Task<List<SliderHomeDto>> GetAllAsync()
+		public async Task<List<WhyUsDto>> GetAllAsync()
 		{
 			var listAll = _repository.GetAll().ToList();
-			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
+			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 
 		}
 
-		public async Task<List<SliderHomeDto>> GetByCondition(Expression<Func<SliderHome, bool>> expression)
+		public async Task<List<WhyUsDto>> GetByCondition(Expression<Func<WhyUs, bool>> expression)
 		{
 			var listAll = _repository.GetAll().Where(expression).ToList();
-			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
+			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 		}
 
-		public async Task<SliderHomeDto?> GetByIdAsync(int id)
+		public async Task<WhyUsDto?> GetByIdAsync(int id)
 		{
-			var slider = await _repository.GetByIdAsync(id);
-			if (slider is null) throw new NotFoundException("Element not found");
-			var sliderDto = _mapper.Map<SliderHomeDto>(slider);
-			return sliderDto;
+			var why = await _repository.GetByIdAsync(id);
+			if (why is null) throw new NotFoundException("Element not found");
+			var whyDto = _mapper.Map<WhyUsDto>(why);
+			return whyDto;
 		}
-		public async Task Create(CreateSliderHomeDto entity)
+		public async Task Create(CreateWhyUsDto entity)
 		{
-			SliderHome slider = new()
+			WhyUs why = new()
 			{
 				Description = entity.Description,
 				Title = entity.Title,
@@ -64,20 +71,20 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
-				slider.Image = fileName;
+				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
+				why.Image = fileName;
 
 			}
-			await _repository.Create(slider);
+			await _repository.Create(why);
 			await _repository.SaveChanges();
 		}
-		public async Task UpdateAsync(int id, UpdateSliderHomeDto entity)
+		public async Task UpdateAsync(int id, UpdateWhyUsDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id doesn't match each other");
-			var slider = await _repository.GetByIdAsync(id);
-			if (slider is null) throw new NotFoundException("Not Found");
-			slider.Description = entity.Description;
-			slider.Title = entity.Title;
+			var why = await _repository.GetByIdAsync(id);
+			if (why is null) throw new NotFoundException("Not Found");
+			why.Description = entity.Description;
+			why.Title = entity.Title;
 
 			if (entity.Image != null)
 			{
@@ -92,27 +99,25 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
-				slider.Image = fileName;
+				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
+				why.Image = fileName;
 
 			}
 
-			_repository.Upate(slider);
+			_repository.Upate(why);
 			await _repository.SaveChanges();
 
 		}
 
 		public async Task Delete(int id)
 		{
-			var slider = await _repository.GetByIdAsync(id);
-			if (slider is null) throw new NotFoundException("Not Found");
+			var why = await _repository.GetByIdAsync(id);
+			if (why is null) throw new NotFoundException("Not Found");
 
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images","sliderHome", slider.Image);
-			_repository.Delete(slider);
+			Helper.DeleteFile(_env.WebRootPath, "assets", "images","whyUs", why.Image);
+			_repository.Delete(why);
 			await _repository.SaveChanges();
 		}
-
-
 
 	}
 }
