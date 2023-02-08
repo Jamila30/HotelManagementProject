@@ -1,14 +1,4 @@
-﻿using AutoMapper;
-using Hotel.Business.DTOs.SliderHomeDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Business.Services.Interfaces;
-using Hotel.Business.Utilities;
-using Hotel.Core.Entities;
-using Hotel.DataAccess.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using System.Linq.Expressions;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class SliderHomeService : ISliderHomeService
 	{
@@ -22,7 +12,7 @@ namespace Hotel.Business.Services.Implementations
 			_env = env;
 		}
 
-		public  async Task<List<SliderHomeDto>> GetAllAsync()
+		public async Task<List<SliderHomeDto>> GetAllAsync()
 		{
 			var listAll = _repository.GetAll().ToList();
 			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
@@ -97,7 +87,7 @@ namespace Hotel.Business.Services.Implementations
 
 			}
 
-			_repository.Upate(slider);
+			_repository.Update(slider);
 			await _repository.SaveChanges();
 
 		}
@@ -107,7 +97,7 @@ namespace Hotel.Business.Services.Implementations
 			var slider = await _repository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Not Found");
 
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images","sliderHome", slider.Image);
+			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "sliderHome", slider.Image);
 			_repository.Delete(slider);
 			await _repository.SaveChanges();
 		}

@@ -1,20 +1,4 @@
-﻿using AutoMapper;
-using Hotel.Business.DTOs.SliderHomeDTOs;
-using Hotel.Business.DTOs.WhyUsDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Business.Services.Interfaces;
-using Hotel.Business.Utilities;
-using Hotel.Core.Entities;
-using Hotel.DataAccess.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class WhyUsService : IWhyUsService
 	{
@@ -104,7 +88,7 @@ namespace Hotel.Business.Services.Implementations
 
 			}
 
-			_repository.Upate(why);
+			_repository.Update(why);
 			await _repository.SaveChanges();
 
 		}

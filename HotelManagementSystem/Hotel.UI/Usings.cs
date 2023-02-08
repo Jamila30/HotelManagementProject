@@ -1,0 +1,16 @@
+﻿global using Hotel.Business.DTOs.NearPlaceDTOs;
+global using Hotel.Business.Exceptions;
+global using Hotel.Business.Services.Interfaces;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Net;
+global using Hotel.Business.DTOs.WhyUsDTOs;
+global using Hotel.DataAccess.Contexts;
+global using Microsoft.EntityFrameworkCore;
+global using FluentValidation.AspNetCore;
+global using Hotel.Business.Validations.SliderHomeValidations;
+global using FluentValidation;
+global using Hotel.DataAccess.Repositories.Interfaces;
+global using Hotel.DataAccess.Repositories.Implementations;
+global using Hotel.Business.DTOs.SliderHomeDTOs;
+global using Hotel.Business.DTOs.TeamMemberDTOs;
+global using Hotel.Business.DTOs.TeamMemberInfoDTOs;

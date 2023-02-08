@@ -1,5 +1,4 @@
-﻿using Hotel.Business.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿
 
 namespace Hotel.Business.DTOs.SliderHomeDTOs
 {

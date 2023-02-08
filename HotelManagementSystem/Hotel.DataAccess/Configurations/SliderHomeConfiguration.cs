@@ -1,6 +1,4 @@
-﻿using Hotel.Core.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿
 
 namespace Hotel.DataAccess.Configurations
 {

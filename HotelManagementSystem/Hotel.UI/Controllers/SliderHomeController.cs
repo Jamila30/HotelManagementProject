@@ -1,8 +1,4 @@
-﻿using Hotel.Business.DTOs.SliderHomeDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Business.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

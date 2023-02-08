@@ -1,11 +1,4 @@
-﻿using Hotel.Business.DTOs.SliderHomeDTOs;
-using Hotel.Business.DTOs.WhyUsDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Business.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
-
+﻿
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]

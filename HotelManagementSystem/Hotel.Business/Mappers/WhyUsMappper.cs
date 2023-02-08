@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using Hotel.Business.DTOs.WhyUsDTOs;
-using Hotel.Core.Entities;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class WhyUsMappper:Profile
 	{

@@ -1,14 +1,4 @@
-﻿using Hotel.Core.Interfaces;
-using Hotel.DataAccess.Contexts;
-using Hotel.DataAccess.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Hotel.DataAccess.Repositories.Implementations
 {
 	public class Repository<T> : IRepository<T> where T : class, IEntity, new()
@@ -40,7 +30,7 @@ namespace Hotel.DataAccess.Repositories.Implementations
 			_table.Add(entity);
 			await _context.SaveChangesAsync();
 		}
-		public void Upate(T entity)
+		public void Update(T entity)
 		{
 			_table.Update(entity);
 		   _context.SaveChanges();

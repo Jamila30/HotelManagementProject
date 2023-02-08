@@ -1,13 +1,4 @@
-﻿using Hotel.Business.DTOs.SliderHomeDTOs;
-using Hotel.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Business.Services.Interfaces
+﻿namespace Hotel.Business.Services.Interfaces
 {
 	public interface ISliderHomeService
 	{

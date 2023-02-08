@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Hotel.Business.DTOs.SliderHomeDTOs;
+﻿
 
 namespace Hotel.Business.Validations.SliderHomeValidations
 {
@@ -11,7 +10,7 @@ namespace Hotel.Business.Validations.SliderHomeValidations
 			{
 				if(!int.TryParse(Id.ToString(),out int id))
 				{
-					contex.AddFailure("Enter vtrue Id format");
+					contex.AddFailure("Enter true Id format");
 				}
 			});
 

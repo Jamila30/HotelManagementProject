@@ -26,11 +26,22 @@ builder.Services.AddValidatorsFromAssemblyContaining<SliderHomeValidator>();
 //Adding Repository injections
 builder.Services.AddScoped<ISliderHomeRepository, SliderHomeRepository>();
 builder.Services.AddScoped<IWhyUsRepository, WhyUsRepository>();
+builder.Services.AddScoped<INearPlaceRepository, NearPlaceRepository>();
+builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
+builder.Services.AddScoped<ITeamMemberInfoRepository, TeamMemberInfoRepository>();
+builder.Services.AddScoped<IServiceOfferRepository, ServiceOfferRepository>();
+builder.Services.AddScoped<IServiceImageRepository, ServiceImageRepository>();
+
 
 
 //Adding Service Injections
 builder.Services.AddScoped<ISliderHomeService, SliderHomeService>();
 builder.Services.AddScoped<IWhyUsService, WhyUsService>();
+builder.Services.AddScoped<INearPlaceService,NearPlaceService>();
+builder.Services.AddScoped<ITeamMemberInfoService,TeamMemberInformationService>();
+builder.Services.AddScoped<ITeamMemberService , TeamMemberService>();
+builder.Services.AddScoped<IServiceOfferService , ServiceOfferService>();
+builder.Services.AddScoped<IServiceImageService , ServiceImageService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
