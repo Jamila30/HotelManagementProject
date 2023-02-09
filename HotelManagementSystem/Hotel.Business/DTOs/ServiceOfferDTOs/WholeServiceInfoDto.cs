@@ -7,6 +7,6 @@
 		public string? Description { get; set; }
 		public float? Price { get; set; }
 		public bool IsFree { get; set; }
-		public List<string>? Images=new List<string>();	
+		public List<string>? Images=new List<string>();
 	}
 }

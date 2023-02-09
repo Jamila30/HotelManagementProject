@@ -1,13 +1,7 @@
-using Hotel.DataAccess.Contexts;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation.AspNetCore;
-using Hotel.Business.Validations.SliderHomeValidations;
-using FluentValidation;
-using Hotel.DataAccess.Repositories.Interfaces;
-using Hotel.DataAccess.Repositories.Implementations;
-using Hotel.Business.Services.Interfaces;
+
+
 using Hotel.Business.Services.Implementations;
-using Hotel.Business.Mappers;
+using Hotel.DataAccess.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +25,11 @@ builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 builder.Services.AddScoped<ITeamMemberInfoRepository, TeamMemberInfoRepository>();
 builder.Services.AddScoped<IServiceOfferRepository, ServiceOfferRepository>();
 builder.Services.AddScoped<IServiceImageRepository, ServiceImageRepository>();
+builder.Services.AddScoped<IGallaryImageRepository, GallaryImageRepository>();
+builder.Services.AddScoped<IGallaryCatagoryRepository, GallaryCatagoryRepository>();
+builder.Services.AddScoped<IFlatRepository, FlatRepository>();
+builder.Services.AddScoped<IRoomImageRepository, RoomImageRepository>();
+builder.Services.AddScoped<IRoomCatagoryRepository, RoomCatagoryRepository>();
 
 
 
@@ -42,6 +41,11 @@ builder.Services.AddScoped<ITeamMemberInfoService,TeamMemberInformationService>(
 builder.Services.AddScoped<ITeamMemberService , TeamMemberService>();
 builder.Services.AddScoped<IServiceOfferService , ServiceOfferService>();
 builder.Services.AddScoped<IServiceImageService , ServiceImageService>();
+builder.Services.AddScoped<IGallaryCatagoryService , GallaryCatagoryService>();
+builder.Services.AddScoped<IGallaryImageService, GallaryImageService>();
+builder.Services.AddScoped<IFlatService,FlatService>();
+builder.Services.AddScoped<IRoomImageService,RoomImageService>();
+builder.Services.AddScoped<IRoomCatagoryService,RoomCatagoryService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);

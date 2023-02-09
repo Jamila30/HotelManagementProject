@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230208004717_Initial")]
+    [Migration("20230209050051_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,83 @@ namespace Hotel.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Hotel.Core.Entities.Flat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Adults")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Children")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Flats");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GallaryCatagories");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.GallaryImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GallaryCatagoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GallaryCatagoryId");
+
+                    b.ToTable("GallaryImages");
+                });
 
             modelBuilder.Entity("Hotel.Core.Entities.NearPlace", b =>
                 {
@@ -49,6 +126,28 @@ namespace Hotel.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NearPlaces");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.RoomImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("FlatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlatId");
+
+                    b.ToTable("RoomImages");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.ServiceImage", b =>
@@ -218,6 +317,28 @@ namespace Hotel.DataAccess.Migrations
                     b.ToTable("WhyUss");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.GallaryImage", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.GallaryCatagory", "GallaryCatagory")
+                        .WithMany("Images")
+                        .HasForeignKey("GallaryCatagoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GallaryCatagory");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.RoomImage", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.Flat", "Flat")
+                        .WithMany("Images")
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Flat");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.ServiceImage", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.ServiceOffer", "ServiceOffer")
@@ -238,6 +359,16 @@ namespace Hotel.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("TeamMember");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.Flat", b =>
+                {
+                    b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.ServiceOffer", b =>

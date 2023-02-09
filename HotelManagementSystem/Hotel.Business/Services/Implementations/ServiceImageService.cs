@@ -58,7 +58,7 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
+				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "serviceImage");
 				image = fileName;
 
 			}
@@ -97,12 +97,12 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
+				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "serviceImage");
 				imageService.Image = fileName;
 
 			}
 			var offer=_offerRepo.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
-			if (offer is null) throw new BadRequestException("there is no Service for set Image");
+			if (offer is null) throw new BadRequestException("there is no Service for set Image for this ServiceOfferId");
 			imageService.ServiceOfferId = entity.ServiceOfferId;
 
 			_repository.Update(imageService);
@@ -112,6 +112,7 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var image = _repository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (image is null) throw new NotFoundException("There is no Image for delete");
+			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "serviceImage",image.Image);
 			_repository.Delete(image);
 			await _repository.SaveChanges();
 		}

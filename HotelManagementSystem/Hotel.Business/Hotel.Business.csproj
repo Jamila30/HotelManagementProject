@@ -26,4 +26,10 @@
 		<ProjectReference Include="..\Hotel.DataAccess\Hotel.DataAccess.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="DTOs\RoomImageDTOs\" />
+	  <Folder Include="Validations\FlatValidations\" />
+	  <Folder Include="Validations\RoomImageValidations\" />
+	</ItemGroup>
+
 </Project>

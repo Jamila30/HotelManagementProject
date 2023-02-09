@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class NearPlaceService:INearPlaceService
 	{

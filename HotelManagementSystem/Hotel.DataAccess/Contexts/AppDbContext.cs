@@ -29,6 +29,27 @@ namespace Hotel.DataAccess.Contexts
 			  .WithMany(x => x.ServiceImages)
 			  .HasForeignKey(x => x.ServiceOfferId);
 			#endregion
+
+			#region 1-to-many relationship between  GallaryImage and GallaryCatagory
+			modelBuilder.Entity<GallaryImage>()
+				.HasOne(x => x.GallaryCatagory)
+				.WithMany(x => x.Images)
+				.HasForeignKey(x => x.GallaryCatagoryId);
+			#endregion
+
+			#region 1-to-many relationship between Flat and RoomImage
+			modelBuilder.Entity<RoomImage>()
+				.HasOne(r => r.Flat)
+				.WithMany(f => f.Images)
+				.HasForeignKey(r => r.FlatId);
+			#endregion
+
+			#region 1-to-many relationship between Flat and RoomCatagory
+			modelBuilder.Entity<Flat>()
+				.HasOne(f => f.RoomCatagory)
+				.WithMany(c => c.Flats)
+				.HasForeignKey(f => f.RoomCatagoryId);
+			#endregion
 		}
 
 		public DbSet<SliderHome> SliderHomes { get; set; } = null!;
@@ -36,8 +57,14 @@ namespace Hotel.DataAccess.Contexts
 		public DbSet<NearPlace> NearPlaces { get; set; } = null!;
 		public DbSet<TeamMember> TeamMembers { get; set; } = null!;
 		public DbSet<TeamMemberInformation> TeamMemberInformations { get; set; } = null!;
-		public DbSet<ServiceImage> ServiceImages { get; set; }=null!;
-		public DbSet<ServiceOffer> ServiceOffers { get; set; }= null!;
+		public DbSet<ServiceImage> ServiceImages { get; set; } = null!;
+		public DbSet<ServiceOffer> ServiceOffers { get; set; } = null!;
+		public DbSet<GallaryImage> GallaryImages { get; set; } = null!;
+		public DbSet<GallaryCatagory> GallaryCatagories { get; set; } = null!;
+		public DbSet<Flat> Flats { get; set; } = null!;
+		public DbSet<RoomImage> RoomImages { get; set; } = null!;
+		public DbSet<RoomCatagory> RoomCatagories { get; set; } =null!;
+
 
 	}
 }
