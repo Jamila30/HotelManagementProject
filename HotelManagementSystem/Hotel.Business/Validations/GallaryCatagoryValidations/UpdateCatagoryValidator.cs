@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryCatagoryDTOs;
-
-namespace Hotel.Business.Validations.GallaryCatagoryValidations
+﻿namespace Hotel.Business.Validations.GallaryCatagoryValidations
 {
 	public class UpdateCatagoryValidator:AbstractValidator<UpdateCatagoryDto>
 	{

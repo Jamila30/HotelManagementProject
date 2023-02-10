@@ -1,35 +1,71 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Hotel.Business.DTOs.RoomImageDTOs;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class FlatService : IFlatService
 	{
-		public Task Create(CreateNearPlaceDto entity)
+
+		private readonly IFlatRepository _repository;
+		private readonly IRoomCatagoryRepository _roomCatagoryRepo;
+		private readonly IMapper _mapper;
+		public FlatService(IFlatRepository repository, IMapper mapper, IRoomCatagoryRepository roomCatagoryRepo)
 		{
-			throw new NotImplementedException();
+			_repository = repository;
+			_mapper = mapper;
+			_roomCatagoryRepo = roomCatagoryRepo;
+		}
+		public async Task<List<FlatDto>> GetAllAsync()
+		{
+			var list = _repository.GetAll().ToList();
+			var lists = _mapper.Map<List<FlatDto>>(list);
+			return lists;
 		}
 
-		public Task Delete(int id)
+		public async Task<List<FlatDto>> GetByCondition(Expression<Func<Flat, bool>> expression)
 		{
-			throw new NotImplementedException();
+
+			var list = _repository.GetAll().Where(expression).ToList();
+			var lists = _mapper.Map<List<FlatDto>>(list);
+			return lists;
 		}
 
-		public Task<List<NearPlaceDto>> GetAllAsync()
+		public async Task<FlatDto?> GetByIdAsync(int id)
 		{
-			throw new NotImplementedException();
+			var flat = await _repository.GetByIdAsync(id);
+			var flatDto = _mapper.Map<FlatDto>(flat);
+			return flatDto;
 		}
 
-		public Task<List<NearPlaceDto>> GetByCondition(Expression<Func<NearPlace, bool>> expression)
+		public async Task Create(CreateFlatDto entity)
 		{
-			throw new NotImplementedException();
+			var room = _roomCatagoryRepo.GetAll().FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
+			if (room is null) throw new IncorrectIdException("there is no catagory with this id for to set");
+			var flat = _mapper.Map<Flat>(entity);
+			await _repository.Create(flat);
+			await _repository.SaveChanges();
+
+		}
+		public async Task UpdateAsync(int id, UpdateFlatDto entity)
+		{
+			if (id != entity.Id) throw new IncorrectIdException("id didt match another");
+			var flat = _repository.GetByCondition(x => x.Id == id);
+			if (flat is null) throw new NotFoundException("there is no flat to update");
+			var roomCatagory=_repository.GetAll().FirstOrDefault(x => x.RoomCatagoryId == entity.RoomCatagoryId);
+			if(roomCatagory is null) throw new NotFoundException("there is no catagory with this id to update");
+			var newFlat = _mapper.Map<Flat>(entity);
+			_repository.Update(newFlat);
+			await _repository.SaveChanges();
+
 		}
 
-		public Task<NearPlaceDto?> GetByIdAsync(int id)
+		public async Task Delete(int id)
 		{
-			throw new NotImplementedException();
+			var flat = _repository.GetAll().FirstOrDefault(x => x.Id == id);
+			if (flat is null) throw new NotFoundException("there is no flat to delete");
+			_repository.Delete(flat);
+			await _repository.SaveChanges();
 		}
 
-		public Task UpdateAsync(int id, UpdateNearPlaceDto entity)
-		{
-			throw new NotImplementedException();
-		}
+
 	}
 }

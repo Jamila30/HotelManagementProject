@@ -1,6 +1,6 @@
 ﻿namespace Hotel.Business.DTOs.FlatDTOs
 {
-	public class FlatDto:IDto
+	public class UpdateFlatDto:IDto
 	{
 		public int Id { get; set; }
 		public string? Name { get; set; }

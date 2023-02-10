@@ -18,7 +18,13 @@ namespace Hotel.Business.Validations.ServiceImageValidations
 					context.AddFailure("Enter Valid Format");
 				}
 			});
-
+			RuleFor(x => x.ServiceOfferId).Custom((Id, context) =>
+			{
+				if (!int.TryParse(Id.ToString(), out int id))
+				{
+					context.AddFailure("Enter Valid Format");
+				}
+			});
 			RuleFor(x => x.ServiceOfferId)
 				.NotNull()
 				.NotEmpty();

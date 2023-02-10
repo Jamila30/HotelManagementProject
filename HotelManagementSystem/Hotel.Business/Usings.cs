@@ -19,3 +19,4 @@ global using FluentValidation;
 global using Hotel.Business.DTOs.ServiceOfferDTOs;
 global using Hotel.Business.Exceptions;
 global using Hotel.Business.DTOs.RoomCatagoryDTOs;
+global using Hotel.Business.DTOs.FlatDTOs;

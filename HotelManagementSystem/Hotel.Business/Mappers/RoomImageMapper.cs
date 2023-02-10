@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Hotel.Business.DTOs.RoomImageDTOs;
 
 namespace Hotel.Business.Mappers
 {
-	internal class RoomImageMapper
+	public class RoomImageMapper:Profile
 	{
+		public RoomImageMapper()
+		{
+			CreateMap<RoomImageDto, RoomImage>().ReverseMap();
+		}
 	}
 }

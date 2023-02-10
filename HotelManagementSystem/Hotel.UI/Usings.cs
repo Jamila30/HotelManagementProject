@@ -14,5 +14,6 @@ global using Hotel.DataAccess.Repositories.Implementations;
 global using Hotel.Business.DTOs.SliderHomeDTOs;
 global using Hotel.Business.DTOs.TeamMemberDTOs;
 global using Hotel.Business.DTOs.TeamMemberInfoDTOs;
+global using Hotel.Business.DTOs.RoomCatagoryDTOs;
 global using Hotel.Business.Mappers;
 global using Hotel.Business.Services.Implementations;

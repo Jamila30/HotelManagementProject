@@ -1,8 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryCatagoryDTOs;
-using Hotel.Business.DTOs.RoomCatagoryDTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]

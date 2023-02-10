@@ -13,6 +13,13 @@ namespace Hotel.Business.Validations.GallaryImageValidations
 					contex.AddFailure("Enter true Id format");
 				}
 			});
+			RuleFor(x => x.GallaryCatagoryId).Custom((Id, contex) =>
+			{
+				if (!int.TryParse(Id.ToString(), out int id))
+				{
+					contex.AddFailure("Enter true Id format");
+				}
+			});
 			RuleFor(x => x.Image)
 				.NotEmpty();
 			RuleFor(x => x.GallaryCatagoryId)

@@ -1,20 +1,16 @@
 ﻿using Hotel.Business.DTOs.GallaryImageDTOs;
-using Hotel.Business.DTOs.ServiceImageDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Core.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Hotel.Business.DTOs.RoomImageDTOs;
 
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class GallaryImageController : ControllerBase
+	public class RoomImageController : ControllerBase
 	{
-		private readonly IGallaryImageService _gallaryService;
-		public GallaryImageController(IGallaryImageService gallaryService)
+		private readonly IRoomImageService _roomImageService;
+		public RoomImageController(IRoomImageService roomImageService)
 		{
-			_gallaryService = gallaryService;
+			_roomImageService = roomImageService;
 		}
 
 		[HttpGet]
@@ -22,7 +18,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var list = await _gallaryService.GetAllAsync();
+				var list = await _roomImageService.GetAllAsync();
 				return Ok(list);
 			}
 			catch (Exception ex)
@@ -32,13 +28,17 @@ namespace Hotel.UI.Controllers
 		}
 
 
-		[HttpGet("searchByCatagoryId/{id}")]
+		[HttpGet("searchByFlatId/{id}")]
 		public async Task<IActionResult> GetByCatagoryId(int id)
 		{
 			try
 			{
-				var element = await _gallaryService.GetByCondition(x => x.GallaryCatagoryId == id);
+				var element = await _roomImageService.GetByCondition(x => x.FlatId == id);
 				return Ok(element);
+			}
+			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
 			}
 			catch (Exception ex)
 			{
@@ -46,25 +46,12 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpGet("searchByCatagoryName/{name}")]
-		public async Task<IActionResult> GetByCatagoryName(string name)
-		{
-			try
-			{
-				var element = await _gallaryService.GetByCondition(x => x.GallaryCatagory != null ? x.GallaryCatagory.Name == name : true);
-				return Ok(element);
-			}
-			catch (Exception ex)
-			{
-				return NotFound(ex.Message);
-			}
-		}
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(int id)
 		{
 			try
 			{
-				var element = await _gallaryService.GetByIdAsync(id);
+				var element = await _roomImageService.GetByIdAsync(id);
 				return Ok(element);
 			}
 			catch (NotFoundException ex)
@@ -79,12 +66,12 @@ namespace Hotel.UI.Controllers
 
 		[HttpPost]
 
-		public async Task<IActionResult> Create([FromForm] CreateGallaryImageDto createGallary)
+		public async Task<IActionResult> Create([FromForm] CreateRoomImageDto createRoomImage)
 		{
 			try
 			{
 
-				await _gallaryService.Create(createGallary);
+				await _roomImageService.Create(createRoomImage);
 				return Ok("Created");
 			}
 			catch (IncorrectFileSizeException ex)
@@ -103,19 +90,24 @@ namespace Hotel.UI.Controllers
 			{
 				return BadRequest(ex.Message);
 			}
+			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
+				
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
 		[HttpPut]
 
-		public async Task<IActionResult> Put(int id, [FromForm] UpdateGallaryImageDto updateGallary)
+		public async Task<IActionResult> Put(int id, [FromForm] UpdateRoomImageDto updateRoom)
 		{
 			try
 			{
-				await _gallaryService.UpdateAsync(id, updateGallary);
+				await _roomImageService.UpdateAsync(id, updateRoom);
 				return Ok("Updated");
 			}
 			catch (IncorrectIdException ex)
@@ -129,6 +121,11 @@ namespace Hotel.UI.Controllers
 				return BadRequest(ex.Message);
 			}
 			catch (IncorrectFileFormatException ex)
+			{
+
+				return BadRequest(ex.Message);
+			}
+			catch (RepeatedImageException ex)
 			{
 
 				return BadRequest(ex.Message);
@@ -150,7 +147,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				await _gallaryService.Delete(id);
+				await _roomImageService.Delete(id);
 				return Ok("Deleted");
 			}
 			catch (NotFoundException ex)
@@ -162,5 +159,6 @@ namespace Hotel.UI.Controllers
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
+
 	}
 }

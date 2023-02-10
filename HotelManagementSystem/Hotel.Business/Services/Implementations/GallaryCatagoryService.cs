@@ -1,8 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryCatagoryDTOs;
-using Hotel.Business.DTOs.ServiceImageDTOs;
-using Hotel.Business.Exceptions;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class GallaryCatagoryService : IGallaryCatagoryService
 	{

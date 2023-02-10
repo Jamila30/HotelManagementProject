@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
-	internal class FlatMapper
+	public class FlatMapper:Profile
 	{
+		public FlatMapper()
+		{
+			CreateMap<FlatDto, Flat>().ReverseMap();
+			CreateMap<CreateFlatDto, Flat>().ReverseMap();
+			CreateMap<UpdateFlatDto, Flat>().ReverseMap();
+		}
 	}
 }
