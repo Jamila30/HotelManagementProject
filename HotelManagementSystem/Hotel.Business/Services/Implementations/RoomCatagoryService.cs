@@ -13,14 +13,14 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task<List<RoomCatagoryDto>> GetAllAsync()
 		{
-			var list = _repository.GetAll().ToList();
+			var list = await _repository.GetAll().ToListAsync();
 			var lists = _mappper.Map<List<RoomCatagoryDto>>(list);
 			return lists;
 		}
 
 		public async Task<List<RoomCatagoryDto>> GetByCondition(Expression<Func<RoomCatagory, bool>> expression)
 		{
-			var list = _repository.GetAll().Where(expression).ToList();
+			var list = await _repository.GetAll().Where(expression).ToListAsync();
 			var lists = _mappper.Map<List<RoomCatagoryDto>>(list);
 			return lists;
 		}

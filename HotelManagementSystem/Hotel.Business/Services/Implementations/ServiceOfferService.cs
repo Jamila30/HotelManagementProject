@@ -5,27 +5,27 @@ namespace Hotel.Business.Services.Implementations
 	public class ServiceOfferService : IServiceOfferService
 	{
 		private readonly IServiceOfferRepository _repository;
-		private readonly IServiceImageRepository _imageRepo;
+		
 		private readonly IMapper _mapper;
-		private readonly IWebHostEnvironment _env;
-		public ServiceOfferService(IServiceOfferRepository repository, IMapper mapper, IWebHostEnvironment env, IServiceImageRepository imageRepo)
+		
+		public ServiceOfferService(IServiceOfferRepository repository, IMapper mapper)
 		{
 			_repository = repository;
 			_mapper = mapper;
-			_env = env;
-			_imageRepo = imageRepo;
+			
+			
 		}
 
 		public async Task<List<ServiceOfferDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<ServiceOfferDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<List<ServiceOfferDto>> GetByCondition(Expression<Func<ServiceOffer, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<ServiceOfferDto>>(listAll);
 			return listDto;
 		}

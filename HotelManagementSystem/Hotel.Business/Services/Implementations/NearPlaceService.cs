@@ -16,7 +16,7 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task<List<NearPlaceDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<NearPlaceDto>>(listAll);
 			return listDto;
 
@@ -24,7 +24,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<NearPlaceDto>> GetByCondition(Expression<Func<NearPlace, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<NearPlaceDto>>(listAll);
 			return listDto;
 		}
@@ -98,8 +98,10 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var place = await _repository.GetByIdAsync(id);
 			if (place is null) throw new NotFoundException("Not Found");
-
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "nearPlace", place.Image);
+			if (place.Image != null)
+			{
+				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "nearPlace", place.Image);
+			}
 			_repository.Delete(place);
 			await _repository.SaveChanges();
 		}

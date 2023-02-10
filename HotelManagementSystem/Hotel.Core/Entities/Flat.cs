@@ -15,5 +15,7 @@
 		//Navigation property
 		public RoomCatagory? RoomCatagory { get; set; }
 		public ICollection<RoomImage>? Images { get; set; }
+		public ICollection<Comment>?  Comments { get; set; }
+
 	}
 }

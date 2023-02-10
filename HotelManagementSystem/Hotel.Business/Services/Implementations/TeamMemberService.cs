@@ -15,26 +15,28 @@
 
 		public async Task<List<TeamMemberDto>> GetAllAsync()
 		{
-			var list = _repository.GetAll().ToList();
+			var list = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberDto>>(list);
 			return listDto;
 		}
 
 		public async Task<List<TeamMemberDto>> GetByCondition(Expression<Func<TeamMember, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<OneMemberInfoDto?> GetByIdAsync(int id)
 		{
-			var info = _repository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			var info = await _repository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefaultAsync(x => x.Id == id);
 			if (info is null) throw new NotFoundException("Element not found");
-			OneMemberInfoDto oneMember = new();
-			oneMember.Fullname = info.Fullname;
-			oneMember.Position = info.Position;
-			oneMember.Image = info.Image;
+			OneMemberInfoDto oneMember = new()
+			{
+				Fullname = info.Fullname,
+				Position = info.Position,
+				Image = info.Image
+			};
 			if (info.TeamMemberInformation != null)
 			{
 				oneMember.Twitter = info.TeamMemberInformation.Twitter;
@@ -75,9 +77,8 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
-				fileName = createWholeMember.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
-				teamMember.Image = fileName;
+				
+				teamMember.Image = createWholeMember.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
 
 			}
 
@@ -105,9 +106,8 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
-				fileName = createTeam.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
-				teamMember.Image = fileName;
+				teamMember.Image = createTeam.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
+				
 
 			}
 

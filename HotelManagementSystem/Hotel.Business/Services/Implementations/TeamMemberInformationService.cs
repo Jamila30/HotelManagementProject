@@ -16,7 +16,7 @@
 
 		public async Task<List<TeamMemberInfoDto>> GetAllAsync()
 		{
-			var list = _repository.GetAll().ToList();
+			var list = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberInfoDto>>(list);
 			return listDto;
 
@@ -24,7 +24,7 @@
 
 		public async Task<List<TeamMemberInfoDto>> GetByCondition(Expression<Func<TeamMemberInformation, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberInfoDto>>(listAll);
 			return listDto;
 		}
@@ -81,9 +81,9 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
-				fileName = entity.MemberImage.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
-				teamInfo.TeamMember.Image = fileName;
+				
+				teamInfo.TeamMember.Image = entity.MemberImage.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
+				
 
 			}
 			await _repository.Create(teamInfo);

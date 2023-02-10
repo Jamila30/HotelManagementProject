@@ -13,7 +13,7 @@ namespace Hotel.DataAccess.Contexts
 			modelBuilder.ApplyConfigurationsFromAssembly(typeof(SliderHomeConfiguration).Assembly);
 			base.OnModelCreating(modelBuilder);
 
-			#region 1-1 relationship between TeamMember and TeamMemberInformation
+			#region 1-to-1 relationship between TeamMember and TeamMemberInformation
 			modelBuilder.Entity<TeamMember>()
 				   .HasOne(m => m.TeamMemberInformation)
 				   .WithOne(m => m.TeamMember)
@@ -50,6 +50,14 @@ namespace Hotel.DataAccess.Contexts
 				.WithMany(c => c.Flats)
 				.HasForeignKey(f => f.RoomCatagoryId);
 			#endregion
+
+			#region 1-to-many relationship between Flat and Comment
+			modelBuilder.Entity<Comment>()
+				.HasOne(c => c.Flat)
+				.WithMany(f => f.Comments)
+				.HasForeignKey(c=>c.FlatId);
+				
+			#endregion
 		}
 
 		public DbSet<SliderHome> SliderHomes { get; set; } = null!;
@@ -63,7 +71,8 @@ namespace Hotel.DataAccess.Contexts
 		public DbSet<GallaryCatagory> GallaryCatagories { get; set; } = null!;
 		public DbSet<Flat> Flats { get; set; } = null!;
 		public DbSet<RoomImage> RoomImages { get; set; } = null!;
-		public DbSet<RoomCatagory> RoomCatagories { get; set; } =null!;
+		public DbSet<RoomCatagory> RoomCatagories { get; set; } = null!;
+		public DbSet<Comment> Comments { get; set; } = null!;
 
 
 	}

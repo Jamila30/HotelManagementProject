@@ -13,14 +13,14 @@
 
 		public async Task<List<GallaryCatagoryDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<GallaryCatagoryDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<List<GallaryCatagoryDto>> GetByCondition(Expression<Func<GallaryCatagory, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<GallaryCatagoryDto>>(listAll);
 			return listDto;
 		}

@@ -16,7 +16,7 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task<List<FlatDto>> GetAllAsync()
 		{
-			var list = _repository.GetAll().ToList();
+			var list = await _repository.GetAll().ToListAsync();
 			var lists = _mapper.Map<List<FlatDto>>(list);
 			return lists;
 		}
@@ -24,7 +24,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<List<FlatDto>> GetByCondition(Expression<Func<Flat, bool>> expression)
 		{
 
-			var list = _repository.GetAll().Where(expression).ToList();
+			var list = await _repository.GetAll().Where(expression).ToListAsync();
 			var lists = _mapper.Map<List<FlatDto>>(list);
 			return lists;
 		}

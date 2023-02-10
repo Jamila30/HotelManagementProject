@@ -18,7 +18,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<ServiceImageDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<ServiceImageDto>>(listAll);
 			return listDto;
 		}
@@ -26,7 +26,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<ServiceImageDto>> GetByCondition(Expression<Func<ServiceImage, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<ServiceImageDto>>(listAll);
 			return listDto;
 		}
@@ -62,10 +62,10 @@ namespace Hotel.Business.Services.Implementations
 				image = fileName;
 
 			}
-			ServiceImage serviceImage=new ()
+			ServiceImage serviceImage = new()
 			{
-			  ServiceOfferId= serviceId,
-			  Image = image,
+				ServiceOfferId = serviceId,
+				Image = image,
 			};
 			await _repository.Create(serviceImage);
 			await _repository.SaveChanges();
@@ -101,7 +101,7 @@ namespace Hotel.Business.Services.Implementations
 				imageService.Image = fileName;
 
 			}
-			var offer=_offerRepo.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
+			var offer = _offerRepo.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
 			if (offer is null) throw new BadRequestException("there is no Service for set Image for this ServiceOfferId");
 			imageService.ServiceOfferId = entity.ServiceOfferId;
 
@@ -112,7 +112,10 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var image = _repository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (image is null) throw new NotFoundException("There is no Image for delete");
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "serviceImage",image.Image);
+			if (image.Image != null)
+			{
+				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "serviceImage", image.Image);
+			}
 			_repository.Delete(image);
 			await _repository.SaveChanges();
 		}

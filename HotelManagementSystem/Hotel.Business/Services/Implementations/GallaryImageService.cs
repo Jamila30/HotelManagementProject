@@ -16,14 +16,14 @@
 
 		public async Task<List<GallaryImageDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<GallaryImageDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<List<GallaryImageDto>> GetByCondition(Expression<Func<GallaryImage, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Include(x => x.GallaryCatagory).Where(expression).ToList();
+			var listAll = await _repository.GetAll().Include(x => x.GallaryCatagory).Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<GallaryImageDto>>(listAll);
 			return listDto;
 		}
@@ -62,8 +62,8 @@
 			{
 				if (item.Image != null)
 				{
-					last=item.Image.Substring(36);
-					next=fileName.Substring(36);
+					last=item.Image[36..];
+					next=fileName[36..];
 					if (last == next) check = true; ;
 				}
 			}

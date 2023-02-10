@@ -15,7 +15,7 @@
 
 		public async Task<List<WhyUsDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 
@@ -23,7 +23,7 @@
 
 		public async Task<List<WhyUsDto>> GetByCondition(Expression<Func<WhyUs, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 		}
@@ -54,9 +54,9 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
-				why.Image = fileName;
+
+				why.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
+				
 
 			}
 			await _repository.Create(why);
@@ -82,9 +82,9 @@
 					throw new IncorrectFileSizeException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
-				why.Image = fileName;
+				
+				why.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
+				
 
 			}
 
@@ -97,8 +97,10 @@
 		{
 			var why = await _repository.GetByIdAsync(id);
 			if (why is null) throw new NotFoundException("Not Found");
-
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images","whyUs", why.Image);
+			if (why.Image != null)
+			{
+				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "whyUs", why.Image);
+			}
 			_repository.Delete(why);
 			await _repository.SaveChanges();
 		}

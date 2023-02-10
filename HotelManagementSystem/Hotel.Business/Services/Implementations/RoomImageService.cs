@@ -22,7 +22,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<RoomImageDto>> GetAllAsync()
 		{
-			var list = _repository.GetAll().ToList();
+			var list = await _repository.GetAll().ToListAsync();
 			var lists = _mapper.Map<List<RoomImageDto>>(list);
 			return lists;
 		}
@@ -30,7 +30,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<List<RoomImageDto>> GetByCondition(Expression<Func<RoomImage, bool>> expression)
 		{
 
-			var list = _repository.GetAll().Where(expression).ToList();
+			var list = await _repository.GetAll().Where(expression).ToListAsync();
 			var lists = _mapper.Map<List<RoomImageDto>>(list);
 			return lists;
 		}
@@ -81,8 +81,8 @@ namespace Hotel.Business.Services.Implementations
 			{
 				if (item.Image != null && roomImage.Image != null)
 				{
-					last = item.Image.Substring(36);
-					next = roomImage.Image.Substring(36);
+					last = item.Image[36..];
+					next = roomImage.Image[36..]; ;
 					if (last.Equals(next)) { check = true; }
 				}
 				if (item.FlatId == roomImage.FlatId)
@@ -129,8 +129,8 @@ namespace Hotel.Business.Services.Implementations
 			{
 				if (item.Image != null && item.Flat != null && item.Flat.RoomCatagory != null)
 				{
-					last = item.Image.Substring(36);
-					next = fileName.Substring(36);
+					last = item.Image[36..];
+					next = fileName[36..];
 					if (last.Equals(next)) { checkImage = true; }
 					
 				}

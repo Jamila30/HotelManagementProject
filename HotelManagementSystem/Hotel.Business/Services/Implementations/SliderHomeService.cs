@@ -14,7 +14,7 @@
 
 		public async Task<List<SliderHomeDto>> GetAllAsync()
 		{
-			var listAll = _repository.GetAll().ToList();
+			var listAll = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
 			return listDto;
 
@@ -22,7 +22,7 @@
 
 		public async Task<List<SliderHomeDto>> GetByCondition(Expression<Func<SliderHome, bool>> expression)
 		{
-			var listAll = _repository.GetAll().Where(expression).ToList();
+			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
 			return listDto;
 		}
@@ -52,11 +52,7 @@
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
-
-				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
-				slider.Image = fileName;
-
+				slider.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
 			}
 			await _repository.Create(slider);
 			await _repository.SaveChanges();
@@ -80,11 +76,7 @@
 				{
 					throw new IncorrectFileSizeException("Enter Suitable File Format");
 				}
-
-				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
-				slider.Image = fileName;
-
+				slider.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
 			}
 
 			_repository.Update(slider);
@@ -96,8 +88,11 @@
 		{
 			var slider = await _repository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Not Found");
-
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "sliderHome", slider.Image);
+			if (slider.Image != null)
+			{
+				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "sliderHome", slider.Image);
+			}
+			
 			_repository.Delete(slider);
 			await _repository.SaveChanges();
 		}

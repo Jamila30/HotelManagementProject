@@ -1,6 +1,7 @@
 
 
 using Hotel.Business.Services.Implementations;
+using Hotel.Business.Services.Interfaces;
 using Hotel.DataAccess.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IGallaryCatagoryRepository, GallaryCatagoryRepository
 builder.Services.AddScoped<IFlatRepository, FlatRepository>();
 builder.Services.AddScoped<IRoomImageRepository, RoomImageRepository>();
 builder.Services.AddScoped<IRoomCatagoryRepository, RoomCatagoryRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 
 
@@ -46,6 +48,7 @@ builder.Services.AddScoped<IGallaryImageService, GallaryImageService>();
 builder.Services.AddScoped<IFlatService,FlatService>();
 builder.Services.AddScoped<IRoomImageService,RoomImageService>();
 builder.Services.AddScoped<IRoomCatagoryService,RoomCatagoryService>();
+builder.Services.AddScoped<ICommentService,CommentService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
