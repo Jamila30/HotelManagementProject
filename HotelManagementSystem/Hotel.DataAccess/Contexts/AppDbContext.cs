@@ -56,7 +56,24 @@ namespace Hotel.DataAccess.Contexts
 				.HasOne(c => c.Flat)
 				.WithMany(f => f.Comments)
 				.HasForeignKey(c=>c.FlatId);
-				
+
+			#endregion
+
+			#region many-to-many relationship between Flat and Amentity
+			modelBuilder.Entity<FlatAmentity>()
+				.HasOne(fa => fa.Flat)
+				.WithMany(f => f.Amentities)
+				.HasForeignKey(fa => fa.FlatId);
+			modelBuilder.Entity<FlatAmentity>()
+				.HasOne(fa => fa.Amentity)
+				.WithMany(a => a.Flats)
+				.HasForeignKey(fa => fa.AmentityId);
+			modelBuilder.Entity<FlatAmentity>()
+				.HasKey(fa => new 
+				{
+					fa.FlatId,
+					fa.AmentityId
+				});
 			#endregion
 		}
 
@@ -73,7 +90,8 @@ namespace Hotel.DataAccess.Contexts
 		public DbSet<RoomImage> RoomImages { get; set; } = null!;
 		public DbSet<RoomCatagory> RoomCatagories { get; set; } = null!;
 		public DbSet<Comment> Comments { get; set; } = null!;
-
+		public DbSet<Amentity>  Amentities { get; set; } = null!;
+		public DbSet<FlatAmentity>  FlatAmentities { get; set; } = null!;
 
 	}
 }

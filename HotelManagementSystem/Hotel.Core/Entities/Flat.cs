@@ -2,6 +2,10 @@
 {
 	public class Flat : IEntity
 	{
+		public Flat()
+		{
+			this.Amentities=new HashSet<FlatAmentity>();
+		}
 		public int Id { get; set; }
 		public string? Name { get; set; }
 		public float Price { get; set; }
@@ -16,6 +20,7 @@
 		public RoomCatagory? RoomCatagory { get; set; }
 		public ICollection<RoomImage>? Images { get; set; }
 		public ICollection<Comment>?  Comments { get; set; }
+		public ICollection<FlatAmentity>? Amentities { get; set; }
 
 	}
 }

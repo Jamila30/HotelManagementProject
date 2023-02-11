@@ -30,6 +30,7 @@
 	<ItemGroup>
 		<Folder Include="wwwroot\assets\images\nearPlace\" />
 		<Folder Include="wwwroot\assets\images\gallaryImage\" />
+		<Folder Include="wwwroot\assets\images\amentityImage\" />
 		<Folder Include="wwwroot\assets\images\roomImage\" />
 		<Folder Include="wwwroot\assets\images\serviceImage\" />
 		<Folder Include="wwwroot\assets\images\sliderHome\" />
