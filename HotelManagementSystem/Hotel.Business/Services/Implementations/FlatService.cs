@@ -1,16 +1,20 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Hotel.DataAccess.Contexts;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class FlatService : IFlatService
 	{
 
 		private readonly IFlatRepository _repository;
 		private readonly IRoomCatagoryRepository _roomCatagoryRepo;
+		private readonly IAmentityRepository _amentRepo;
 		private readonly IMapper _mapper;
-		public FlatService(IFlatRepository repository, IMapper mapper, IRoomCatagoryRepository roomCatagoryRepo)
+		public FlatService(IFlatRepository repository, IMapper mapper, IRoomCatagoryRepository roomCatagoryRepo, IAmentityRepository amentRepo)
 		{
 			_repository = repository;
 			_mapper = mapper;
 			_roomCatagoryRepo = roomCatagoryRepo;
+			_amentRepo = amentRepo;
 		}
 		public async Task<List<FlatDto>> GetAllAsync()
 		{
@@ -33,7 +37,29 @@
 			var flatDto = _mapper.Map<FlatDto>(flat);
 			return flatDto;
 		}
+		public async Task AddAmentity( int amentityId,int flatId)
+		{
+			var amentity = await _amentRepo.GetByIdAsync(amentityId);
+			if (amentity is null) throw new NotFoundException("there is not amentity with this id");
+			var flat = await _repository.GetByIdAsync(flatId);
+			if (flat is null) throw new NotFoundException("there is not amentity with this id");
 
+			if (flat.Amentities != null && amentity.Flats != null) 
+			{
+				flat.Amentities.Add(new FlatAmentity() { Amentity = amentity });
+			}
+			var crossListForFlatId=_repository.GetAll().Include(x=>x.Amentities).FirstOrDefault(x=>x.Id==flatId);
+			var list = _repository.GetAll().Include(x => x.Amentities).FirstOrDefault(x => (x.Id == flatId));
+			if (list != null && list.Amentities != null)
+			{
+				foreach (var item in list.Amentities)
+				{
+					if (item.AmentityId == amentity.Id) throw new RepeatedChoiceException("This option already exist");
+				}
+			}
+			_repository.Update(flat);
+			await _repository.SaveChanges();
+		}
 		public async Task Create(CreateFlatDto entity)
 		{
 			var room = _roomCatagoryRepo.GetAll().Include(x=>x.Flats).FirstOrDefault(c => c.Id == entity.RoomCatagoryId);

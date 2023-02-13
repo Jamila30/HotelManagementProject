@@ -71,7 +71,6 @@ namespace Hotel.DataAccess.Contexts
 			modelBuilder.Entity<FlatAmentity>()
 				.HasKey(fa => new
 				{
-					fa.Id,
 					fa.FlatId,
 					fa.AmentityId
 				});
@@ -93,7 +92,6 @@ namespace Hotel.DataAccess.Contexts
 		public DbSet<RoomCatagory> RoomCatagories { get; set; } = null!;
 		public DbSet<Comment> Comments { get; set; } = null!;
 		public DbSet<Amentity>  Amentities { get; set; } = null!;
-		public DbSet<FlatAmentity>  FlatAmentities { get; set; } = null!;
 
 	}
 }

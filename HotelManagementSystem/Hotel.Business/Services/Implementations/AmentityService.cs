@@ -32,7 +32,6 @@
 			var amentityDto = _mapper.Map<AmentityDto>(amentity);
 			return amentityDto;
 		}
-
 		public async Task Create(CreateAmentityDto entity)
 		{
 			Amentity amentity = new();
@@ -52,6 +51,21 @@
 
 				amentity.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "amentityImage");
 
+			}
+			var listAmentity = _repository.GetAll();
+			if (listAmentity != null)
+			{
+				foreach (var item in listAmentity)
+				{
+					if (item.Image[36..].Equals(amentity.Image[36..]) && (item.Title == amentity.Title))
+					{
+						throw new RepeatedChoiceException("this amentity already exist with  same image and title ,choose different ones");
+					}
+					if (item.Title == amentity.Title)
+					{
+						throw new RepeatedChoiceException(" amentity already exist with this title ");
+					}
+				}
 			}
 			await _repository.Create(amentity);
 			await _repository.SaveChanges();
@@ -79,7 +93,21 @@
 			}
 			amentity.Title = entity.Title;
 			amentity.Description = entity.Description;
-
+			var listAmentity = _repository.GetAll();
+			if (listAmentity != null)
+			{
+				foreach (var item in listAmentity)
+				{
+					if (item.Image[36..].Equals(amentity.Image[36..]) && (item.Title == amentity.Title) && item.Id!=amentity.Id)
+					{
+						throw new RepeatedChoiceException("this amentity has same image and title ,choose different ones");
+					}
+					if (item.Title == amentity.Title && item.Id != amentity.Id)
+					{
+						throw new RepeatedChoiceException(" amentity already exist with this title");
+					}
+				}
+			}
 
 			_repository.Update(amentity);
 			await _repository.SaveChanges();

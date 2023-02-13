@@ -80,6 +80,10 @@
 			{
 				return BadRequest(ex.Message);
 			}
+			catch (RepeatedChoiceException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
 				return StatusCode(500);
@@ -99,6 +103,10 @@
 				return BadRequest(ex.Message);
 			}
 			catch (IncorrectFileSizeException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (RepeatedChoiceException ex)
 			{
 				return BadRequest(ex.Message);
 			}

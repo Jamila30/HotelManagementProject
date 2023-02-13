@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Hotel.Core.Entities
+﻿namespace Hotel.Core.Entities
 {
-	public class FlatAmentity:IEntity
+	public class FlatAmentity
 	{
-		
-		public int Id { get; set; }
 		public int FlatId { get; set; }
 		public int AmentityId { get; set; }
 		//Naviagtion Properties

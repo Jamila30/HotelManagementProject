@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230212045812_NewAllInOne")]
-    partial class NewAllInOne
+    [Migration("20230213080458_All")]
+    partial class All
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,22 +130,17 @@ namespace Hotel.DataAccess.Migrations
 
             modelBuilder.Entity("Hotel.Core.Entities.FlatAmentity", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("FlatId")
                         .HasColumnType("int");
 
                     b.Property<int>("AmentityId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "FlatId", "AmentityId");
+                    b.HasKey("FlatId", "AmentityId");
 
                     b.HasIndex("AmentityId");
 
-                    b.HasIndex("FlatId");
-
-                    b.ToTable("FlatAmentities");
+                    b.ToTable("FlatAmentity");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>

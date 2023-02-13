@@ -33,7 +33,6 @@ builder.Services.AddScoped<IRoomImageRepository, RoomImageRepository>();
 builder.Services.AddScoped<IRoomCatagoryRepository, RoomCatagoryRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IAmentityRepository, AmentityRepository>();
-builder.Services.AddScoped<IFlatAmentityRepository, FlatAmentityRepository>();
 
 
 
@@ -51,7 +50,6 @@ builder.Services.AddScoped<IFlatService,FlatService>();
 builder.Services.AddScoped<IRoomImageService,RoomImageService>();
 builder.Services.AddScoped<IRoomCatagoryService,RoomCatagoryService>();
 builder.Services.AddScoped<ICommentService,CommentService>();
-builder.Services.AddScoped<IFlatAmentityService,FlatAmentityService>();
 builder.Services.AddScoped<IAmentityService,AmentityService>();
 
 //Adding Mapper configuration

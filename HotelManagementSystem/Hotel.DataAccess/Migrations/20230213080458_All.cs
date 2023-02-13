@@ -1,11 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace Hotel.DataAccess.Migrations
 {
-    public partial class NewAllInOne : Migration
+    public partial class All : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -238,25 +235,23 @@ namespace Hotel.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FlatAmentities",
+                name: "FlatAmentity",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-					 .Annotation("SqlServer:Identity", "1, 1"),
-					FlatId = table.Column<int>(type: "int", nullable: false),
+                    FlatId = table.Column<int>(type: "int", nullable: false),
                     AmentityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FlatAmentities", x => new { x.Id, x.FlatId, x.AmentityId });
+                    table.PrimaryKey("PK_FlatAmentity", x => new { x.FlatId, x.AmentityId });
                     table.ForeignKey(
-                        name: "FK_FlatAmentities_Amentities_AmentityId",
+                        name: "FK_FlatAmentity_Amentities_AmentityId",
                         column: x => x.AmentityId,
                         principalTable: "Amentities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FlatAmentities_Flats_FlatId",
+                        name: "FK_FlatAmentity_Flats_FlatId",
                         column: x => x.FlatId,
                         principalTable: "Flats",
                         principalColumn: "Id",
@@ -289,14 +284,9 @@ namespace Hotel.DataAccess.Migrations
                 column: "FlatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlatAmentities_AmentityId",
-                table: "FlatAmentities",
+                name: "IX_FlatAmentity_AmentityId",
+                table: "FlatAmentity",
                 column: "AmentityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FlatAmentities_FlatId",
-                table: "FlatAmentities",
-                column: "FlatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flats_RoomCatagoryId",
@@ -325,7 +315,7 @@ namespace Hotel.DataAccess.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "FlatAmentities");
+                name: "FlatAmentity");
 
             migrationBuilder.DropTable(
                 name: "GallaryImages");

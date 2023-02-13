@@ -100,7 +100,28 @@
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
-
+		[HttpPost("AddAmentityWithId")]
+		public async Task<IActionResult>  AddAmentity(int amentityId, int flatId)
+		{
+			try
+			{
+				await _flatService.AddAmentity(amentityId, flatId);
+				return Ok("Created");
+			}
+			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (RepeatedChoiceException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				throw;
+				//return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
+		}
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateFlatDto updateFlat)

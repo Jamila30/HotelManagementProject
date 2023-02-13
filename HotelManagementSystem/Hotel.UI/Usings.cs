@@ -5,7 +5,6 @@ global using Microsoft.AspNetCore.Mvc;
 global using System.Net;
 global using Hotel.Business.DTOs.WhyUsDTOs;
 global using Hotel.Business.DTOs.CommentDTOs;
-global using Hotel.Business.DTOs.FlatAmentityDTOs;
 global using Hotel.Business.DTOs.AmentityDTOs;
 global using Hotel.Business.DTOs.FlatDTOs;
 global using Hotel.DataAccess.Contexts;
