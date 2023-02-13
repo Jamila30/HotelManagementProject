@@ -74,6 +74,14 @@ namespace Hotel.UI.Controllers
 			{
 				return BadRequest(ex.Message);
 			}
+			catch (RepeatedImageException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
 				return StatusCode((int)HttpStatusCode.InternalServerError);
@@ -99,15 +107,28 @@ namespace Hotel.UI.Controllers
 
 				return NotFound(ex.Message);
 			}
+			catch (RepeatedImageException ex)
+			{
+
+				return NotFound(ex.Message);
+			}
 			catch (BadRequestException ex)
 			{
 
 				return NotFound(ex.Message);
 			}
-
+			catch (IncorrectFileSizeException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (IncorrectFileFormatException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				throw;
+				//return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 
 		}

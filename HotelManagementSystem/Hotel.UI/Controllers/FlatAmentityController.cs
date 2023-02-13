@@ -1,7 +1,4 @@
-﻿using Hotel.Business.DTOs.AmentityDTOs;
-using Hotel.Business.DTOs.FlatAmentityDTOs;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -101,7 +98,8 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				return StatusCode(500);
+				throw;
+			//	return StatusCode(500);
 			}
 		}
 

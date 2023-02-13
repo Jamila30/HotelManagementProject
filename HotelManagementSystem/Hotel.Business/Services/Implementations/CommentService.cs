@@ -14,14 +14,14 @@
 
 		public async Task<List<CommentDto>> GetAllAsync()
 		{
-			var list =await  _repository.GetAll().ToListAsync();
+			var list = await _repository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<CommentDto>>(list);
 			return listDto;
 		}
 
 		public async Task<List<CommentDto>> GetByCondition(Expression<Func<Comment, bool>> expression)
 		{
-			var list =await _repository.GetAll().Where(expression).ToListAsync();
+			var list = await _repository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<CommentDto>>(list);
 			return listDto;
 		}
@@ -37,8 +37,13 @@
 		{
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this id for create");
-			var comment=_mapper.Map<Comment>(entity);
+			var comment = _mapper.Map<Comment>(entity);
 			comment.Created = DateTime.UtcNow;
+			comment.Flat = flat;
+			if (flat.Comments != null)
+			{
+				flat.Comments.Add(comment);
+			}
 			await _repository.Create(comment);
 			await _repository.SaveChanges();
 		}
@@ -47,18 +52,18 @@
 			if (id != entity.Id) throw new IncorrectIdException("id didt match another");
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this Flat Id");
-			
+
 			var comment = await _repository.GetByIdAsync(id);
 			if (comment is null) throw new NotFoundException("there is no comment  with this id");
 			comment.Id = entity.Id;
 			comment.Name = entity.Name;
-			comment.Opinions= entity.Opinions;
+			comment.Opinions = entity.Opinions;
 			comment.Email = entity.Email;
 			comment.FlatId = entity.FlatId;
 			_repository.Update(comment);
 			await _repository.SaveChanges();
 		}
-		public  async Task Delete(int id)
+		public async Task Delete(int id)
 		{
 
 			var comment = _repository.GetAll().FirstOrDefault(x => x.Id == id);
@@ -67,10 +72,10 @@
 			await _repository.SaveChanges();
 		}
 
-		public async  Task<List<CommentDto>> GetByEmail(string email)
+		public async Task<List<CommentDto>> GetByEmail(string email)
 		{
-			var comment= await _repository.GetByCondition(x => x.Email == email).ToListAsync();	
-			var commentDto=_mapper.Map<List<CommentDto>>(comment);
+			var comment = await _repository.GetByCondition(x => x.Email == email).ToListAsync();
+			var commentDto = _mapper.Map<List<CommentDto>>(comment);
 			return commentDto;
 
 		}

@@ -2,6 +2,10 @@
 {
 	public class RoomCatagory:IEntity
 	{
+		public RoomCatagory()
+		{
+			Flats=new HashSet<Flat>();
+		}
 		public int Id { get; set; }
 		public string? Name { get; set; }
 

@@ -4,7 +4,9 @@
 	{
 		public Flat()
 		{
-			this.Amentities=new HashSet<FlatAmentity>();
+			Amentities=new HashSet<FlatAmentity>();
+			Comments = new HashSet<Comment>();
+			Images = new HashSet<RoomImage>();
 		}
 		public int Id { get; set; }
 		public string? Name { get; set; }

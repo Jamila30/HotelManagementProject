@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230210051421_CommentAdded")]
-    partial class CommentAdded
+    [Migration("20230212045812_NewAllInOne")]
+    partial class NewAllInOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,32 @@ namespace Hotel.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Hotel.Core.Entities.Amentity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Amentities");
+                });
 
             modelBuilder.Entity("Hotel.Core.Entities.Comment", b =>
                 {
@@ -100,6 +126,26 @@ namespace Hotel.DataAccess.Migrations
                     b.HasIndex("RoomCatagoryId");
 
                     b.ToTable("Flats");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.FlatAmentity", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlatId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmentityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id", "FlatId", "AmentityId");
+
+                    b.HasIndex("AmentityId");
+
+                    b.HasIndex("FlatId");
+
+                    b.ToTable("FlatAmentities");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>
@@ -398,6 +444,25 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("RoomCatagory");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.FlatAmentity", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.Amentity", "Amentity")
+                        .WithMany("Flats")
+                        .HasForeignKey("AmentityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hotel.Core.Entities.Flat", "Flat")
+                        .WithMany("Amentities")
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Amentity");
+
+                    b.Navigation("Flat");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.GallaryImage", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.GallaryCatagory", "GallaryCatagory")
@@ -442,8 +507,15 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("TeamMember");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.Amentity", b =>
+                {
+                    b.Navigation("Flats");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.Flat", b =>
                 {
+                    b.Navigation("Amentities");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Images");

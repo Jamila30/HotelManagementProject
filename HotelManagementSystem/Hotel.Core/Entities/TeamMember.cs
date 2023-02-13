@@ -8,8 +8,6 @@ namespace Hotel.Core.Entities
 		public string? Position { get; set; }
 		public string? Image { get; set; }
 		
-
-
 		//Navigation Property
 		public TeamMemberInformation? TeamMemberInformation { get; set; }
 

@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AmentityDTOs;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

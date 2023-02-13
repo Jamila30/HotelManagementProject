@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceImageDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class ServiceImageService : IServiceImageService
 	{
@@ -64,9 +62,29 @@ namespace Hotel.Business.Services.Implementations
 			}
 			ServiceImage serviceImage = new()
 			{
+				ServiceOffer= serviceOffer,
 				ServiceOfferId = serviceId,
 				Image = image,
 			};
+			if(serviceOffer.ServiceImages !=null)
+			{
+				serviceOffer.ServiceImages.Add(serviceImage);
+			}
+			string last;
+			string next;
+			bool check = false;
+			var serviceImages = _repository.GetAll().Include(x => x.ServiceOffer).ToList();
+			foreach (var item in serviceImages)
+			{
+				if (item.Image != null && serviceImage.Image != null)
+				{
+					last = item.Image[36..];
+					next = serviceImage.Image[36..]; ;
+					if (last.Equals(next)) { check = true; }
+				}
+			
+			}
+			if (check == true) throw new RepeatedImageException("this image exists ");
 			await _repository.Create(serviceImage);
 			await _repository.SaveChanges();
 		}
@@ -81,9 +99,10 @@ namespace Hotel.Business.Services.Implementations
 		//}
 		public async Task UpdateAsync(int id, UpdateServiceImageDto entity)
 		{
-			if (id != entity.Id) throw new NotFoundException("Id didnt match each other");
-			var imageService = _repository.GetAll().FirstOrDefault(x => x.Id == id);
+			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other");
+			var imageService = _repository.GetAll().Include(x => x.ServiceOffer).FirstOrDefault(x => x.Id == id);
 			if (imageService is null) throw new NotFoundException("There is no Image for update");
+			string fileName = string.Empty;
 			if (entity.Image != null)
 			{
 				if (!entity.Image.CheckFileSize(100))
@@ -96,15 +115,30 @@ namespace Hotel.Business.Services.Implementations
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				string fileName = string.Empty;
 				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "serviceImage");
 				imageService.Image = fileName;
-
 			}
+
 			var offer = _offerRepo.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
 			if (offer is null) throw new BadRequestException("there is no Service for set Image for this ServiceOfferId");
 			imageService.ServiceOfferId = entity.ServiceOfferId;
 
+			string last;
+			string next;
+			bool checkImage = false;
+			var serviceImages = _repository.GetAll().Include(x => x.ServiceOffer).ToList();
+			foreach (var item in serviceImages)
+			{
+				if (item.Image != null && imageService.Image!=null  )
+				{
+					last = item.Image[36..];
+					next = imageService.Image[36..];
+					if (last.Equals(next)&& item.Id!=imageService.Id) { checkImage = true; }
+
+				}
+			}
+			if (checkImage == true) throw new RepeatedImageException("this image exists");
+			
 			_repository.Update(imageService);
 			await _offerRepo.SaveChanges();
 		}

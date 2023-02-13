@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.RoomImageDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class FlatService : IFlatService
 	{
@@ -31,16 +29,21 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<FlatDto?> GetByIdAsync(int id)
 		{
-			var flat = await _repository.GetByIdAsync(id);
+			var flat = await _repository.GetAll().Include(x=>x.Amentities).FirstOrDefaultAsync(x=>x.Id== id);
 			var flatDto = _mapper.Map<FlatDto>(flat);
 			return flatDto;
 		}
 
 		public async Task Create(CreateFlatDto entity)
 		{
-			var room = _roomCatagoryRepo.GetAll().FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
+			var room = _roomCatagoryRepo.GetAll().Include(x=>x.Flats).FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
 			if (room is null) throw new IncorrectIdException("there is no catagory with this id for to set");
 			var flat = _mapper.Map<Flat>(entity);
+			flat.RoomCatagory= room;
+			if (room.Flats != null)
+			{
+				room.Flats.Add(flat);
+			}
 			await _repository.Create(flat);
 			await _repository.SaveChanges();
 

@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using System.Xml.Linq;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class GallaryCatagoryService : IGallaryCatagoryService
 	{
@@ -27,7 +29,7 @@
 
 		public async Task<GallaryCatagoryDto?> GetByIdAsync(int id)
 		{
-			var catagory = await _repository.GetByIdAsync(id);
+			var catagory = await _repository.GetAll().Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == id);
 			if (catagory is null) throw new NotFoundException("Element not found");
 			var catagoryDto = _mapper.Map<GallaryCatagoryDto>(catagory);
 			return catagoryDto;
@@ -35,10 +37,7 @@
 
 		public async Task Create(CreateCatagoryDto entity)
 		{
-			GallaryCatagory gallaryCatagory = new()
-			{
-				Name = entity.Name,
-			};
+			GallaryCatagory gallaryCatagory = new() { Name = entity.Name };
 			var sameNameList = _repository.GetByCondition(x => x.Name == entity.Name).ToList();
 			if (sameNameList.Count >= 1) throw new RepeatedSameCatagoryNameException("This catagory name exist");
 			await _repository.Create(gallaryCatagory);

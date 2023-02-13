@@ -1,9 +1,4 @@
-﻿using Hotel.Business.DTOs.RoomImageDTOs;
-using Hotel.Core.Entities;
-using Hotel.DataAccess.Repositories.Interfaces;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class RoomImageService : IRoomImageService
 	{
@@ -51,10 +46,13 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task Create(CreateRoomImageDto entity)
 		{
-			RoomImage roomImage = new();
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this Flat Id");
-			roomImage.FlatId = entity.FlatId;
+			RoomImage roomImage = new()
+			{
+				Flat = flat,
+				FlatId = entity.FlatId,
+			};
 			if (entity.Image != null)
 			{
 				if (!entity.Image.CheckFileSize(100))
@@ -66,12 +64,15 @@ namespace Hotel.Business.Services.Implementations
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
-
 				string fileName = string.Empty;
 				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "roomImage");
 				roomImage.Image = fileName;
-
 			}
+			if (flat.Images != null)
+			{
+				flat.Images.Add(roomImage);
+			}
+
 			string last;
 			string next;
 			bool check = false;
@@ -89,12 +90,11 @@ namespace Hotel.Business.Services.Implementations
 				{
 					checkCatagory = true;
 				}
-
+				if (check != checkCatagory) { check = false; checkCatagory = false; }
 			}
-			if (check==true && checkCatagory==true) throw new RepeatedImageException("this image exist in another catagory");
+			if (check == true && checkCatagory == true) throw new RepeatedImageException("this image exists for this flat");
 			await _repository.Create(roomImage);
 			await _repository.SaveChanges();
-
 		}
 
 		public async Task UpdateAsync(int id, UpdateRoomImageDto entity)
@@ -116,7 +116,7 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "roomImage");
-				//	roomImage.Image = fileName;
+				roomImage.Image = fileName;
 			}
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this Flat Id");
@@ -127,19 +127,19 @@ namespace Hotel.Business.Services.Implementations
 			var roomList = _repository.GetAll().Include(x => x.Flat).ToList();
 			foreach (var item in roomList)
 			{
-				if (item.Image != null && item.Flat != null && item.Flat.RoomCatagory != null)
+				if (item.Image != null && item.Flat != null && roomImage.Image != null)
 				{
 					last = item.Image[36..];
-					next = fileName[36..];
-					if (last.Equals(next)) { checkImage = true; }
-					
+					next = roomImage.Image[36..];
+					if (last.Equals(next) && item.Id != roomImage.Id) { checkImage = true; }
+
 				}
 				if (item.FlatId == entity.FlatId)
 				{
 					checkCatagory = true;
 				}
 			}
-			if (checkImage==true && checkCatagory ==true) throw new RepeatedImageException("this image exist in another catagory");
+			if (checkImage == true && checkCatagory == true) throw new RepeatedImageException("this image exist in another catagory");
 			roomImage.FlatId = entity.FlatId;
 			_repository.Update(roomImage);
 			await _repository.SaveChanges();

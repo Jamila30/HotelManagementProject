@@ -59,7 +59,7 @@ namespace Hotel.DataAccess.Contexts
 
 			#endregion
 
-			#region many-to-many relationship between Flat and Amentity
+			#region many-to-many relationship between Flat and Amentity and FlatAmentity
 			modelBuilder.Entity<FlatAmentity>()
 				.HasOne(fa => fa.Flat)
 				.WithMany(f => f.Amentities)
@@ -69,11 +69,13 @@ namespace Hotel.DataAccess.Contexts
 				.WithMany(a => a.Flats)
 				.HasForeignKey(fa => fa.AmentityId);
 			modelBuilder.Entity<FlatAmentity>()
-				.HasKey(fa => new 
+				.HasKey(fa => new
 				{
+					fa.Id,
 					fa.FlatId,
 					fa.AmentityId
 				});
+				
 			#endregion
 		}
 

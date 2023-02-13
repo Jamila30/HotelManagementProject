@@ -2,7 +2,10 @@
 {
 	public class ServiceOffer:IEntity
 	{
-		
+		public ServiceOffer()
+		{
+			ServiceImages=new HashSet<ServiceImage>();
+		}
 		public int Id { get; set; }
 		public string? Title { get; set; }
 		public string? Description { get; set; }

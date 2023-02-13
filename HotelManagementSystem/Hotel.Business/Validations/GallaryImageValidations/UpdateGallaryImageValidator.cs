@@ -20,8 +20,6 @@ namespace Hotel.Business.Validations.GallaryImageValidations
 					contex.AddFailure("Enter true Id format");
 				}
 			});
-			RuleFor(x => x.Image)
-				.NotEmpty();
 			RuleFor(x => x.GallaryCatagoryId)
 				.NotEmpty()
 				.NotNull();

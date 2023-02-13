@@ -1,9 +1,4 @@
 ﻿using Hotel.Business.DTOs.GallaryImageDTOs;
-using Hotel.Business.DTOs.ServiceImageDTOs;
-using Hotel.Business.Exceptions;
-using Hotel.Core.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.UI.Controllers
 {
@@ -105,7 +100,8 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				throw;
+				//return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
@@ -134,6 +130,11 @@ namespace Hotel.UI.Controllers
 				return BadRequest(ex.Message);
 			}
 			catch (NotFoundException ex)
+			{
+
+				return NotFound(ex.Message);
+			}
+			catch (RepeatedImageException ex)
 			{
 
 				return NotFound(ex.Message);

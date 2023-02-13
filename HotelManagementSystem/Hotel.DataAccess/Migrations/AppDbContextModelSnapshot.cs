@@ -45,7 +45,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amentities", (string)null);
+                    b.ToTable("Amentities");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Comment", b =>
@@ -81,7 +81,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasIndex("FlatId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Flat", b =>
@@ -123,25 +123,27 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasIndex("RoomCatagoryId");
 
-                    b.ToTable("Flats", (string)null);
+                    b.ToTable("Flats");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.FlatAmentity", b =>
                 {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("FlatId")
                         .HasColumnType("int");
 
                     b.Property<int>("AmentityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("FlatId", "AmentityId");
+                    b.HasKey("Id", "FlatId", "AmentityId");
 
                     b.HasIndex("AmentityId");
 
-                    b.ToTable("FlatAmentities", (string)null);
+                    b.HasIndex("FlatId");
+
+                    b.ToTable("FlatAmentities");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>
@@ -159,7 +161,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GallaryCatagories", (string)null);
+                    b.ToTable("GallaryCatagories");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.GallaryImage", b =>
@@ -181,7 +183,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasIndex("GallaryCatagoryId");
 
-                    b.ToTable("GallaryImages", (string)null);
+                    b.ToTable("GallaryImages");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.NearPlace", b =>
@@ -208,7 +210,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NearPlaces", (string)null);
+                    b.ToTable("NearPlaces");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.RoomCatagory", b =>
@@ -226,7 +228,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomCatagories", (string)null);
+                    b.ToTable("RoomCatagories");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.RoomImage", b =>
@@ -248,7 +250,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasIndex("FlatId");
 
-                    b.ToTable("RoomImages", (string)null);
+                    b.ToTable("RoomImages");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.ServiceImage", b =>
@@ -270,7 +272,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasIndex("ServiceOfferId");
 
-                    b.ToTable("ServiceImages", (string)null);
+                    b.ToTable("ServiceImages");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.ServiceOffer", b =>
@@ -299,7 +301,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceOffers", (string)null);
+                    b.ToTable("ServiceOffers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.SliderHome", b =>
@@ -326,7 +328,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SliderHomes", (string)null);
+                    b.ToTable("SliderHomes");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.TeamMember", b =>
@@ -353,7 +355,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TeamMembers", (string)null);
+                    b.ToTable("TeamMembers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.TeamMemberInformation", b =>
@@ -388,7 +390,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TeamMemberInformations", (string)null);
+                    b.ToTable("TeamMemberInformations");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.WhyUs", b =>
@@ -415,7 +417,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WhyUss", (string)null);
+                    b.ToTable("WhyUss");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Comment", b =>

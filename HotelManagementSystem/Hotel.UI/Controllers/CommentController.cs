@@ -1,7 +1,4 @@
-﻿using Hotel.Business.DTOs.CommentDTOs;
-using Hotel.Business.DTOs.FlatDTOs;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

@@ -27,7 +27,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<RoomCatagoryDto?> GetByIdAsync(int id)
 		{
-			var catagory = await _repository.GetByIdAsync(id);
+			var catagory = await _repository.GetAll().Include(x=>x.Flats).FirstOrDefaultAsync(x=>x.Id==id);
 			var catagoryDto = _mappper.Map<RoomCatagoryDto>(catagory);
 			return catagoryDto;
 		}

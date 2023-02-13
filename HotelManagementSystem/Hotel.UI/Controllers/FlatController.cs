@@ -1,7 +1,4 @@
-﻿using Hotel.Business.DTOs.FlatDTOs;
-using Hotel.Business.Validations.FlatValidations;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -57,7 +54,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpGet("searchBedCount/{count}")]
-		public async Task<IActionResult> GetUntilPrice(int count)
+		public async Task<IActionResult> GetByBedCount(int count)
 		{
 			try
 			{

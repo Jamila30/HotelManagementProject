@@ -60,7 +60,7 @@
 		public async Task UpdateAsync(int id, UpdateAmentityDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id did match another");
-			var amentity = _repository.GetAll().FirstOrDefault(x => x.Id == entity.Id);
+			var amentity = await _repository.GetByIdAsync(id);
 			if (amentity is null) throw new NotFoundException("there is no amentity to update");
 			if (entity.Image != null)
 			{
@@ -77,9 +77,11 @@
 				amentity.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "amentityImage");
 
 			}
-			var result = _mapper.Map<Amentity>(entity);
+			amentity.Title = entity.Title;
+			amentity.Description = entity.Description;
 
-			_repository.Update(result);
+
+			_repository.Update(amentity);
 			await _repository.SaveChanges();
 		}
 		public async Task Delete(int id)
