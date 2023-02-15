@@ -22,6 +22,7 @@
 			{
 				return NotFound(ex.Message);
 			}
+			
 		}
 
 		[HttpGet("{id}")]
@@ -36,21 +37,27 @@
 			{
 				return NotFound(ex.Message);
 			}
-
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
 		}
 		[HttpGet("untilPrice/{price}")]
 		public async Task<IActionResult> GetUntilPrice(float price)
 		{
 			try
 			{
-				var slider = await _flatService.GetByCondition(x=>x.Price<price);
+				var slider = await _flatService.GetByCondition(x => x.Price < price);
 				return Ok(slider);
 			}
 			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
 			}
-
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
 		}
 
 		[HttpGet("searchBedCount/{count}")]
@@ -58,14 +65,17 @@
 		{
 			try
 			{
-				var slider = await _flatService.GetByCondition(x => x.BedCount==count);
+				var slider = await _flatService.GetByCondition(x => x.BedCount == count);
 				return Ok(slider);
 			}
 			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
 			}
-
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
 		}
 
 		[HttpGet("searchForAdultsCount/{fromCount}")]
@@ -73,14 +83,17 @@
 		{
 			try
 			{
-				var slider = await _flatService.GetByCondition(x => x.Adults >=fromCount);
+				var slider = await _flatService.GetByCondition(x => x.Adults >= fromCount);
 				return Ok(slider);
 			}
 			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
 			}
-
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
 		}
 
 		[HttpPost]
@@ -100,12 +113,12 @@
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
-		[HttpPost("AddAmentityWithId")]
-		public async Task<IActionResult>  AddAmentity(int amentityId, int flatId)
+		[HttpPost("AddAmentityWithFlatId")]
+		public async Task<IActionResult> AddAmentityToFlat(int flatId,int amentityId)
 		{
 			try
 			{
-				await _flatService.AddAmentity(amentityId, flatId);
+				await _flatService.AddAmentityToFlat(amentityId, flatId);
 				return Ok("Created");
 			}
 			catch (NotFoundException ex)
@@ -122,7 +135,6 @@
 				//return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
-
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateFlatDto updateFlat)
 		{
@@ -149,6 +161,8 @@
 		}
 
 
+
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
@@ -167,5 +181,44 @@
 
 			}
 		}
+
+		[HttpPut("UpdateAmentityWithFlatId")]
+		public async Task<IActionResult> UpdateAmentityForFlatID(int flatId,int amentityId,int newAmentityId)
+		{
+			try
+			{
+				await _flatService.UpdateAmentityOfFlat(amentityId,newAmentityId, flatId);
+				return Ok("Updated");
+			}
+			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				throw;
+				//return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
+		}
+
+		[HttpDelete("DeleteAmentityForFlatId")]
+		public async Task<IActionResult> DeleteAmentityFromFlat(int flatId, int amentityId)
+		{
+			try
+			{
+				await _flatService.DeleteAmentityFromFlat(amentityId, flatId);
+				return Ok("Deleted");
+			}
+			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				throw;
+				//return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
+		}
+
 	}
 }

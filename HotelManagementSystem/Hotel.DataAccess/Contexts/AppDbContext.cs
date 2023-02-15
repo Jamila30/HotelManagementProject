@@ -1,8 +1,6 @@
-﻿
-
-namespace Hotel.DataAccess.Contexts
+﻿namespace Hotel.DataAccess.Contexts
 {
-	public class AppDbContext : DbContext
+	public class AppDbContext : IdentityDbContext<AppUser>
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 		{

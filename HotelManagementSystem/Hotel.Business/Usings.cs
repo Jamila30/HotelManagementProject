@@ -24,3 +24,10 @@ global using Hotel.Business.DTOs.FlatDTOs;
 global using Hotel.Business.DTOs.CommentDTOs;
 global using Hotel.Business.DTOs.AmentityDTOs;
 global using Hotel.Business.DTOs.RoomImageDTOs;
+global using Hotel.Business.Services.Interfaces.ForAuthorizations;
+global using Hotel.Business.DTOs.AuthorizationDTOs;
+global using Hotel.Business.Utilities.Enums;
+global using Hotel.Core.Entities.Identity;
+global using Microsoft.AspNetCore.Identity;
+global using System.Web;
+

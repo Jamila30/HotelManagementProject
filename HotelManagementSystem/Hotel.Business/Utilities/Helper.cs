@@ -1,6 +1,4 @@
-﻿
-
-namespace Hotel.Business.Utilities
+﻿namespace Hotel.Business.Utilities
 {
 	public static class Helper
 	{
@@ -19,4 +17,6 @@ namespace Hotel.Business.Utilities
 			return false;
 		}
 	}
+
+
 }

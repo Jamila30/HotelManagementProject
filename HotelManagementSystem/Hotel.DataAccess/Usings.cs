@@ -8,3 +8,9 @@ global using Hotel.DataAccess.Contexts;
 global using Hotel.DataAccess.Repositories.Interfaces;
 global using System.Linq.Expressions;
 global using Hotel.Core.Interfaces;
+global using Hotel.Core.Entities.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.Extensions.Configuration;
+global using Hotel.Business.Utilities.Enums;
+

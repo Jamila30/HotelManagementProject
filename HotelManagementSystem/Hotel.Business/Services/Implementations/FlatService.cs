@@ -30,42 +30,90 @@ namespace Hotel.Business.Services.Implementations
 			var lists = _mapper.Map<List<FlatDto>>(list);
 			return lists;
 		}
-
 		public async Task<FlatDto?> GetByIdAsync(int id)
 		{
-			var flat = await _repository.GetAll().Include(x=>x.Amentities).FirstOrDefaultAsync(x=>x.Id== id);
+			var flat = await _repository.GetByIdAsync(id);
+			if (flat is null) throw new NotFoundException("There is no flat for this id");
 			var flatDto = _mapper.Map<FlatDto>(flat);
 			return flatDto;
 		}
-		public async Task AddAmentity( int amentityId,int flatId)
+		
+		public async Task AddAmentityToFlat(int amentityId, int flatId)
 		{
 			var amentity = await _amentRepo.GetByIdAsync(amentityId);
 			if (amentity is null) throw new NotFoundException("there is not amentity with this id");
-			var flat = await _repository.GetByIdAsync(flatId);
-			if (flat is null) throw new NotFoundException("there is not amentity with this id");
-
-			if (flat.Amentities != null && amentity.Flats != null) 
+			var flat = await _repository.GetAll().Include(x => x.Amentities).FirstOrDefaultAsync(x => x.Id == flatId);
+			if (flat is null) throw new NotFoundException("there is not flat with this id");
+			if (flat.Amentities != null)
 			{
-				flat.Amentities.Add(new FlatAmentity() { Amentity = amentity });
-			}
-			var crossListForFlatId=_repository.GetAll().Include(x=>x.Amentities).FirstOrDefault(x=>x.Id==flatId);
-			var list = _repository.GetAll().Include(x => x.Amentities).FirstOrDefault(x => (x.Id == flatId));
-			if (list != null && list.Amentities != null)
-			{
-				foreach (var item in list.Amentities)
+				foreach (var item in flat.Amentities)
 				{
 					if (item.AmentityId == amentity.Id) throw new RepeatedChoiceException("This option already exist");
 				}
 			}
+
+			if (flat.Amentities != null && amentity.Flats != null)
+			{
+				flat.Amentities.Add(new FlatAmentity() { Amentity = amentity });
+			}
+
 			_repository.Update(flat);
+			await _repository.SaveChanges();
+		}
+
+		public async Task DeleteAmentityFromFlat(int amentityId, int flatId)
+		{
+			var amentity = await _amentRepo.GetByIdAsync(amentityId);
+			if (amentity is null) throw new NotFoundException("there is not amentity with this id");
+
+			var flat = await _repository.GetAll().Include(x => x.Amentities).FirstOrDefaultAsync(x => x.Id == flatId);
+			if (flat is null) throw new NotFoundException("there is not flat with this id");
+			bool check=false;
+			if (flat.Amentities is null) throw new NotFoundException("there is not any amentity for delete");
+			foreach (var item in flat.Amentities)
+			{
+				if (item.AmentityId == amentity.Id)
+				{
+					check = true;
+					flat.Amentities.Remove(item);
+				}
+			}
+			if (check == false) throw new NotFoundException("there is not suitable amentity of flat");
+
+			await _repository.SaveChanges();
+		}
+		public async Task UpdateAmentityOfFlat(int amentityId, int newAmentityId, int flatId)
+		{
+			var amentity = await _amentRepo.GetByIdAsync(amentityId);
+			if (amentity is null) throw new NotFoundException("there is not amentity with this id");
+			var NewAmentity = await _amentRepo.GetByIdAsync(newAmentityId);
+			if (NewAmentity is null) throw new NotFoundException("there is not new amentity with this id");
+			var flat = await _repository.GetAll().Include(x => x.Amentities).FirstOrDefaultAsync(x => x.Id == flatId);
+			if (flat is null) throw new NotFoundException("there is not flat with this id");
+			bool check = false;
+			if (flat.Amentities is null) throw new NotFoundException("there is not any amentity for delete");
+			foreach (var item in flat.Amentities)
+			{
+				if (item.AmentityId == amentity.Id)
+				{
+					check = true;
+					flat.Amentities.Remove(item);
+				}
+			}
+			if (check == false) throw new NotFoundException("there is not suitable amentity of this flat");
+
+			if (flat.Amentities != null && amentity.Flats != null)
+			{
+				flat.Amentities.Add(new FlatAmentity() { Amentity = NewAmentity });
+			}
 			await _repository.SaveChanges();
 		}
 		public async Task Create(CreateFlatDto entity)
 		{
-			var room = _roomCatagoryRepo.GetAll().Include(x=>x.Flats).FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
+			var room = _roomCatagoryRepo.GetAll().Include(x => x.Flats).FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
 			if (room is null) throw new IncorrectIdException("there is no catagory with this id for to set");
 			var flat = _mapper.Map<Flat>(entity);
-			flat.RoomCatagory= room;
+			flat.RoomCatagory = room;
 			if (room.Flats != null)
 			{
 				room.Flats.Add(flat);
@@ -79,8 +127,8 @@ namespace Hotel.Business.Services.Implementations
 			if (id != entity.Id) throw new IncorrectIdException("id didt match another");
 			var flat = _repository.GetByCondition(x => x.Id == id);
 			if (flat is null) throw new NotFoundException("there is no flat to update");
-			var roomCatagory=_repository.GetAll().FirstOrDefault(x => x.RoomCatagoryId == entity.RoomCatagoryId);
-			if(roomCatagory is null) throw new NotFoundException("there is no catagory with this id to update");
+			var roomCatagory = _repository.GetAll().FirstOrDefault(x => x.RoomCatagoryId == entity.RoomCatagoryId);
+			if (roomCatagory is null) throw new NotFoundException("there is no catagory with this id to update");
 			var newFlat = _mapper.Map<Flat>(entity);
 			_repository.Update(newFlat);
 			await _repository.SaveChanges();

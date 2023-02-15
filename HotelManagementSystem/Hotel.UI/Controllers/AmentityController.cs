@@ -63,6 +63,24 @@
 				return StatusCode(500);
 			}
 		}
+		[HttpGet("GetAllAmentitiesByFlatID/{flatId}")]
+		public async Task<ActionResult> GetAllFlatAmentity(int flatId)
+		{
+			try
+			{
+				var list = await _amentityService.GetAllAmentitiesByFlatId(flatId);
+				return Ok(list);
+			}
+			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				throw;
+				//return StatusCode(500);
+			}
+		}
 
 		[HttpPost]
 		public async Task<ActionResult> Post([FromForm] CreateAmentityDto createAmentity)
