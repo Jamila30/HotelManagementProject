@@ -1,7 +1,7 @@
 ﻿
 namespace Hotel.DataAccess.Repositories.Interfaces
 {
-	public interface IRepository<T> where T : class,IEntity,new()
+	public interface IRepository<T> where T : class,ITableEntity,new()
 	{
 		IQueryable<T> GetAll();
 		IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression);

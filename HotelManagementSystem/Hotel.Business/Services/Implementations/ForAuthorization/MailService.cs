@@ -1,11 +1,4 @@
-﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-using Hotel.Business.Services.Interfaces.ForAuthorizations;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
-
-namespace Hotel.Business.Services.Implementations.ForAuthorization
+﻿namespace Hotel.Business.Services.Implementations.ForAuthorization
 {
 	public class MailService : IMailService
 	{

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230215044843_add-migration AppUser")]
-    partial class addmigrationAppUser
+    [Migration("20230215205805_AppUser")]
+    partial class AppUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

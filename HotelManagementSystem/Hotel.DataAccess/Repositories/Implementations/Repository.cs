@@ -1,7 +1,7 @@
 ﻿
 namespace Hotel.DataAccess.Repositories.Implementations
 {
-	public class Repository<T> : IRepository<T> where T : class, IEntity, new()
+	public class Repository<T> : IRepository<T> where T : class,ITableEntity, new()
 	{
 		private readonly AppDbContext _context;
 		private readonly DbSet<T> _table;

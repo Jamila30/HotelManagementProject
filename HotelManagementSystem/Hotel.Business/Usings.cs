@@ -30,4 +30,12 @@ global using Hotel.Business.Utilities.Enums;
 global using Hotel.Core.Entities.Identity;
 global using Microsoft.AspNetCore.Identity;
 global using System.Web;
+global using Hotel.Business.DTOs.AccountsDTOs;
+global using Hotel.DataAccess.Contexts;
+global using Hotel.Business.Helper_Services.Interfaces;
+global using Microsoft.Extensions.Configuration;
+global using MailKit.Net.Smtp;
+global using MailKit.Security;
+global using Microsoft.Extensions.Options;
+global using MimeKit;
 

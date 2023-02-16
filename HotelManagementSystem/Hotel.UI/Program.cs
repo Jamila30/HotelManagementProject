@@ -1,9 +1,4 @@
-using Hotel.Business.Services.Implementations.ForAuthorization;
-using Hotel.Business.Services.Interfaces.ForAuthorizations;
-using Hotel.Business.Utilities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Hotel.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +37,7 @@ builder.Services.AddScoped<IRoomImageRepository, RoomImageRepository>();
 builder.Services.AddScoped<IRoomCatagoryRepository, RoomCatagoryRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IAmentityRepository, AmentityRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 
 
@@ -61,6 +57,9 @@ builder.Services.AddScoped<IRoomCatagoryService, RoomCatagoryService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IAmentityService, AmentityService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<ITokenCreatorService,TokenCreatorService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);

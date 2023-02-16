@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hotel.DataAccess.Migrations
 {
-    public partial class addmigrationAppUser : Migration
+    public partial class AppUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

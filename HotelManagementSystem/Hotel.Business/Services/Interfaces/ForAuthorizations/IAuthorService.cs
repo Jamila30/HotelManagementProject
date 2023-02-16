@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-
-namespace Hotel.Business.Services.Interfaces.ForAuthorizations
+﻿namespace Hotel.Business.Services.Interfaces.ForAuthorizations
 {
     public interface IAuthorService
     {
