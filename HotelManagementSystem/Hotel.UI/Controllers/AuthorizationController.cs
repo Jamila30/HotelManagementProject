@@ -9,9 +9,9 @@ namespace Hotel.UI.Controllers
 	public class AuthorizationController : ControllerBase
 	{
 
-		private readonly IAuthorService _authorizationService;
+		private readonly IAutService _authorizationService;
 		private readonly IMailService _mailService;
-		public AuthorizationController(IAuthorService authorizationService, IMailService mailService)
+		public AuthorizationController(IAutService authorizationService, IMailService mailService)
 		{
 			_authorizationService = authorizationService;
 			_mailService = mailService;

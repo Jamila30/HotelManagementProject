@@ -39,18 +39,22 @@
 
 		}
 
-		[HttpGet("searchEmail/{email}")]
-		public async Task<IActionResult> GetByEmail(string email)
+		[HttpGet("searchUserId/{userId}")]
+		public async Task<IActionResult> GetByUserId(string userId)
 		{
 			try
 			{
 				
-				var comment = await _commentService.GetByEmail(email);
+				var comment = await _commentService.GetByCondition(x=>x.UserId==userId);
 				return Ok(comment);
 			}
 			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 
 		}
@@ -67,6 +71,10 @@
 			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 
 		}

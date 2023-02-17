@@ -14,7 +14,8 @@ namespace Hotel.Business.Validations.AuthorizationValidations
 				.NotNull();
 			RuleFor(x => x.ToEmail)
 				.NotEmpty()
-				.NotNull();
+				.NotNull()
+				.EmailAddress();
 		}
 	}
 }

@@ -35,7 +35,7 @@
 			var account = _mapper.Map<AppUser>(createAccount);
 			var identityResult=await _userManager.CreateAsync(account);
 			if (!identityResult.Succeeded) throw new BadRequestException("Account didnt created");
-			await _userManager.AddToRoleAsync(account, Roles.User.ToString());
+			await _userManager.AddToRoleAsync(account, Roles.Member.ToString());
 
 		}
 		public async Task<bool> BlockAccount(BlockAccountDto blockAccount)
@@ -43,7 +43,7 @@
 			var user = await _userManager.FindByEmailAsync(blockAccount.Email);
 			if (user is null) throw new NotFoundException("There is no account with this email");
 
-			var lockUser = await _userManager.SetLockoutEnabledAsync(user, true);
+			var lockUser = await _userManager.SetLockoutEnabledAsync(user, false);
 			if (!lockUser.Succeeded) throw new BadRequestException("problem happened during lock user");
 
 			var lockDate = await _userManager.SetLockoutEndDateAsync(user, blockAccount.EndDate);
@@ -55,7 +55,7 @@
 			var user = await _userManager.FindByEmailAsync(justEmail.Email);
 			if (user is null) throw new NotFoundException("There is not account with this email");
 
-			var lockUser = await _userManager.SetLockoutEnabledAsync(user, false);
+			var lockUser = await _userManager.SetLockoutEnabledAsync(user, true);
 			if (!lockUser.Succeeded) throw new BadRequestException("problem happened during unlock user");
 			DateTime date = DateTime.Now - TimeSpan.FromMinutes(1);
 			var lockDate = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now - TimeSpan.FromMinutes(1));

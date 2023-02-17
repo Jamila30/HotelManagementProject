@@ -1,11 +1,11 @@
 ﻿namespace Hotel.Business.Services.Implementations.ForAuthorization
 {
-	public class AuthorService : IAuthorService
+	public class AuthService : IAutService
 	{
 		private readonly UserManager<AppUser> _userManager;
 		private readonly IConfiguration _configuration;
 		private readonly ITokenCreatorService _tokenCreator;
-		public AuthorService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenCreatorService tokenCreator)
+		public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenCreatorService tokenCreator)
 		{
 			_userManager = userManager;
 			_configuration = configuration;
@@ -26,7 +26,7 @@
 			};
 
 			var identityResult = await _userManager.CreateAsync(user, register.Password);
-			await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+			await _userManager.AddToRoleAsync(user, Roles.Member.ToString());
 
 
 			if (!identityResult.Succeeded) throw new BadRequestException("Register didnt successfully");

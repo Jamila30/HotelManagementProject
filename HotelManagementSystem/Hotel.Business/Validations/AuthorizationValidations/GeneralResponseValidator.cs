@@ -11,7 +11,8 @@ namespace Hotel.Business.Validations.AuthorizationValidations
 				.NotNull();
 			RuleFor(x => x.Email)
 				.NotEmpty()
-				.NotNull();
+				.NotNull()
+				.EmailAddress();
 			RuleFor(x => x.UserId)
 				.NotEmpty()
 				.NotNull();

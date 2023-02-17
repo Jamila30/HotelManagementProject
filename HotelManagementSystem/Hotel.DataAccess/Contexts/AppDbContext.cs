@@ -57,6 +57,13 @@
 
 			#endregion
 
+			#region 1-to-many relationship between Comment And AppUser
+			modelBuilder.Entity<Comment>()
+				.HasOne(x => x.User)
+				.WithMany(x =>x.Comments)
+				.HasForeignKey(x => x.UserId);
+			#endregion
+			
 			#region many-to-many relationship between Flat and Amentity and FlatAmentity
 			modelBuilder.Entity<FlatAmentity>()
 				.HasOne(fa => fa.Flat)
@@ -90,6 +97,9 @@
 		public DbSet<RoomCatagory> RoomCatagories { get; set; } = null!;
 		public DbSet<Comment> Comments { get; set; } = null!;
 		public DbSet<Amentity>  Amentities { get; set; } = null!;
+		public DbSet<SentQuestion> SentQuestions { get; set; } = null!;
+		public DbSet<FAQ> FAQs { get; set; } = null!;
+
 
 	}
 }

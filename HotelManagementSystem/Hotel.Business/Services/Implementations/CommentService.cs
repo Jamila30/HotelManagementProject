@@ -5,11 +5,13 @@
 		private readonly ICommentRepository _repository;
 		private readonly IMapper _mapper;
 		private readonly IFlatRepository _flatRepo;
-		public CommentService(ICommentRepository repository, IMapper mapper, IFlatRepository flatRepo)
+		private readonly UserManager<AppUser> _userManager;
+		public CommentService(ICommentRepository repository, IMapper mapper, IFlatRepository flatRepo, UserManager<AppUser> userManager)
 		{
 			_repository = repository;
 			_mapper = mapper;
 			_flatRepo = flatRepo;
+			_userManager = userManager;
 		}
 
 		public async Task<List<CommentDto>> GetAllAsync()
@@ -37,12 +39,17 @@
 		{
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this id for create");
+			var user = await _userManager.FindByIdAsync(entity.UserId);
+			if (user is null) throw new NotFoundException("There is no user with this id for create");
+
 			var comment = _mapper.Map<Comment>(entity);
 			comment.Created = DateTime.UtcNow;
 			comment.Flat = flat;
-			if (flat.Comments != null)
+			comment.User= user;
+			if (flat.Comments != null&& user.Comments!=null)
 			{
 				flat.Comments.Add(comment);
+				user.Comments.Add(comment);
 			}
 			await _repository.Create(comment);
 			await _repository.SaveChanges();
@@ -52,13 +59,14 @@
 			if (id != entity.Id) throw new IncorrectIdException("id didt match another");
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("There is no flat with this Flat Id");
-
+			var user = await _userManager.FindByIdAsync(entity.UserId);
+			if (user is null) throw new NotFoundException("There is no user with this id for create");
 			var comment = await _repository.GetByIdAsync(id);
 			if (comment is null) throw new NotFoundException("there is no comment  with this id");
 			comment.Id = entity.Id;
 			comment.Name = entity.Name;
 			comment.Opinions = entity.Opinions;
-			comment.Email = entity.Email;
+			comment.UserId = entity.UserId;
 			comment.FlatId = entity.FlatId;
 			_repository.Update(comment);
 			await _repository.SaveChanges();
@@ -72,12 +80,6 @@
 			await _repository.SaveChanges();
 		}
 
-		public async Task<List<CommentDto>> GetByEmail(string email)
-		{
-			var comment = await _repository.GetByCondition(x => x.Email == email).ToListAsync();
-			var commentDto = _mapper.Map<List<CommentDto>>(comment);
-			return commentDto;
 
-		}
 	}
 }

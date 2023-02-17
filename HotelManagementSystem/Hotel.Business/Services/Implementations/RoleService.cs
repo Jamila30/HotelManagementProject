@@ -7,7 +7,7 @@ namespace Hotel.Business.Services.Implementations
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly UserManager<AppUser> _userManager;
 		private readonly AppDbContext _context;
-		private HashSet<Roles> myRoles=new HashSet<Roles>();
+		private HashSet<Roles> myRoles = new HashSet<Roles>();
 
 		public RoleService(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, AppDbContext context)
 		{
@@ -28,7 +28,7 @@ namespace Hotel.Business.Services.Implementations
 			return roles;
 		}
 
-		public async  Task<List<RoleInfoDto>> GetRoles(string userId)
+		public async Task<List<RoleInfoDto>> GetRoles(string userId)
 		{
 			List<RoleInfoDto> roles = new List<RoleInfoDto>();
 			if (userId is null) throw new BadRequestException("Enter valid user id");
@@ -40,7 +40,7 @@ namespace Hotel.Business.Services.Implementations
 				var roleString = role.ToString();
 				if (roleString != null)
 				{
-					check=await _userManager.IsInRoleAsync(user, roleString);
+					check = await _userManager.IsInRoleAsync(user, roleString);
 					if (check)
 					{
 						var roleId = await _roleManager.GetRoleIdAsync(role);
@@ -54,24 +54,23 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task CreateRole(string roleName)
 		{
-			var existenceCheck=await _roleManager.RoleExistsAsync(roleName);
+			var existenceCheck = await _roleManager.RoleExistsAsync(roleName);
 			if (existenceCheck) throw new NotFoundException("role name already exists ");
-			var identityResult=await _roleManager.CreateAsync(new IdentityRole(roleName));
-			if(!identityResult.Succeeded) throw new BadRequestException($"Failed to create role {roleName}");
+			Helper.Roles.Add(roleName);
 		}
 		public async Task UpdateRole(UpdateRoleDto updateRole)
 		{
 			var oldCheck = await _roleManager.RoleExistsAsync(updateRole.OldRoleName);
 			if (!oldCheck) throw new NotFoundException("old role name doesn't exist");
 			var newCheck = await _roleManager.RoleExistsAsync(updateRole.NewRoleName);
-			if (!newCheck) throw new NotFoundException("new role name doesn't exist");
-
-			foreach (var item in myRoles)
+			if (newCheck) throw new NotFoundException("new role name already exist");
+			if (updateRole.OldRoleName != null && updateRole.NewRoleName != null)
 			{
-				Console.WriteLine(item);
+				Helper.Roles.Remove(updateRole.OldRoleName);
+				Helper.Roles.Add(updateRole.NewRoleName);
 			}
 			
-
+			
 
 		}
 		public Task DeleteRole(string roleName)

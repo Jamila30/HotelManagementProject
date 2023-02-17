@@ -16,7 +16,7 @@
 			}
 			return false;
 		}
+
+		public static HashSet<string> Roles= new HashSet<string>();
 	}
-
-
 }

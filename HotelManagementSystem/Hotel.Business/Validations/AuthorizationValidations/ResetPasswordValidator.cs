@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-
-namespace Hotel.Business.Validations.AuthorizationValidations
+﻿namespace Hotel.Business.Validations.AuthorizationValidations
 {
 	public class ResetPasswordValidator : AbstractValidator<ResetPasswordDto>
 	{
@@ -12,7 +10,7 @@ namespace Hotel.Business.Validations.AuthorizationValidations
 			RuleFor(x => x.NewConfirmedPassword)
 				.NotEmpty()
 				.NotNull()
-				.Equal(x => x.NewPassword).WithMessage("Must be same with Password");
+				.Equal(x => x.NewPassword).WithMessage("Confirmed Password must be same with Password");
 		}
 	}
 }

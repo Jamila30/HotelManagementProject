@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AccountsDTOs;
-
-namespace Hotel.Business.Validations.AccountValidations
+﻿namespace Hotel.Business.Validations.AccountValidations
 {
 	public class UpdateUserRoleValidator:AbstractValidator<UpdateUserRolesDto>
 	{
@@ -8,7 +6,8 @@ namespace Hotel.Business.Validations.AccountValidations
 		{
 			RuleFor(x => x.Email)
 				.NotEmpty()
-				.NotNull();
+				.NotNull()
+				.EmailAddress();
 			RuleFor(x => x.OldRoleName)
 				.NotEmpty()
 				.NotNull();

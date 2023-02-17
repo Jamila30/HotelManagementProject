@@ -9,11 +9,9 @@
 				.NotNull()
 				.MaximumLength(70)
 				.NotEmpty();
-			RuleFor(c => c.Email)
+			RuleFor(c => c.UserId)
 				.NotNull()
-				.NotEmpty()
-				.MaximumLength(70)
-				.EmailAddress();
+				.NotEmpty();
 			RuleFor(c => c.FlatId)
 					.NotNull()
 					.NotEmpty();

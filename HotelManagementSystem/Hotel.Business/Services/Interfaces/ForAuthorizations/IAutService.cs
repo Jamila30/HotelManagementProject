@@ -1,6 +1,6 @@
 ﻿namespace Hotel.Business.Services.Interfaces.ForAuthorizations
 {
-    public interface IAuthorService
+    public interface IAutService
     {
         Task<GeneralResponseDto> RegisterAsync(RegisterDto register);
         Task ConfirmEmail(string token, string userId);

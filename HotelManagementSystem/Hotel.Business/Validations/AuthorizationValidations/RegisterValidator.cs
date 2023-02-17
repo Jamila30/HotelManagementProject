@@ -2,7 +2,7 @@
 
 namespace Hotel.Business.Validations.AuthorizationValidations
 {
-	public class RegisterValidator:AbstractValidator<RegisterDto>
+	public class RegisterValidator : AbstractValidator<RegisterDto>
 	{
 		public RegisterValidator()
 		{
@@ -29,7 +29,7 @@ namespace Hotel.Business.Validations.AuthorizationValidations
 				.NotNull()
 				.MaximumLength(120)
 				.MinimumLength(4);
-			RuleFor(x =>x.Phone)
+			RuleFor(x => x.Phone)
 				.NotEmpty()
 				.NotNull();
 
