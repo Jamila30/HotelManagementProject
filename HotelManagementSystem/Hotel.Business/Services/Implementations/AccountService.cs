@@ -25,7 +25,7 @@
 		public async Task<AppUserDto> GetAccount(string accountId)
 		{
 			if (accountId is null) throw new BadRequestException("Invalid form of user id");
-			var account = await _repository.GetByCondition(x => x.Id == accountId).ToListAsync();
+			var account = await _repository.GetAll().FirstOrDefaultAsync(x=>x.Id==accountId);
 			if (account is null) throw new NotFoundException("there is no account for this id");
 			var user = _mapper.Map<AppUserDto>(account);
 			return user;

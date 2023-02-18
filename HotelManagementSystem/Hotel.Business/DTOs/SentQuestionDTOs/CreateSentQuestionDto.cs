@@ -4,6 +4,5 @@
 	{
 		public string? Question { get; set; }
 		public string? Email { get; set; }
-		public bool? isAnswered { get; set; }
 	}
 }

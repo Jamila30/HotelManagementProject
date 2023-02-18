@@ -53,17 +53,28 @@
 			modelBuilder.Entity<Comment>()
 				.HasOne(c => c.Flat)
 				.WithMany(f => f.Comments)
-				.HasForeignKey(c=>c.FlatId);
+				.HasForeignKey(c => c.FlatId);
 
 			#endregion
 
 			#region 1-to-many relationship between Comment And AppUser
 			modelBuilder.Entity<Comment>()
 				.HasOne(x => x.User)
-				.WithMany(x =>x.Comments)
+				.WithMany(x => x.Comments)
 				.HasForeignKey(x => x.UserId);
 			#endregion
-			
+
+			#region 1-to-1 relationshp between AppUser and UserInfo
+			modelBuilder.Entity<AppUser>()
+				.HasOne(u => u.UserInfo)
+				.WithOne(x => x.AppUser)
+				.HasForeignKey<UserInfo>(x => x.UserId);
+			modelBuilder.Entity<UserInfo>()
+				.HasKey(x => x.Id);
+		
+
+			#endregion
+
 			#region many-to-many relationship between Flat and Amentity and FlatAmentity
 			modelBuilder.Entity<FlatAmentity>()
 				.HasOne(fa => fa.Flat)
@@ -79,7 +90,7 @@
 					fa.FlatId,
 					fa.AmentityId
 				});
-				
+
 			#endregion
 		}
 
@@ -96,9 +107,10 @@
 		public DbSet<RoomImage> RoomImages { get; set; } = null!;
 		public DbSet<RoomCatagory> RoomCatagories { get; set; } = null!;
 		public DbSet<Comment> Comments { get; set; } = null!;
-		public DbSet<Amentity>  Amentities { get; set; } = null!;
+		public DbSet<Amentity> Amentities { get; set; } = null!;
 		public DbSet<SentQuestion> SentQuestions { get; set; } = null!;
 		public DbSet<FAQ> FAQs { get; set; } = null!;
+		public DbSet<UserInfo> UserInfos { get; set; } = null!;
 
 
 	}

@@ -26,7 +26,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{userId}")]
 		public async Task<ActionResult> GetById(string userId)
 		{
 			try

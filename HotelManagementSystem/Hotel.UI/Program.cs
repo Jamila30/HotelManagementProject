@@ -38,6 +38,7 @@ builder.Services.AddScoped<IAmentityRepository, AmentityRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ISentQuestionRepository, SentQuestionRepository>();
 builder.Services.AddScoped<IFAQRepository,FAQRepository>();
+builder.Services.AddScoped<IUserInfoRepository, UserInfoRepository>();
 
 
 
@@ -62,6 +63,7 @@ builder.Services.AddScoped<ITokenCreatorService,TokenCreatorService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ISentQuestionService, SentQuestionService>();
 builder.Services.AddScoped<IFaqService, FaqService>();
+builder.Services.AddScoped<IUserInfoService, UserInfoService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);

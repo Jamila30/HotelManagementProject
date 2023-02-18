@@ -12,8 +12,6 @@ namespace Hotel.Business.Services.Implementations
 		{
 			_repository = repository;
 			_mapper = mapper;
-			
-			
 		}
 
 		public async Task<List<ServiceOfferDto>> GetAllAsync()

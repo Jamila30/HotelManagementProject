@@ -29,10 +29,6 @@ namespace Hotel.Business.Validations.AuthorizationValidations
 				.NotNull()
 				.MaximumLength(120)
 				.MinimumLength(4);
-			RuleFor(x => x.Phone)
-				.NotEmpty()
-				.NotNull();
-
 		}
 	}
 }

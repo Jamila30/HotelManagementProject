@@ -8,7 +8,6 @@ namespace Hotel.Business.Validations.SentQuestionValidations
 		{
 			RuleFor(x=>x.Email).NotEmpty().NotNull().EmailAddress().MaximumLength(120);
 			RuleFor(x=>x.Question).NotEmpty().NotNull();
-			
 		}
 	}
 }

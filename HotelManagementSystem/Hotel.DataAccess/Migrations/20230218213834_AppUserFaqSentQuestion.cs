@@ -5,10 +5,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hotel.DataAccess.Migrations
 {
-    public partial class AppUser : Migration
+    public partial class AppUserFaqSentQuestion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Email",
+                table: "Comments");
+
+            migrationBuilder.AddColumn<string>(
+                name: "UserId",
+                table: "Comments",
+                type: "nvarchar(450)",
+                nullable: false,
+                defaultValue: "");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -29,6 +40,7 @@ namespace Hotel.DataAccess.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Fullname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -47,6 +59,36 @@ namespace Hotel.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FAQs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FAQs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SentQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAnswered = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SentQuestions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,6 +197,39 @@ namespace Hotel.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    PostCode = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserInfos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,10 +268,28 @@ namespace Hotel.DataAccess.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfos_UserId",
+                table: "UserInfos",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Comments_AspNetUsers_UserId",
+                table: "Comments",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_AspNetUsers_UserId",
+                table: "Comments");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -213,10 +306,35 @@ namespace Hotel.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "FAQs");
+
+            migrationBuilder.DropTable(
+                name: "SentQuestions");
+
+            migrationBuilder.DropTable(
+                name: "UserInfos");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments");
+
+            migrationBuilder.DropColumn(
+                name: "UserId",
+                table: "Comments");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Email",
+                table: "Comments",
+                type: "nvarchar(70)",
+                maxLength: 70,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

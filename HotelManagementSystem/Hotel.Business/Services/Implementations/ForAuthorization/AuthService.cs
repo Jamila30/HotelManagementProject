@@ -20,7 +20,6 @@
 			{
 				Email = register.Email,
 				Fullname = register.Fullname,
-				PhoneNumber = register.Phone,
 				UserName = register.Username,
 				EmailConfirmed = false
 			};

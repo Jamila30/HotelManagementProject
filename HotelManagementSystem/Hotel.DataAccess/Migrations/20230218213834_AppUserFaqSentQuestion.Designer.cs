@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230217045744_SentQuestionsANDFaq")]
-    partial class SentQuestionsANDFaq
+    [Migration("20230218213834_AppUserFaqSentQuestion")]
+    partial class AppUserFaqSentQuestion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -511,6 +511,69 @@ namespace Hotel.DataAccess.Migrations
                     b.ToTable("TeamMemberInformations");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.UserInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserInfos");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.WhyUs", b =>
                 {
                     b.Property<int>("Id")
@@ -764,6 +827,17 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("TeamMember");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.UserInfo", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithOne("UserInfo")
+                        .HasForeignKey("Hotel.Core.Entities.UserInfo", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -837,6 +911,8 @@ namespace Hotel.DataAccess.Migrations
             modelBuilder.Entity("Hotel.Core.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("UserInfo");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.RoomCatagory", b =>

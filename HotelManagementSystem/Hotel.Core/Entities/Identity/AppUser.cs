@@ -11,5 +11,6 @@
 
         //Navigation Property
         public ICollection<Comment>? Comments { get; set; }
+        public UserInfo? UserInfo { get; set; }  
 	}
 }
