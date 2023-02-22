@@ -1,5 +1,8 @@
-﻿namespace Hotel.UI.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace Hotel.UI.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FlatController : ControllerBase

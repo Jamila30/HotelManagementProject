@@ -5,6 +5,7 @@
 		Task<List<AppUserDto>> GetAllAccounts();
 		Task<AppUserDto> GetAccount(string accountId);
 		Task CreateAccount(CreateAccountDto createAccount);
+		Task UpdateAccount(string userId,UpdateUserDto createAccount);
 		Task<bool> BlockAccount(BlockAccountDto blockAccount);
 		Task<bool> UnBlockAccount(JustEmailDto justEmail);
 		Task DeleteAccount(JustEmailDto justEmail);

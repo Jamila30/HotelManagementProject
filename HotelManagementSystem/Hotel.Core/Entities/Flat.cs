@@ -7,6 +7,8 @@
 			Amentities=new HashSet<FlatAmentity>();
 			Comments = new HashSet<Comment>();
 			Images = new HashSet<RoomImage>();
+			Reservations=new HashSet<Reservation>();
+			SelectedLists=new HashSet<SelectedList>();
 		}
 		public int Id { get; set; }
 		public string? Name { get; set; }
@@ -23,6 +25,8 @@
 		public ICollection<RoomImage>? Images { get; set; }
 		public ICollection<Comment>?  Comments { get; set; }
 		public ICollection<FlatAmentity>? Amentities { get; set; }
+		public ICollection<Reservation> Reservations { get; set; }
+		public ICollection<SelectedList> SelectedLists{ get; set; }
 
 	}
 }

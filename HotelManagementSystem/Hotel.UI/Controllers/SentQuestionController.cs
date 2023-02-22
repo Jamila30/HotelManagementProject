@@ -57,7 +57,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateSentQuestionDto createSentQuestion)
+		public async Task<IActionResult> Post([FromBody]CreateSentQuestionDto createSentQuestion)
 		{
 			try
 			{

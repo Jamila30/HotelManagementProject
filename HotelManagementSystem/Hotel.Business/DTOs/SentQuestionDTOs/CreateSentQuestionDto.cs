@@ -4,5 +4,6 @@
 	{
 		public string? Question { get; set; }
 		public string? Email { get; set; }
+
 	}
 }

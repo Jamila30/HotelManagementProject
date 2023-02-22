@@ -10,7 +10,6 @@
 		public string? Name { get; set; }
 
 		//Naviagtion Property
-		public ICollection<Flat>? Flats { get; set; }
-		
+		public ICollection<Flat>? Flats { get; set; }	
 	}
 }

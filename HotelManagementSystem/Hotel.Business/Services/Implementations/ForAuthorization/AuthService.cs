@@ -40,7 +40,7 @@
 			};
 		}
 
-	
+
 		public async Task ConfirmEmail(string token, string userId)
 		{
 			if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userId)) throw new BadRequestException("token or user id is invalid");
@@ -63,9 +63,63 @@
 			var resultSign = await _userManager.CheckPasswordAsync(user, login.Password);
 			if (!resultSign) throw new NotFoundException("Username or Password are Invalid");
 
-			var response =await _tokenCreator.CreateTokenForUser(user, 10);
-			return response;
+			var response = await _tokenCreator.CreateTokenForUser(user, 10);
+			var refreshToken = _tokenCreator.GenerateRefreshToken();
 
+			_ = int.TryParse(_configuration["JwtSettings:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
+			user.RefreshToken = refreshToken;
+			user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+
+			await _userManager.UpdateAsync(user);
+
+			return new TokenResponseDto
+			{
+				Token = response.Token,
+				RefreshToken = refreshToken,
+				ExpireDate = response.ExpireDate,
+				Username = response.Username
+			};
+
+		}
+		public async Task<Tokens> RefreshToken(Tokens tokenModel)
+		{
+			if (tokenModel is null)
+			{
+				throw new BadRequestException("Invalid client request");
+			}
+
+			string? accessToken = tokenModel.AccessToken;
+			string? refreshToken = tokenModel.RefreshToken;
+
+			var principal = _tokenCreator.GetPrincipalFromExpiredToken(accessToken);
+			if (principal == null)
+			{
+				throw new BadRequestException("Invalid access token or refresh token");
+			}
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+			string username = principal.Identity.Name;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+			var user = await _userManager.FindByNameAsync(username);
+
+			if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+			{
+				throw new BadRequestException("Invalid access token or refresh token");
+			}
+
+			var newResponse= await _tokenCreator.CreateTokenForUser(user,10);
+			var newRefreshToken = _tokenCreator.GenerateRefreshToken();
+
+			user.RefreshToken = newRefreshToken;
+			await _userManager.UpdateAsync(user);
+			return new Tokens
+			{
+				AccessToken = newResponse.Token,
+				RefreshToken = newRefreshToken
+			};
 		}
 
 		public async Task<GeneralResponseDto> ForgotPasswordAsync(ForgotPasswordDto forgotPassword)
@@ -99,5 +153,6 @@
 			var identityResult = await _userManager.ResetPasswordAsync(user, decodeToken, resetPassword.NewPassword);
 			if (!identityResult.Succeeded) throw new BadRequestException("password couldn't reset!");
 		}
+
 	}
 }

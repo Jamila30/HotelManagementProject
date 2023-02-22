@@ -92,6 +92,27 @@
 				});
 
 			#endregion
+
+			#region 1-to-many relationship between Reservation and Flat
+			modelBuilder.Entity<Reservation>()
+				.HasOne(r => r.Flat)
+				.WithMany(f => f.Reservations)
+				.HasForeignKey(r => r.FlatId);
+			#endregion
+
+			#region 1-to-many relationship between Reservation and AppUser
+			modelBuilder.Entity<Reservation>()
+				.HasOne(r => r.AppUser)
+				.WithMany(f => f.Reservations)
+				.HasForeignKey(r => r.UserId);
+			#endregion
+
+			#region 1-to-many relationship between SelectedList and Flat
+			modelBuilder.Entity<SelectedList>()
+				.HasOne(s => s.Flat)
+				.WithMany(c => c.SelectedLists)
+				.HasForeignKey(s => s.FlatId);
+			#endregion
 		}
 
 		public DbSet<SliderHome> SliderHomes { get; set; } = null!;
@@ -111,6 +132,8 @@
 		public DbSet<SentQuestion> SentQuestions { get; set; } = null!;
 		public DbSet<FAQ> FAQs { get; set; } = null!;
 		public DbSet<UserInfo> UserInfos { get; set; } = null!;
+		public DbSet<Reservation> Reservations { get; set; } = null!;
+		public DbSet<SelectedList> SelectedLists { get; set; } = null!;
 
 
 	}

@@ -48,7 +48,7 @@ namespace Hotel.UI.Controllers
 				await _accountService.CreateAccount(createAccount);
 				return Ok("Created");
 			}
-			catch(BadRequestException ex)
+			catch (BadRequestException ex)
 			{
 				return BadRequest(ex);
 			}
@@ -63,7 +63,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-			      await _accountService.AddUserRole(userDto);
+				await _accountService.AddUserRole(userDto);
 				return Ok("Added this role to user's roles");
 			}
 			catch (NotFoundException ex)
@@ -73,6 +73,23 @@ namespace Hotel.UI.Controllers
 			catch (AlreadyExistException ex)
 			{
 				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError);
+			}
+		}
+		[HttpPut("Update Account")]
+		public async Task<ActionResult> UpdateAccount(string userId, UpdateUserDto updateUserDto)
+		{
+			try
+			{
+				await _accountService.UpdateAccount(userId, updateUserDto);
+				return Ok("Updated");
+			}
+			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
 			}
 			catch (Exception)
 			{

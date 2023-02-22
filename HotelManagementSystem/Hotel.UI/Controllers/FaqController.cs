@@ -1,5 +1,4 @@
 ﻿using Hotel.Business.DTOs.FaqDTOs;
-using Hotel.Business.DTOs.SentQuestionDTOs;
 
 namespace Hotel.UI.Controllers
 {

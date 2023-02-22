@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +16,7 @@ builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<SliderHomeValidator>();
 
 //Adding AppDbContextInitializer
-builder.Services.AddScoped<AppDbContextInitializer>();
+IServiceCollection serviceCollection = builder.Services.AddScoped<AppDbContextInitializer>();
 
 //MailSender Configuration
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
@@ -72,7 +74,7 @@ builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Adding JWT Configuration
+//Adding JWT Configurations
 builder.Services.AddAuthentication(option =>
 {
 	option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,6 +82,7 @@ builder.Services.AddAuthentication(option =>
 	option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(opt =>
 {
+	opt.SaveToken = true;
 	opt.TokenValidationParameters = new TokenValidationParameters()
 	{
 		ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
@@ -90,7 +93,8 @@ builder.Services.AddAuthentication(option =>
 		ValidateIssuer = true,
 		ValidateAudience = true,
 		ValidateIssuerSigningKey = true,
-		ValidateLifetime = true
+		ValidateLifetime = true,
+		ClockSkew = TimeSpan.Zero,
 	};
 });
 builder.Services.AddAuthorization();

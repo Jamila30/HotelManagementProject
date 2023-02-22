@@ -251,6 +251,12 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -301,6 +307,48 @@ namespace Hotel.DataAccess.Migrations
                     b.ToTable("NearPlaces");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Adult")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Children")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FlatId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReserved")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlatId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.RoomCatagory", b =>
                 {
                     b.Property<int>("Id")
@@ -339,6 +387,31 @@ namespace Hotel.DataAccess.Migrations
                     b.HasIndex("FlatId");
 
                     b.ToTable("RoomImages");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.SelectedList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CatagoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FlatId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlatId");
+
+                    b.ToTable("SelectedLists");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.SentQuestion", b =>
@@ -792,10 +865,40 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("GallaryCatagory");
                 });
 
+            modelBuilder.Entity("Hotel.Core.Entities.Reservation", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.Flat", "Flat")
+                        .WithMany("Reservations")
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hotel.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Flat");
+                });
+
             modelBuilder.Entity("Hotel.Core.Entities.RoomImage", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.Flat", "Flat")
                         .WithMany("Images")
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Flat");
+                });
+
+            modelBuilder.Entity("Hotel.Core.Entities.SelectedList", b =>
+                {
+                    b.HasOne("Hotel.Core.Entities.Flat", "Flat")
+                        .WithMany("SelectedLists")
                         .HasForeignKey("FlatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -899,6 +1002,10 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Images");
+
+                    b.Navigation("Reservations");
+
+                    b.Navigation("SelectedLists");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.GallaryCatagory", b =>
@@ -909,6 +1016,8 @@ namespace Hotel.DataAccess.Migrations
             modelBuilder.Entity("Hotel.Core.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Reservations");
 
                     b.Navigation("UserInfo");
                 });

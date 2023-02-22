@@ -1,8 +1,9 @@
 ﻿using Hotel.Business.DTOs.SentQuestionDTOs;
+using Hotel.Business.Services.Interfaces.ForAuthorizations;
 
 namespace Hotel.Business.Services.Implementations
 {
-	public class SentQuestionService : ISentQuestionService
+    public class SentQuestionService : ISentQuestionService
 	{
 		private readonly ISentQuestionRepository _repostory;
 		private readonly IMailService _mailService;
@@ -43,30 +44,32 @@ namespace Hotel.Business.Services.Implementations
 				Question = entity.Question,
 				Email = entity.Email,
 				IsAnswered = false
+
 			};
+
 			await _repostory.Create(sentQuestion);
 			await _repostory.SaveChanges();
 		}
 		public async Task AnswerQuestion(AnswerDto entity)
 		{
-			var question=await _repostory.GetAll().FirstOrDefaultAsync(x => x.Id == entity.QuestionId);
+			var question = await _repostory.GetAll().FirstOrDefaultAsync(x => x.Id == entity.QuestionId);
 			if (question is null) throw new NotFoundException("question doesnt exist for this id");
-			question.Answer=entity.Answer;
+			question.Answer = entity.Answer;
 			await _mailService.SendEmailAsync(new MailRequestDto()
 			{
 				ToEmail = question.Email,
 				Subject = "Your question aswered by Hotel ",
-				Body = $"Hello dear, You send question by our website.Your question was : {question.Question}. "  +
+				Body = $"Hello dear, You send question by our website.Your question was : {question.Question}. " +
 				$" Our answer : {question.Answer}"
-			}) ;
+			});
 			question.IsAnswered = true;
 			_repostory.Update(question);
-			await _repostory.SaveChanges() ;
+			await _repostory.SaveChanges();
 		}
 
 		public async Task Delete(int id)
 		{
-			
+
 			var question = await _repostory.GetAll().FirstOrDefaultAsync(x => x.Id == id);
 			if (question is null) throw new NotFoundException("question doesnt exist for this id");
 			_repostory.Delete(question);

@@ -1,7 +1,6 @@
 ﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-using Hotel.Business.Services.Interfaces.ForAuthorizations;
-using Hotel.Business.Services.Implementations.ForAuthorization;
-using Microsoft.AspNetCore.Authorization;
+using Hotel.Core.Entities;
+
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
@@ -18,7 +17,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost("[action]")]
-		public async Task<IActionResult> Register([FromForm] RegisterDto registerDto)
+		public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
 		{
 			try
 			{
@@ -81,18 +80,38 @@ namespace Hotel.UI.Controllers
 			}
 			catch (ConfirmationException ex)
 			{
-				return BadRequest(ex.Message);
+				return Unauthorized(ex.Message);
+
 			}
 			catch (NotFoundException ex)
+			{
+				return Unauthorized(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+				
+			}
+		}
+
+		[HttpPost("RefreshToken")]
+		public async Task<IActionResult> RefreshToken(Tokens tokenModel)
+		{
+			try
+			{
+				var tokens = await _authorizationService.RefreshToken(tokenModel);
+				return Ok(tokens);
+			}
+			catch (BadRequestException ex)
 			{
 				return BadRequest(ex.Message);
 			}
 			catch (Exception)
 			{
-				return StatusCode(500);
+
+				throw;
 			}
 		}
-
 		[HttpPost("[action]")]
 		public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordDto forgotPassword)
 		{
@@ -120,7 +139,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost("[action]")]
-		public async Task<IActionResult> ResetPasswordAsync(string token, string userId, [FromForm] ResetPasswordDto resetPassword)
+		public async Task<IActionResult> ResetPasswordAsync(string token, string userId, [FromBody] ResetPasswordDto resetPassword)
 		{
 			try
 			{

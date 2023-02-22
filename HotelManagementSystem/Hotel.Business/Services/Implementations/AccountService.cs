@@ -25,7 +25,7 @@
 		public async Task<AppUserDto> GetAccount(string accountId)
 		{
 			if (accountId is null) throw new BadRequestException("Invalid form of user id");
-			var account = await _repository.GetAll().FirstOrDefaultAsync(x=>x.Id==accountId);
+			var account = await _repository.GetAll().FirstOrDefaultAsync(x => x.Id == accountId);
 			if (account is null) throw new NotFoundException("there is no account for this id");
 			var user = _mapper.Map<AppUserDto>(account);
 			return user;
@@ -33,10 +33,23 @@
 		public async Task CreateAccount(CreateAccountDto createAccount)
 		{
 			var account = _mapper.Map<AppUser>(createAccount);
-			var identityResult=await _userManager.CreateAsync(account);
+			account.EmailConfirmed = true;
+			var identityResult = await _userManager.CreateAsync(account, createAccount.Password);
 			if (!identityResult.Succeeded) throw new BadRequestException("Account didnt created");
 			await _userManager.AddToRoleAsync(account, Roles.Member.ToString());
 
+		}
+		public async Task UpdateAccount(string userId, UpdateUserDto createAccount)
+		{
+			if (userId != createAccount.Id) throw new IncorrectIdException("id didnt overlap");
+			var user = await _userManager.FindByIdAsync(userId);
+			if (user is null) throw new NotFoundException("user didnt find");
+			user.Email = createAccount.Email;
+			user.Fullname = createAccount.FullName;
+			user.PhoneNumber = createAccount.PhoneNumber;
+			user.UserName = createAccount.UserName;
+			_repository.Update(user);
+			await _repository.SaveChanges();
 		}
 		public async Task<bool> BlockAccount(BlockAccountDto blockAccount)
 		{
@@ -100,8 +113,8 @@
 			if (!oldCheck) throw new NotFoundException("old role name doesn't exist");
 			var newCheck = await _roleManager.RoleExistsAsync(updateUser.NewRoleName);
 			if (!newCheck) throw new NotFoundException("new role name doesn't exist");
-			var result =await _userManager.IsInRoleAsync(user, updateUser.NewRoleName);
-			if(result) throw new BadRequestException("new role name exists for this user");
+			var result = await _userManager.IsInRoleAsync(user, updateUser.NewRoleName);
+			if (result) throw new BadRequestException("new role name exists for this user");
 			var roles = await _userManager.GetRolesAsync(user);
 			foreach (var role in roles)
 			{
@@ -119,7 +132,7 @@
 			if (user is null) throw new NotFoundException("There is not account with this email");
 			var roleCheck = await _roleManager.RoleExistsAsync(deleteRole.RoleName);
 			if (!roleCheck) throw new NotFoundException("role name doesn't exist");
-			var result = await _userManager.IsInRoleAsync(user,deleteRole.RoleName);
+			var result = await _userManager.IsInRoleAsync(user, deleteRole.RoleName);
 			if (!result) throw new BadRequestException("role name doesnt exists for this user");
 
 			var roles = await _userManager.GetRolesAsync(user);
@@ -135,6 +148,7 @@
 			}
 			if (!isExist) throw new AlreadyExistException("this user has no such role");
 		}
+
 
 	}
 }
