@@ -7,8 +7,8 @@ namespace Hotel.Business.Services.Interfaces
 		Task<List<ReservationDto>> GetAllAsync();
 		Task<List<ReservationDto>> GetByCondition(Expression<Func<Reservation, bool>> expression);
 		Task<ReservationDto?> GetByIdAsync(int id);
-		Task CreateRezerv(CreateReservationDto entity);
-		Task UpdateAsync(int id, UpdateCommentDto entity);
+		Task CreateRezerv(StabilPropertirsDto stabil, List<CreateReservationDto> entities);
+		Task UpdateAsync(int id, UpdateReservationDto entity);
 		Task Delete(int id);
 	}
 }

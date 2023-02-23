@@ -11,8 +11,9 @@ namespace Hotel.Core.Entities
 		public string? UserId { get; set; }
 		public int Adult { get; set; }
 		public int Children { get; set; }
+		public float Price { get; set; }
 		public bool IsCanceled { get; set; }
-		public bool IsReserved { get; set; }
+		public bool IsDeleted { get; set; }
 
 		//Navigation Property
 

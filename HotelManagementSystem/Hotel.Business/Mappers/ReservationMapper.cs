@@ -7,6 +7,7 @@ namespace Hotel.Business.Mappers
 		public ReservationMapper()
 		{
 			CreateMap<Reservation,ReservationDto>().ReverseMap();
+			CreateMap<Reservation,UpdateReservationDto>().ReverseMap();
 		}
 	}
 }

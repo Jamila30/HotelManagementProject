@@ -16,6 +16,8 @@ namespace Hotel.Business.Validations.ReservationValidations
 			RuleFor(r=>r.Children).NotNull().NotEmpty();
 			RuleFor(r=>r.Adults).NotNull().NotEmpty();
 			RuleFor(r=>r.Price).NotNull().NotEmpty();
+			RuleFor(r=>r.IsCanceled).NotNull();
+			RuleFor(r=>r.IsDeleted).NotNull();
 
 		}
 	}
