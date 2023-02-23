@@ -11,5 +11,6 @@
 		public int Children { get; set; }
 		public float Price { get; set; }
 		public bool IsCanceled { get; set; }
+		public bool IsDeleted { get; set; }
 	}
 }

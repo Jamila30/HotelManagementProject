@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Business.DTOs.ReservationDTOs
+﻿namespace Hotel.Business.DTOs.ReservationDTOs
 {
-	internal class AvailableFlatsDto
+	public class AvailableFlatsDto:IDto
 	{
+		public int Id { get; set; }
+		public int CatagoryId { get; set; }
+
+		public int FlatId { get; set; }
+
 	}
 }

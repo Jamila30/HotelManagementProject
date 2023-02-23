@@ -111,7 +111,8 @@ namespace Hotel.Business.Services.Implementations
 					StartDate = stabil.CheckInDate,
 					EndDate = stabil.CheckOutDate,
 					Price = timeDifferenceAsDays * flat.Price,
-					IsCanceled = false
+					IsCanceled = false,
+					IsDeleted = false
 				};
 				await _repository.Create(reservation);
 			}
@@ -129,17 +130,72 @@ namespace Hotel.Business.Services.Implementations
 			if (user is null) throw new NotFoundException("there is no user with this id");
 			if (entity.Adults > flat.Adults) throw new BadRequestException($"this flat may have maximum {flat.Adults} adults");
 			if (entity.Children > flat.Children) throw new BadRequestException($"this flat may have maximum {flat.Adults} children");
+			if (reserv.StartDate != entity.StartDate || reserv.EndDate != entity.EndDate || reserv.FlatId != entity.FlatId)
+			{
+				var result = await IsReserved(entity.FlatId, entity.StartDate, entity.EndDate);
+				if (!result) throw new AlreadyExistException("this flat for these dates is not available");
+			}
 			var newReservation = _mapper.Map<Reservation>(entity);
 			_repository.Update(newReservation);
 			await _repository.SaveChanges();
 		}
 		public async Task Delete(int id)
 		{
-			var reserv = _repository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).Single(r => r.Id == id);
+			var reserv = await _repository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).SingleAsync(r => r.Id == id);
+			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
+			reserv.IsDeleted = true;
+		}
+
+		public async Task CancelReservation(int reservId)
+		{
+			var reserv = await _repository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).SingleAsync(r => r.Id == reservId);
 			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
 			reserv.IsCanceled = true;
 		}
 
+		public async Task<bool> IsReserved(int flatId, DateTime checkIn, DateTime checkOut)
+		{
+			bool available = true;
+			var reservs = await _repository.GetByCondition(r => r.FlatId == flatId).ToListAsync();
+			foreach (var rezerv in reservs)
+			{
+				if (!((checkOut > rezerv.StartDate) && (checkIn > rezerv.EndDate))) { available = false; };
+			}
+			return available;
+		}
 
+		public async Task<List<AvailableFlatsDto>> AvailableFlatsForReserve(DateTime checkIn, DateTime checkOut, int adults = 1, int children = 0)
+		{
+			bool isAvailable = false;
+			List<AvailableFlatsDto> availableFlats = new List<AvailableFlatsDto>();
+			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
+			foreach (var flat in flats)
+			{
+				isAvailable = _repository.GetAll().Where(x => x.FlatId == flat.Id).All(x => x.StartDate < checkOut && x.EndDate < checkIn);
+				if (isAvailable)
+				{
+					availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id });
+				}
+			}
+
+			return availableFlats;
+		}
+
+		//public async Task<List<AvailableFlatsDto>> RecomendedFlats(DateTime checkIn, DateTime checkOut, int adults = 1, int children = 0)
+		//{
+		//	bool isAvailable = false;
+		//	List<AvailableFlatsDto> availableFlats = new List<AvailableFlatsDto>();
+		//	var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
+		//	foreach (var flat in flats)
+		//	{
+		//		isAvailable = _repository.GetAll().Where(x => x.FlatId == flat.Id).All(x => x.StartDate < checkOut && x.EndDate < checkIn);
+		//		if (isAvailable)
+		//		{
+		//			availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id });
+		//		}
+		//	}
+
+		//	return availableFlats;
+		//}
 	}
 }
