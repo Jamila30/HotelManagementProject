@@ -1,5 +1,4 @@
 ﻿using Hotel.Business.DTOs.ReservationDTOs;
-using Hotel.Business.DTOs.SelectedListDTOs;
 
 namespace Hotel.UI.Controllers
 {
@@ -67,8 +66,8 @@ namespace Hotel.UI.Controllers
 				return NotFound(ex.Message);
 			}
 		}
-		[HttpGet("getTotalPrice")]
-		public async Task<IActionResult> TotalPrice(List<int> reservIds)
+		[HttpPost("getTotalPrice")]
+		public async Task<IActionResult> TotalPrice(List<StabilPropertirsDto> reservIds)
 		{
 			try
 			{
@@ -84,14 +83,18 @@ namespace Hotel.UI.Controllers
 				return StatusCode(500);
 			}
 		}
-		[HttpGet("IsReserved /{flatId}")]
-
-		public async Task<IActionResult> IsReserved(int flatId, DateDto date)
+		
+		[HttpPost("CanReserve/{flatId}")]
+		public async Task<IActionResult> CanReserve(int flatId, DateDto date)
 		{
 			try
 			{
-				var result=await _reservationService.IsReserved(flatId, date);
+				var result=await _reservationService.CanReserve(flatId, date);
 				return Ok(result);
+			}
+			catch(NotFoundException ex)
+			{
+				return NotFound(ex.Message);
 			}
 			catch (Exception)
 			{
@@ -99,7 +102,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpGet("AvailableFlatsForReserve")]
+		[HttpPost("AvailableFlatsForReserve")]
 		public async Task<IActionResult> AvailableFlatsForReserve(DateDto date)
 		{
 			try
@@ -126,11 +129,11 @@ namespace Hotel.UI.Controllers
 			}
 		}
 		[HttpPost("CreateReserv")]
-		public async Task<IActionResult> CreateReserv(StabilPropertirsDto stabil, [FromBody] List<CreateReservationDto> entities)
+		public async Task<IActionResult> CreateReserv(DateTime CheckInDate, DateTime CheckOutDate, string UserId, [FromBody] List<CreateReservationDto> entities)
 		{
 			try
 			{
-				await _reservationService.CreateRezerv(stabil, entities);
+				await _reservationService.CreateRezerv(CheckInDate,CheckOutDate, UserId, entities);
 				return Ok("Created");
 			}
 			catch (NotFoundException ex)
@@ -143,7 +146,8 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				return StatusCode(500);
+				throw;
+				//return StatusCode(500);
 			}
 		}
 		[HttpPut("CancelReservation")]
@@ -164,12 +168,12 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpPut("UpdateReserv/{catagoryId}")]
-		public async Task<IActionResult> Update(int catagoryId, [FromBody] UpdateReservationDto updateReserv)
+		[HttpPut("UpdateReserv/{Id}")]
+		public async Task<IActionResult> Update(int Id, [FromForm] UpdateReservationDto updateReserv)
 		{
 			try
 			{
-				await _reservationService.UpdateAsync(catagoryId, updateReserv);
+				await _reservationService.UpdateAsync(Id, updateReserv);
 				return Ok("Updated");
 			}
 			catch (NotFoundException ex)
@@ -194,7 +198,23 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[HttpDelete("{reservId}")]
+		public async Task<IActionResult> Delete(int reservId)
+		{
+			try
+			{
+				await _reservationService.Delete(reservId);
+				return Ok("Deleted reservation with this id");
+			}
+			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
 
 	}
 }

@@ -30,13 +30,7 @@ namespace Hotel.Business.Validations.ReservationValidations
 				}
 			}).GreaterThan(x => x.StartDate);
 
-			RuleFor(r => r.UserId).NotNull().NotEmpty().Custom((UserId, context) =>
-			{
-				if (!int.TryParse(UserId.ToString(), out int User_Id))
-				{
-					context.AddFailure("Enter Valid Format");
-				}
-			});
+			RuleFor(r => r.UserId).NotNull().NotEmpty();
 			RuleFor(r => r.Price).NotNull().NotEmpty();
 			RuleFor(r => r.FlatId).NotNull().NotEmpty().Custom((FlatId, context) =>
 			{

@@ -36,7 +36,7 @@ namespace Hotel.Business.Services.Implementations
 			return userDto;
 		}
 
-		public async Task Create(CreateUserInfoDto entity)
+		public async Task<string> Create(CreateUserInfoDto entity)
 		{
 			var user = await _userManager.FindByEmailAsync(entity.Email);
 			if (user is null) throw new NotFoundException("there is no user with this email");
@@ -45,6 +45,7 @@ namespace Hotel.Business.Services.Implementations
 			user.PhoneNumber = entity.Phone;
 			await _repository.Create(userInfo);
 			await _repository.SaveChanges();
+			return userInfo.UserId;
 		}
 		public async Task UpdateAsync(int id, UpdateUserInfoDto entity)
 		{

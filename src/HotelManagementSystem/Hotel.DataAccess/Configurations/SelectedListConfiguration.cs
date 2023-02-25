@@ -8,6 +8,7 @@
 			builder.Property(s => s.Id).IsRequired();
 			builder.Property(s => s.CatagoryName).IsRequired();
 			builder.Property(s => s.FlatId).IsRequired();
+			builder.Property(s => s.CatagoryId).IsRequired();
 		}
 	}
 }

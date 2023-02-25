@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class AmentityService : IAmentityService
 	{
@@ -113,8 +115,8 @@
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
-
-				amentity.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "amentityImage");
+				//  C:\Users\Asus\Desktop\reactpro\src\assets\images
+				amentity.Image = entity.Image.CopyFileTo($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
 
 			}
 			amentity.Title = entity.Title;

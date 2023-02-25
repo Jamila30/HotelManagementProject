@@ -30,7 +30,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<SelectedListDto?> GetByIdAsync(int id)
 		{
-			var list = await _repository.GetAll().Include(x => x.Flat).SingleOrDefaultAsync(l => l.Id == id);
+			var list = await _repository.GetAll().SingleOrDefaultAsync(l => l.Id == id);
 			var listDto = _mapper.Map<SelectedListDto>(list);
 			return listDto;
 		}
@@ -50,7 +50,7 @@ namespace Hotel.Business.Services.Implementations
 					selectedList.FlatId = flat.Id;
 					selectedList.Price = flat.Price;
 					selectedList.Flat = flat;
-
+					selectedList.CatagoryId = flat.RoomCatagoryId;
 				};
 				await _repository.Create(selectedList);
 			}
@@ -62,12 +62,12 @@ namespace Hotel.Business.Services.Implementations
 			List<int> nextFlats = new List<int>();
 			if (catagoryId != updateList.CatagoryId) throw new IncorrectIdException("id didn't overlap");
 			var list = await _repository.GetAll().Where(l => l.Flat != null ? l.Flat.RoomCatagoryId == catagoryId : false).ToListAsync();
-			if (list is null) throw new NotFoundException("There is no selected element for this catagory");
+			if (list.Count() == 0) throw new NotFoundException("There is no selected element for this catagory");
 			var listCount = list.Count();
 			var flatIdCount = updateList.FlatIds.Count();
 			if (flatIdCount > listCount)
 			{
-				for (int i = listCount + 1; i <= flatIdCount; i++)
+				for (int i = listCount ; i < flatIdCount; i++)
 				{
 					nextFlats.Add(updateList.FlatIds[i]);
 					await AddToList(nextFlats);
@@ -75,7 +75,7 @@ namespace Hotel.Business.Services.Implementations
 			}
 			else
 			{
-				for (int i = flatIdCount + 1; i <= listCount; i++)
+				for (int i = flatIdCount; i < listCount; i++)
 				{
 					_repository.Delete(list[i]);
 				}

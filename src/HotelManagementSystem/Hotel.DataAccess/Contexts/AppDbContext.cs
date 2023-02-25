@@ -134,6 +134,7 @@
 		public DbSet<UserInfo> UserInfos { get; set; } = null!;
 		public DbSet<Reservation> Reservations { get; set; } = null!;
 		public DbSet<SelectedList> SelectedLists { get; set; } = null!;
+		public DbSet<SettingsTable> SettingsTables { get; set; } = null!;
 
 
 	}

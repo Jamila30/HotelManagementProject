@@ -1,4 +1,5 @@
-﻿using Hotel.Business.DTOs.ReservationDTOs;
+﻿using Auth0.ManagementApi.Models;
+using Hotel.Business.DTOs.ReservationDTOs;
 
 namespace Hotel.Business.Services.Interfaces
 {
@@ -7,13 +8,13 @@ namespace Hotel.Business.Services.Interfaces
 		Task<List<ReservationDto>> GetAllAsync();
 		Task<List<ReservationDto>> GetByCondition(Expression<Func<Reservation, bool>> expression);
 		Task<ReservationDto?> GetByIdAsync(int id);
-		Task CreateRezerv(StabilPropertirsDto stabil, List<CreateReservationDto> entities);
+		Task CreateRezerv(DateTime CheckInDate, DateTime CheckOutDate, string UserId, List<CreateReservationDto> entities);
 		Task UpdateAsync(int id, UpdateReservationDto entity);
 		Task Delete(int id);
 		Task CancelReservation(int reservId);
-		Task<bool> IsReserved(int flatId, DateDto date);
+		Task<bool> CanReserve(int flatId, DateDto date);
 		Task<List<AvailableFlatsDto>> AvailableFlatsForReserve(DateDto date);
-		Task<float> GetTotalPrice(List<int> reservId);
+		Task<float> GetTotalPrice(List<StabilPropertirsDto> reservId);
 		Task FinishEndedReservations();
 
 	}

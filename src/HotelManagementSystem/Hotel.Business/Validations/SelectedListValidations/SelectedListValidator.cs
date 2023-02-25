@@ -9,8 +9,8 @@ namespace Hotel.Business.Validations.SelectedListValidations
 			RuleFor(u => u.Id).NotNull().NotEmpty();
 			RuleFor(u => u.Price).NotNull().NotEmpty();
 			RuleFor(u => u.CatagoryName).NotNull().NotEmpty();
-			RuleFor(u => u.Flat).NotNull().NotEmpty();
 			RuleFor(u => u.FlatId).NotNull().NotEmpty();
+			RuleFor(u => u.CatagoryId).NotNull().NotEmpty();
 		}
 	}
 }

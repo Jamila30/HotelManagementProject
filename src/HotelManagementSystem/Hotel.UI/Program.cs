@@ -1,3 +1,4 @@
+using Hotel.DataAccess.Repositories.Implementations;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,10 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ISentQuestionRepository, SentQuestionRepository>();
 builder.Services.AddScoped<IFAQRepository,FAQRepository>();
 builder.Services.AddScoped<IUserInfoRepository, UserInfoRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<ISelectedListRepository, SelectedListRepository>();
+builder.Services.AddScoped<ISettingTableRepository, SettingsTableRepository>();
+
 
 
 
@@ -75,6 +80,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ISentQuestionService, SentQuestionService>();
 builder.Services.AddScoped<IFaqService, FaqService>();
 builder.Services.AddScoped<IUserInfoService, UserInfoService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<ISelectedListService,SelectedListService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);

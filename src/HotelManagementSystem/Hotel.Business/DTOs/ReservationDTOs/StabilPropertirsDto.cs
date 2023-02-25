@@ -2,8 +2,7 @@
 {
 	public class StabilPropertirsDto:IDto
 	{
-		public DateTime CheckInDate { get; set; }
-		public DateTime CheckOutDate { get; set; }
-		public string? UserId { get; set; }
+		
+		public int ReservId { get; set; }
 	}
 }

@@ -10,8 +10,6 @@
 		public int Adults { get; set; }
 		public int Children { get; set; }
 		public float Price { get; set; }
-		public bool IsCanceled { get; set; }
-		public bool IsDeleted { get; set; }
-		public bool IsFinished { get; set; }
+	
 	}
 }

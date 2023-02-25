@@ -75,8 +75,8 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				await _userInfoService.Create(userInfoDto);
-				return Ok("Created");
+				string user=await _userInfoService.Create(userInfoDto);
+				return Ok($"Created for user : {user} ");
 			}
 			catch (NotFoundException ex)
 			{

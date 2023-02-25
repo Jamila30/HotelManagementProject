@@ -7,7 +7,7 @@ namespace Hotel.Business.Services.Interfaces
 		Task<List<UserInfoDto>> GetAllAsync();
 		Task<List<UserInfoDto>> GetByCondition(Expression<Func<UserInfo, bool>> expression);
 		Task<UserInfoDto?> GetByIdAsync(int id);
-		Task Create(CreateUserInfoDto entity);
+		Task<string> Create(CreateUserInfoDto entity);
 		Task UpdateAsync(int id, UpdateUserInfoDto entity);
 		Task Delete(int id);
 	}

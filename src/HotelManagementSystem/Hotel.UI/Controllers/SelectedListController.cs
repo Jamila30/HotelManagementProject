@@ -1,5 +1,4 @@
 ﻿using Hotel.Business.DTOs.SelectedListDTOs;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.UI.Controllers
 {
@@ -28,7 +27,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpGet("searchByFlatId/{flatId}")]
-		public async Task<IActionResult> GetByTitle(int flatId)
+		public async Task<IActionResult> GetByFlatId (int flatId)
 		{
 			try
 			{
@@ -70,13 +69,13 @@ namespace Hotel.UI.Controllers
 			}
 
 		}
-		[HttpPost("AddToList")]
+		[HttpPost("AddFlatToList")]
 		public async Task<IActionResult> AddToList([FromBody] List<int> flatIds)
 		{
 			try
 			{
 				await _selectedListService.AddToList(flatIds);
-				return Ok();
+				return Ok("Created");
 			}
 			catch (NotFoundException ex)
 			{
@@ -110,7 +109,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				return StatusCode(500);
+				throw;	//return StatusCode(500);
 			}
 		}
 
