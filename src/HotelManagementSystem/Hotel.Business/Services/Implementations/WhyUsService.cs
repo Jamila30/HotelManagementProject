@@ -55,8 +55,16 @@
 				}
 
 
-				why.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
-				
+				try
+				{
+					why.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "whyUs");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException("file didnt created");
+				}
+
 
 			}
 			await _repository.Create(why);
@@ -82,8 +90,16 @@
 					throw new IncorrectFileSizeException("Enter Suitable File Format");
 				}
 
-				
-				why.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images","whyUs");
+
+				try
+				{
+					why.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "whyUs");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException(" new file didnt created");
+				}
 				
 
 			}

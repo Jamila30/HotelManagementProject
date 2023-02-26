@@ -56,7 +56,16 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "nearPlace");
+				try
+				{
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "nearPlace");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException(" file didnt created");
+				}
+				
 				place.Image = fileName;
 
 			}
@@ -84,7 +93,17 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "nearPlace");
+				try
+				{
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "nearPlace");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException(" file didnt created");
+				}
+
+				
 				place.Image = fileName;
 
 			}

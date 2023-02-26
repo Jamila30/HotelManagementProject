@@ -77,8 +77,14 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				
-				teamMember.Image = createWholeMember.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
+				try
+				{
+					teamMember.Image = await createWholeMember.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
 
 			}
 
@@ -106,7 +112,14 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				teamMember.Image = createTeam.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
+				try
+				{
+					teamMember.Image = await createTeam.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
 				
 
 			}
@@ -136,7 +149,14 @@
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
+				try
+				{
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
 				teamMember.Image = fileName;
 
 			}

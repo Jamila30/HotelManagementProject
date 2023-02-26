@@ -81,10 +81,16 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				
-				teamInfo.TeamMember.Image = entity.MemberImage.CopyFileTo(_env.WebRootPath, "assets", "images", "teamMember");
-				
+				try
+				{
+					teamInfo.TeamMember.Image = await entity.MemberImage.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
 
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException("file didnt created");
+				}
+				
 			}
 			await _repository.Create(teamInfo);
 			await _repository.SaveChanges();

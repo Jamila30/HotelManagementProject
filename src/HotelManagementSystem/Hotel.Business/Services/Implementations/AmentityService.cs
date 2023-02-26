@@ -73,8 +73,15 @@ namespace Hotel.Business.Services.Implementations
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				amentity.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "amentityImage");
+				try
+				{
+					amentity.Image = await entity.Image.CopyFileToAsync($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
+				}
+				catch (Exception)
+				{
 
+					throw new BadRequestException("file didnt created");
+				}
 			}
 			var listAmentity = _repository.GetAll();
 			if (listAmentity != null)
@@ -116,7 +123,15 @@ namespace Hotel.Business.Services.Implementations
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 				//  C:\Users\Asus\Desktop\reactpro\src\assets\images
-				amentity.Image = entity.Image.CopyFileTo($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
+				try
+				{
+					amentity.Image = await entity.Image.CopyFileToAsync($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException(" new file didnt created");
+				}
 
 			}
 			amentity.Title = entity.Title;

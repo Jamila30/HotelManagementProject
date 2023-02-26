@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Hotel.Core.Entities;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class ServiceImageService : IServiceImageService
 	{
@@ -56,7 +58,17 @@
 				}
 
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "serviceImage");
+				fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
+				try
+				{
+
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException("  file didnt created");
+				}
+
 				image = fileName;
 
 			}
@@ -115,7 +127,16 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "serviceImage");
+				try
+				{
+
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
+
 				imageService.Image = fileName;
 			}
 

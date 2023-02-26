@@ -52,14 +52,24 @@
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
-				slider.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
+				try
+				{
+					slider.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "sliderHome");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException("new file didnt created");
+				}
+
+				
 			}
 			await _repository.Create(slider);
 			await _repository.SaveChanges();
 		}
 		public async Task UpdateAsync(int id, UpdateSliderHomeDto entity)
 		{
-			if (id != entity.Id) throw new IncorrectIdException("Id doesn't match each other");
+			if (id != entity.Id) throw new IncorrectIdException("Id doesn't overlap");
 			var slider = await _repository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Not Found");
 			slider.Description = entity.Description;
@@ -76,7 +86,17 @@
 				{
 					throw new IncorrectFileSizeException("Enter Suitable File Format");
 				}
-				slider.Image = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "sliderHome");
+			
+				try
+				{
+					slider.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "sliderHome");
+				}
+				catch (Exception)
+				{
+
+					throw new BadRequestException("new file didnt created");
+				}
+
 			}
 
 			_repository.Update(slider);

@@ -29,7 +29,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var slider = await _whyUsService.GetByCondition(x => x.Title!=null? x.Title.Contains(title):true);
+				var slider = await _whyUsService.GetByCondition(x => x.Title != null ? x.Title.Contains(title) : true);
 				return Ok(slider);
 			}
 			catch (Exception ex)
@@ -56,7 +56,7 @@ namespace Hotel.UI.Controllers
 
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateWhyUsDto  createWhyUs)
+		public async Task<IActionResult> Post([FromForm] CreateWhyUsDto createWhyUs)
 		{
 			try
 			{
@@ -68,6 +68,10 @@ namespace Hotel.UI.Controllers
 				return BadRequest(ex.Message);
 			}
 			catch (IncorrectFileFormatException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (BadRequestException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -101,8 +105,11 @@ namespace Hotel.UI.Controllers
 			}
 			catch (NotFoundException ex)
 			{
-
 				return NotFound(ex.Message);
+			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
 			}
 			catch (Exception)
 			{

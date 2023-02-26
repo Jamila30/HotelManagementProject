@@ -102,6 +102,10 @@
 			{
 				return BadRequest(ex.Message);
 			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
 				return StatusCode(500);
@@ -133,6 +137,10 @@
 				return BadRequest(ex.Message);
 			}
 			catch (NotFoundException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (BadRequestException ex)
 			{
 				return BadRequest(ex.Message);
 			}

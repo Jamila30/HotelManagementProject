@@ -11,21 +11,28 @@ namespace Hotel.Business.Utilities
 		{
 			return file.ContentType.Contains(format);
 		}
-		public static string CopyFileTo(this IFormFile file,params string[] folders)
+		public static async Task<string> CopyFileToAsync(this IFormFile file,string wwwroot,params string[] folders)
 		{
-			string filename= Guid.NewGuid() + file.FileName;
-			string resultPath = string.Empty;
-			foreach (var folder in folders)
+			try
 			{
-				resultPath= Path.Combine(resultPath, folder);
-			}
-			resultPath=Path.Combine(resultPath, filename);
+				string filename = Guid.NewGuid() + file.FileName;
+				string resultPath = wwwroot;
+				foreach (var folder in folders)
+				{
+					resultPath = Path.Combine(resultPath, folder);
+				}
+				resultPath = Path.Combine(resultPath, filename);
 
-			using (FileStream fileStream = new FileStream(resultPath, FileMode.Create))
-			{
-				file.CopyToAsync(fileStream);
+				using (FileStream fileStream = new FileStream(resultPath, FileMode.Create))
+				{
+					 await file.CopyToAsync(fileStream);
+				}
+				return filename;
 			}
-			return filename;
+			catch (Exception)
+			{
+				throw;
+			}
 			
 		}
 	}

@@ -65,7 +65,15 @@
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 				string fileName = string.Empty;
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "roomImage");
+				try
+				{
+
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "roomImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException("file didnt created");
+				}
 				roomImage.Image = fileName;
 			}
 			if (flat.Images != null)
@@ -114,8 +122,15 @@
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
+				try
+				{
 
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "roomImage");
+				fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "roomImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException("new file didnt created");
+				}
 				roomImage.Image = fileName;
 			}
 			var flat = await _flatRepo.GetByIdAsync(entity.FlatId);

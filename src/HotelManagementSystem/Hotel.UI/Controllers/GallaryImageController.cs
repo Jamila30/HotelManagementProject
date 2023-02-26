@@ -100,8 +100,8 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode((int)HttpStatusCode.InternalServerError);
+				
+			return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
@@ -138,6 +138,10 @@ namespace Hotel.UI.Controllers
 			{
 
 				return NotFound(ex.Message);
+			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
 			}
 			catch (Exception)
 			{

@@ -58,8 +58,16 @@ namespace Hotel.Business.Services.Implementations
 				{
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
+				try
+				{
 
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "gallaryImage");
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "gallaryImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
+
 
 			}
 			var catagory = await _catRepo.GetByIdAsync(entity.GallaryCatagoryId);
@@ -115,7 +123,17 @@ namespace Hotel.Business.Services.Implementations
 					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
-				fileName = entity.Image.CopyFileTo(_env.WebRootPath, "assets", "images", "gallaryImage");
+				try
+				{
+
+					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "gallaryImage");
+				}
+				catch (Exception)
+				{
+					throw new BadRequestException(" new file didnt created");
+				}
+
+					
 				gallary.Image = fileName;
 			}
 			var images = _repository.GetAll().ToList();
