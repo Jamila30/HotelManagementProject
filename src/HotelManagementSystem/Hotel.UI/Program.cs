@@ -1,5 +1,6 @@
-using Hotel.DataAccess.Repositories.Implementations;
-using Microsoft.Extensions.Options;
+using Hotel.Business.Services.Implementations.ForStripe;
+using Hotel.Business.Services.Interfaces.ForStripes;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +77,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IAmentityService, AmentityService>();
 builder.Services.AddScoped<IAutService, AuthService>();
 builder.Services.AddScoped<ITokenCreatorService,TokenCreatorService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAccountService, Hotel.Business.Services.Implementations.AccountService>();
 builder.Services.AddScoped<ISentQuestionService, SentQuestionService>();
 builder.Services.AddScoped<IFaqService, FaqService>();
 builder.Services.AddScoped<IUserInfoService, UserInfoService>();
@@ -86,6 +87,15 @@ builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
+
+//Stripe Cinfiguration
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<ChargeService>();
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("Stripe:SecretKey");//4242424242424242
+
+builder.Services.AddScoped<IStripeService, StripeService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

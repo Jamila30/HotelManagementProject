@@ -11,16 +11,6 @@
 			RuleFor(f => f.Description)
 				.NotNull()
 				.NotEmpty();
-			RuleFor(f => f.Adults)
-				.NotEmpty()
-				.NotNull()
-				.GreaterThanOrEqualTo(1)
-				.LessThanOrEqualTo(5);
-			RuleFor(f => f.Children)
-				.NotEmpty()
-				.NotNull()
-				.GreaterThanOrEqualTo(0)
-				.LessThanOrEqualTo(4);
 			RuleFor(f => f.Price)
 				.NotEmpty()
 				.NotNull();

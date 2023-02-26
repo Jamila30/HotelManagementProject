@@ -5,7 +5,6 @@
 		public int FlatId { get; set; }
 		public int Adults { get; set; }
 		public int Children { get; set; }
-		public float Price { get; set; }
 
 	}
 }

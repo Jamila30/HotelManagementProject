@@ -59,15 +59,17 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task UpdateAsync(int catagoryId, UpdateSelectedListDto updateList)
 		{
-			List<int> nextFlats = new List<int>();
+			List<int> nextFlats = new ();
 			if (catagoryId != updateList.CatagoryId) throw new IncorrectIdException("id didn't overlap");
 			var list = await _repository.GetAll().Where(l => l.Flat != null ? l.Flat.RoomCatagoryId == catagoryId : false).ToListAsync();
 			if (list.Count() == 0) throw new NotFoundException("There is no selected element for this catagory");
 			var listCount = list.Count();
-			var flatIdCount = updateList.FlatIds.Count();
+			if (updateList.FlatIds is null) throw new BadRequestException("updated list must contains at least 1 element");
+			int flatIdCount = updateList.FlatIds.Count();
+			
 			if (flatIdCount > listCount)
 			{
-				for (int i = listCount ; i < flatIdCount; i++)
+				for (int i = listCount; i < flatIdCount; i++)
 				{
 					nextFlats.Add(updateList.FlatIds[i]);
 					await AddToList(nextFlats);

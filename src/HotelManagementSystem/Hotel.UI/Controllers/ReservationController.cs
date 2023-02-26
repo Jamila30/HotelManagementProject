@@ -89,7 +89,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var result=await _reservationService.CanReserve(flatId, date);
+				var result=await _reservationService.IsReserve(flatId, date);
 				return Ok(result);
 			}
 			catch(NotFoundException ex)
@@ -115,6 +115,22 @@ namespace Hotel.UI.Controllers
 				return StatusCode(500);
 			}
 		}
+
+		[HttpPost("RecomendedFlats")]
+		public async Task<IActionResult> RecomendedFlats(DateDto dateDto, int adults = 1, int children = 0)
+		{
+			try
+			{
+				var result = await _reservationService.RecomendedFlats(dateDto,adults,children);
+				return Ok(result);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+
+
 		[HttpGet("FinishEndedReservations")]
 		public async Task<IActionResult> FinishEndedReservations()
 		{

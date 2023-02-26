@@ -6,7 +6,7 @@ namespace Hotel.Business.Validations.ReservationValidations
 	{
 		public CreateReservationValidator()
 		{
-			RuleFor(r => r.Price).NotNull().NotEmpty();
+			
 			RuleFor(r => r.FlatId).NotNull().NotEmpty().Custom((FlatId, context) =>
 			{
 				if (!int.TryParse(FlatId.ToString(), out int Flat_Id))

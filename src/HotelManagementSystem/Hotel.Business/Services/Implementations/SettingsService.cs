@@ -65,7 +65,11 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task Create(DictionaryDto dictionaryDto)
 		{
-			var setting = new SettingsTable() { Key = dictionaryDto.Key, Value = dictionaryDto.Value };
+			SettingsTable setting = new();
+			if (dictionaryDto.Key != null && dictionaryDto.Value != null)
+			{
+				 setting = new SettingsTable() { Key = dictionaryDto.Key, Value = dictionaryDto.Value };
+			}
 			await _repository.Create(setting);
 			await _repository.SaveChanges();
 		}
@@ -82,7 +86,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task Delete(int id)
 		{
-			var setting=await _repository.GetAll().FirstOrDefaultAsync(x=>x.Id== id);
+			var setting = await _repository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
 			if (setting is null) throw new NotFoundException("there is not setting with this id ");
 			_repository.Delete(setting);
 			await _repository.SaveChanges();

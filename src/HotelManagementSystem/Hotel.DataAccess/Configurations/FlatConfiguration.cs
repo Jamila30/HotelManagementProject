@@ -6,10 +6,6 @@
 		{
 			builder.Property(x => x.Id)
 				.IsRequired();
-			builder.Property(x => x.Adults)
-				.IsRequired();
-			builder.Property(x => x.Children)
-				.IsRequired();
 			builder.Property(x => x.BedCount)
 				.IsRequired();
 			builder.Property(x => x.Price)

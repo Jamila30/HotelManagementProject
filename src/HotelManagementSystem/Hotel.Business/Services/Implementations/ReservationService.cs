@@ -21,7 +21,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<List<ReservationDto>> GetAllAsync()
 		{
 			var list = await _repository.GetAll().Include(x => x.Flat).Include(y => y.AppUser).ThenInclude(x => x.UserInfo).ToListAsync();
-			List<ReservationDto> listDto = new List<ReservationDto>();
+			List<ReservationDto> listDto = new ();
 			foreach (var item in list)
 			{
 				var userInfo = await _UserRepository.GetAll().SingleAsync(x => x.UserId == item.UserId);
@@ -141,7 +141,7 @@ namespace Hotel.Business.Services.Implementations
 				DateDto date = new DateDto();
 				date.CheckInDate = entity.StartDate;
 				date.CheckOutDate = entity.EndDate;
-				var result = await CanReserve(entity.FlatId, date);
+				var result = await IsReserve(entity.FlatId, date);
 				if (!result) throw new AlreadyExistException("this flat for these dates is not available");
 			}
 			var newReservation = _mapper.Map<Reservation>(entity);
@@ -167,7 +167,7 @@ namespace Hotel.Business.Services.Implementations
 			await _repository.SaveChanges();
 		}
 
-		public async Task<bool> CanReserve(int flatId, DateDto date)
+		public async Task<bool> IsReserve(int flatId, DateDto date)
 		{
 			bool available = true;
 			var flat = await _flatRepository.GetByIdAsync(flatId);
@@ -193,34 +193,42 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<AvailableFlatsDto>> AvailableFlatsForReserve(DateDto date)
 		{
-			bool isAvailable = false;
+			bool isAvailable = false; 
 			List<AvailableFlatsDto> availableFlats = new List<AvailableFlatsDto>();
-			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
+			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();//5 
 			foreach (var flat in flats)
 			{
 
 				var listReserv = await _repository.GetAll().Where(x => x.FlatId == flat.Id).ToListAsync();
 				if (listReserv.Count() == 0) { availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id }); }
-				foreach (var reserv in listReserv)
+				else
 				{
-
-					if ((reserv.StartDate <= date.CheckOutDate && reserv.EndDate >= date.CheckInDate) == false)
+					foreach (var reserv in listReserv)
 					{
-						isAvailable = true;
-					}
 
-					else
-					{
-						if (reserv.IsFinished == true || reserv.IsCanceled == true || reserv.IsDeleted != true)
+						if ((reserv.StartDate <= date.CheckOutDate && reserv.EndDate >= date.CheckInDate) == false)
 						{
 							isAvailable = true;
 						}
-						else { isAvailable = false; }
+
+						else
+						{
+							if (reserv.IsFinished == true || reserv.IsCanceled == true || reserv.IsDeleted == true)
+							{
+								isAvailable = true;
+							}
+							else { isAvailable = false; }
+						}
+						if (!isAvailable) break;
+						
 					}
-				}
-				if (isAvailable)
-				{
-					availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id });
+
+					if (isAvailable)
+					{
+						availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id });
+					}
+					
+					
 				}
 			}
 
@@ -246,35 +254,65 @@ namespace Hotel.Business.Services.Implementations
 			return totalPrice;
 		}
 
-		//public async Task<List<RecomendedFlatDto>> RecomendedFlats(DateDto dateDto, int adults = 1, int children = 0)
-		//{
+		public async Task<List<RecomendedFlatDto>> RecomendedFlats(DateDto dateDto, int adults = 1, int children = 0)
+		{
 
-		//	bool isAvailable = false;
-		//	bool isEqual = false;
-		//	bool isLess = false;
-		//	List<RecomendedFlatDto> recomendedFlats = new List<RecomendedFlatDto>();
-		//	var total = adults + children;
-		//	var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
-		//	foreach (var flat in flats)
-		//	{
-		//		isEqual = (flat.BedCount == total);
-		//		isAvailable = _repository.GetAll().Where(x => x.FlatId == flat.Id).All(x => x.StartDate < dateDto.CheckOutDate && x.EndDate < dateDto.CheckInDate);
-		//		isLess = (flat.BedCount < total);
-		//		if (isAvailable && isEqual)
-		//		{
-		//			recomendedFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id, BedCount = flat.BedCount, Price = flat.Price });
-		//			return recomendedFlats;
-		//		}
-		//		else if (isAvailable && isLess)
-		//		{
-		//			List<int> listId = new List<int>();
-		//			var need = total - flat.BedCount;
-		//			recomendedFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id, BedCount = flat.BedCount, Price = flat.Price });
-		//			listId.Add(flat.BedCount);
-		//			return recomendedFlats.OrderByDescending(f => f.BedCount).ToList();
-		//		}
-		//		return recomendedFlats.OrderByDescending(f => f.BedCount).ToList();
-		//	}
-		//}
+			bool isAvailable = false;
+			bool isEqual = false;
+			bool isLess = false;
+			List<RecomendedFlatDto> recomendedFlats = new List<RecomendedFlatDto>();
+			List<RecomendedFlatDto> availableFlats = new List<RecomendedFlatDto>();
+			var total = adults + children;
+			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
+			foreach (var flat in flats)
+			{
+				isEqual = (flat.BedCount == total);
+				isAvailable = _repository.GetAll().Where(x => x.FlatId == flat.Id).All(x => (x.StartDate <= dateDto.CheckOutDate && x.EndDate >= dateDto.CheckInDate) == false);
+				isLess = (flat.BedCount < total);
+				if (isAvailable && isEqual)
+				{
+					recomendedFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id, BedCount = flat.BedCount, Price = flat.Price });
+					return recomendedFlats;
+				}
+				if (isAvailable)
+				{
+					availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id, BedCount = flat.BedCount, Price = flat.Price });
+				}
+			}
+			var gettedList = availableFlats.OrderByDescending(x => x.BedCount).ToList();
+			int c = 0;
+			recomendedFlats.Add(gettedList[c]);
+			var neededCount = total - gettedList[c].BedCount;
+			var getElement=gettedList.FirstOrDefault(x => x.BedCount <= gettedList[c].BedCount);
+			gettedList.Remove(getElement);
+			
+			if (neededCount > 0)
+			{
+				while (c < gettedList.Count)
+				{
+					if (gettedList.Any(x => x.BedCount <= neededCount))
+					{
+						var recommend = gettedList.FirstOrDefault(x => x.BedCount <= neededCount);
+						if (recommend != null)
+						{
+							recomendedFlats.Add(new() { CatagoryId = recommend.CatagoryId, FlatId = recommend.FlatId, BedCount = recommend.BedCount, Price = recommend.Price });
+							gettedList.Remove(recommend);
+						}
+						neededCount = neededCount - recommend.BedCount;
+						if (neededCount < 0)
+						{
+							return recomendedFlats;
+						}
+					}
+					else
+					{
+					neededCount = neededCount + 1;
+
+					}
+					c++;
+				}
+			}
+			return recomendedFlats;
+		}
 	}
 }

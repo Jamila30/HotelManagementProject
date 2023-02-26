@@ -2,7 +2,7 @@
 
 namespace Hotel.UI.Controllers
 {
-	[Authorize]
+	
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FlatController : ControllerBase
@@ -69,24 +69,6 @@ namespace Hotel.UI.Controllers
 			try
 			{
 				var slider = await _flatService.GetByCondition(x => x.BedCount == count);
-				return Ok(slider);
-			}
-			catch (NotFoundException ex)
-			{
-				return NotFound(ex.Message);
-			}
-			catch (Exception)
-			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
-			}
-		}
-
-		[HttpGet("searchForAdultsCount/{fromCount}")]
-		public async Task<IActionResult> GetByAdultsCount(int fromCount)
-		{
-			try
-			{
-				var slider = await _flatService.GetByCondition(x => x.Adults >= fromCount);
 				return Ok(slider);
 			}
 			catch (NotFoundException ex)

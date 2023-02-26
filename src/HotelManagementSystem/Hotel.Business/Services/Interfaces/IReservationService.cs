@@ -12,8 +12,9 @@ namespace Hotel.Business.Services.Interfaces
 		Task UpdateAsync(int id, UpdateReservationDto entity);
 		Task Delete(int id);
 		Task CancelReservation(int reservId);
-		Task<bool> CanReserve(int flatId, DateDto date);
+		Task<bool> IsReserve(int flatId, DateDto date);
 		Task<List<AvailableFlatsDto>> AvailableFlatsForReserve(DateDto date);
+		Task<List<RecomendedFlatDto>> RecomendedFlats(DateDto dateDto, int adults = 1, int children = 0);
 		Task<float> GetTotalPrice(List<StabilPropertirsDto> reservId);
 		Task FinishEndedReservations();
 

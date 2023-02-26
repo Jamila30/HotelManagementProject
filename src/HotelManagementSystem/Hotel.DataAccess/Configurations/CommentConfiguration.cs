@@ -16,9 +16,6 @@ namespace Hotel.DataAccess.Configurations
 				.IsRequired();
 			builder.Property(c => c.Created)
 				.IsRequired();
-			
-	
-
 		}
 	}
 }

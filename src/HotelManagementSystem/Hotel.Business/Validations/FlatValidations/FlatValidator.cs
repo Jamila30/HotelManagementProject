@@ -16,12 +16,6 @@ namespace Hotel.Business.Validations.FlatValidations
 			RuleFor(f => f.Description)
 				.NotNull()
 				.NotEmpty();
-			RuleFor(f => f.Adults)
-				.NotEmpty()
-				.NotNull();
-			RuleFor(f => f.Children)
-				.NotEmpty()
-				.NotNull();
 			RuleFor(f => f.Price)
 				.NotEmpty()
 				.NotNull();
