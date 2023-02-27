@@ -20,9 +20,9 @@ namespace Hotel.UI.Controllers
 				var accounts = await _accountService.GetAllAccounts();
 				return Ok(accounts);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				return NotFound(ex.Message);
 			}
 		}
 
@@ -50,7 +50,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (BadRequestException ex)
 			{
-				return BadRequest(ex);
+				return BadRequest(ex.Message);
 			}
 			catch (Exception)
 			{
@@ -58,7 +58,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpPost("Add Role to User")]
+		[HttpPost("AddRoletoUser")]
 		public async Task<ActionResult> AddUserRole(UserRoleDto userDto)
 		{
 			try
@@ -73,13 +73,17 @@ namespace Hotel.UI.Controllers
 			catch (AlreadyExistException ex)
 			{
 				return BadRequest(ex.Message);
+			
+			}catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
 			}
 			catch (Exception)
 			{
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
-		[HttpPut("Update Account")]
+		[HttpPut("UpdateAccount")]
 		public async Task<ActionResult> UpdateAccount(string userId, UpdateUserDto updateUserDto)
 		{
 			try
@@ -91,13 +95,21 @@ namespace Hotel.UI.Controllers
 			{
 				return NotFound(ex.Message);
 			}
+			catch(BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (IncorrectIdException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
-		[HttpPut("Block Account")]
+		[HttpPut("BlockAccount")]
 		public async Task<ActionResult> BlockAccount(BlockAccountDto blockAccount)
 		{
 			try
@@ -119,7 +131,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpPut("Unblock Account")]
+		[HttpPut("UnblockAccount")]
 		public async Task<ActionResult> UnBlockAccount(JustEmailDto blockEmail)
 		{
 			try
@@ -141,7 +153,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpPut("Update User's Role")]
+		[HttpPut("UpdateUserRole")]
 		public async Task<ActionResult> UpdateUserRole(UpdateUserRolesDto updateUserRoles)
 		{
 			try
@@ -163,7 +175,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpDelete("Delete Account")]
+		[HttpDelete("DeleteAccount")]
 		public async Task<ActionResult> DeleteAccount(JustEmailDto deleteAccount)
 		{
 			try
@@ -185,8 +197,8 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpDelete("Delete Role")]
-		public async Task<ActionResult> DeleteUserRole(UserRoleDto deleteRole)
+		[HttpDelete("DeleteRole")]
+		public async Task<ActionResult> DeleteUserRole([FromBody]UserRoleDto deleteRole)
 		{
 			try
 			{
@@ -198,6 +210,10 @@ namespace Hotel.UI.Controllers
 				return NotFound(ex.Message);
 			}
 			catch (AlreadyExistException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (BadRequestException ex)
 			{
 				return BadRequest(ex.Message);
 			}

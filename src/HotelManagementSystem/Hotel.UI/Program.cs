@@ -6,10 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 //Connecting DBContext
 var conString = builder.Configuration["ConnectionStrings:default"];
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(conString));
-builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
+{
+	
+	opt.Lockout.AllowedForNewUsers = false;
+	opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+	opt.Lockout.MaxFailedAccessAttempts = 5;
+}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 //Adding CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

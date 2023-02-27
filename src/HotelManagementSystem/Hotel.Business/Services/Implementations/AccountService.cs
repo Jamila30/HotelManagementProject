@@ -1,4 +1,7 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Hotel.Business.Exceptions;
+using Microsoft.AspNetCore.Identity;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class AccountService : IAccountService
 	{
@@ -35,18 +38,29 @@
 			var account = _mapper.Map<AppUser>(createAccount);
 			account.EmailConfirmed = true;
 			var identityResult = await _userManager.CreateAsync(account, createAccount.Password);
-			if (!identityResult.Succeeded) throw new BadRequestException("Account didnt created");
+			string errors = string.Empty;
+			int count = 1;
+			if (!identityResult.Succeeded)
+			{
+				foreach (var error in identityResult.Errors)
+				{
+					errors += count+"." + error.Description+"\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
 			await _userManager.AddToRoleAsync(account, Roles.Member.ToString());
 
 		}
 		public async Task UpdateAccount(string userId, UpdateUserDto createAccount)
 		{
-			if (userId != createAccount.Id) throw new IncorrectIdException("id didnt overlap");
+			if (userId != createAccount.userId) throw new IncorrectIdException("id didnt overlap");
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new NotFoundException("user didnt find");
-			user.Email = createAccount.Email;
 			user.Fullname = createAccount.FullName;
 			user.PhoneNumber = createAccount.PhoneNumber;
+			var existUsername=await _userManager.FindByNameAsync(createAccount.UserName);
+			if(existUsername !=null) throw new BadRequestException("This username is taken"); 
 			user.UserName = createAccount.UserName;
 			_repository.Update(user);
 			await _repository.SaveChanges();
@@ -56,11 +70,29 @@
 			var user = await _userManager.FindByEmailAsync(blockAccount.Email);
 			if (user is null) throw new NotFoundException("There is no account with this email");
 
-			var lockUser = await _userManager.SetLockoutEnabledAsync(user, false);
-			if (!lockUser.Succeeded) throw new BadRequestException("problem happened during lock user");
-
+			var lockUser = await _userManager.SetLockoutEnabledAsync(user, true);
+			var errors = string.Empty;
+			int count = 1;
+			if (!lockUser.Succeeded)
+			{
+				foreach (var error in lockUser.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
 			var lockDate = await _userManager.SetLockoutEndDateAsync(user, blockAccount.EndDate);
-			if (!lockDate.Succeeded) throw new BadRequestException("problem happened during lock user until date");
+			if (!lockDate.Succeeded)
+			{
+				foreach (var error in lockUser.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
+
 			return true;
 		}
 		public async Task<bool> UnBlockAccount(JustEmailDto justEmail)
@@ -68,11 +100,30 @@
 			var user = await _userManager.FindByEmailAsync(justEmail.Email);
 			if (user is null) throw new NotFoundException("There is not account with this email");
 
-			var lockUser = await _userManager.SetLockoutEnabledAsync(user, true);
-			if (!lockUser.Succeeded) throw new BadRequestException("problem happened during unlock user");
-			DateTime date = DateTime.Now - TimeSpan.FromMinutes(1);
-			var lockDate = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now - TimeSpan.FromMinutes(1));
-			if (!lockDate.Succeeded) throw new BadRequestException("user unsuccessfully unlocked");
+			var errors = string.Empty;
+			int count = 1;
+			var DATE = DateTime.Now - TimeSpan.FromMinutes(1);
+			var lockDate = await _userManager.SetLockoutEndDateAsync(user,null );
+			if (!lockDate.Succeeded)
+			{
+				foreach (var error in lockDate.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
+
+			var lockUser = await _userManager.SetLockoutEnabledAsync(user, false);
+			if (!lockUser.Succeeded)
+			{
+				foreach (var error in lockUser.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
 			return true;
 		}
 		public async Task DeleteAccount(JustEmailDto justEmail)
@@ -99,10 +150,7 @@
 
 					await _userManager.AddToRoleAsync(user, addRole.RoleName);
 				}
-				else
-				{
-					throw new AlreadyExistException("this role already exist for this user");
-				}
+				
 			}
 		}
 		public async Task UpdateUserRole(UpdateUserRolesDto updateUser)
@@ -136,6 +184,7 @@
 			if (!result) throw new BadRequestException("role name doesnt exists for this user");
 
 			var roles = await _userManager.GetRolesAsync(user);
+			if (roles.Count() <= 1) throw new BadRequestException("role cant deleted because another role doesnt exist");
 			bool isExist = false;
 			foreach (var role in roles)
 			{

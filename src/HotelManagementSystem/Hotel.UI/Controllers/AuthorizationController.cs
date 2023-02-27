@@ -63,15 +63,18 @@ namespace Hotel.UI.Controllers
 			{
 				return BadRequest(ex.Message);
 			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
-
-				throw;
+				return StatusCode(500);
 			}
 		}
 
 		[HttpPost("[action]")]
-		public async Task<IActionResult> Login([FromForm] LoginDto login)
+		public async Task<IActionResult> Login(LoginDto login)
 		{
 			try
 			{
@@ -113,7 +116,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 		[HttpPost("[action]")]
-		public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordDto forgotPassword)
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPassword)
 		{
 			try
 			{

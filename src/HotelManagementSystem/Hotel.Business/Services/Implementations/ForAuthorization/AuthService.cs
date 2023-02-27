@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations.ForAuthorization
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Hotel.Business.Services.Implementations.ForAuthorization
 {
 	public class AuthService : IAutService
 	{
@@ -27,8 +29,17 @@
 			var identityResult = await _userManager.CreateAsync(user, register.Password);
 			await _userManager.AddToRoleAsync(user, Roles.Member.ToString());
 
-
-			if (!identityResult.Succeeded) throw new BadRequestException("Register didnt successfully");
+			string errors = string.Empty;
+			int count = 1;
+			if (!identityResult.Succeeded)
+			{
+				foreach (var error in identityResult.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
 			var token = HttpUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
 			return new GeneralResponseDto()
 			{
@@ -47,13 +58,22 @@
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user.EmailConfirmed == true) throw new AlreadyExistException("This email already confirmed");
 			var decodeToken = HttpUtility.UrlDecode(token);
-			var result = await _userManager.ConfirmEmailAsync(user, decodeToken);
+			var result = await _userManager.ConfirmEmailAsync(user, token);
+			string errors = string.Empty;
+			int count = 1;
 			if (!result.Succeeded)
 			{
-				throw new ConfirmationException("Email didnt confirmed!");
-			}
+				foreach (var error in result.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new ConfirmationException(errors.Trim());
 
+			}
 		}
+
+
 
 		public async Task<TokenResponseDto> LoginAsync(LoginDto login)
 		{
@@ -110,7 +130,7 @@
 				throw new BadRequestException("Invalid access token or refresh token");
 			}
 
-			var newResponse= await _tokenCreator.CreateTokenForUser(user,10);
+			var newResponse = await _tokenCreator.CreateTokenForUser(user, 10);
 			var newRefreshToken = _tokenCreator.GenerateRefreshToken();
 
 			user.RefreshToken = newRefreshToken;
@@ -149,9 +169,20 @@
 			if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token)) throw new BadRequestException("token or user id is empty");
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user is null) throw new NotFoundException("User not found");
-			var decodeToken = HttpUtility.UrlDecode(token);
-			var identityResult = await _userManager.ResetPasswordAsync(user, decodeToken, resetPassword.NewPassword);
-			if (!identityResult.Succeeded) throw new BadRequestException("password couldn't reset!");
+		   // var decodeToken = HttpUtility.UrlDecode(token);
+			var identityResult = await _userManager.ResetPasswordAsync(user, token, resetPassword.NewPassword);
+
+			string errors = string.Empty;
+			int count = 1;
+			if (!identityResult.Succeeded)
+			{
+				foreach (var error in identityResult.Errors)
+				{
+					errors += count + "." + error.Description + "\n";
+					count++;
+				}
+				throw new BadRequestException(errors.Trim());
+			}
 		}
 
 	}

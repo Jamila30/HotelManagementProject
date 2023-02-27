@@ -11,7 +11,8 @@ namespace Hotel.Business.Validations.AccountValidations
 				.NotNull();
 			RuleFor(x => x.EndDate)
 				.NotEmpty()
-				.NotNull();
+				.NotNull()
+				.GreaterThan(DateTime.Now);
 		}
 	}
 }

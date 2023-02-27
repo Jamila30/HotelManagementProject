@@ -75,7 +75,7 @@ namespace Hotel.Business.Services.Implementations
 
 				try
 				{
-					amentity.Image = await entity.Image.CopyFileToAsync($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
+					amentity.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "amentityImage");
 				}
 				catch (Exception)
 				{
@@ -125,7 +125,7 @@ namespace Hotel.Business.Services.Implementations
 				//  C:\Users\Asus\Desktop\reactpro\src\assets\images
 				try
 				{
-					amentity.Image = await entity.Image.CopyFileToAsync($"C:\\Users\\Asus\\Desktop\\reactpro\\", "src", "assets", "images");
+					amentity.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "amentityImage");
 				}
 				catch (Exception)
 				{

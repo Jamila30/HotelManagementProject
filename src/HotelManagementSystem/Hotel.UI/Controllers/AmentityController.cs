@@ -73,12 +73,11 @@
 			}
 			catch (NotFoundException ex)
 			{
-				return BadRequest(ex.Message);
+				return NotFound(ex.Message);
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode(500);
+				return StatusCode(500);
 			}
 		}
 
