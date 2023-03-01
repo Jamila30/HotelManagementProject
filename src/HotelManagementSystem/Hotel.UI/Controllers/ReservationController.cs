@@ -83,16 +83,16 @@ namespace Hotel.UI.Controllers
 				return StatusCode(500);
 			}
 		}
-		
-		[HttpPost("CanReserve/{flatId}")]
-		public async Task<IActionResult> CanReserve(int flatId, DateDto date)
+
+		[HttpPost("IsReserve/{flatId}")]
+		public async Task<IActionResult> IsReserve(int flatId, DateDto date)
 		{
 			try
 			{
-				var result=await _reservationService.IsReserve(flatId, date);
+				var result = await _reservationService.IsReserve(flatId, date);
 				return Ok(result);
 			}
-			catch(NotFoundException ex)
+			catch (NotFoundException ex)
 			{
 				return NotFound(ex.Message);
 			}
@@ -121,7 +121,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				var result = await _reservationService.RecomendedFlats(dateDto,adults,children);
+				var result = await _reservationService.RecomendedFlats(dateDto, adults, children);
 				return Ok(result);
 			}
 			catch (Exception)
@@ -136,7 +136,7 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-				 await _reservationService.FinishEndedReservations();
+				await _reservationService.FinishEndedReservations();
 				return Ok("Done");
 			}
 			catch (Exception)
@@ -145,11 +145,11 @@ namespace Hotel.UI.Controllers
 			}
 		}
 		[HttpPost("CreateReserv")]
-		public async Task<IActionResult> CreateReserv(DateTime CheckInDate, DateTime CheckOutDate, string UserId, [FromBody] List<CreateReservationDto> entities)
+		public async Task<IActionResult> CreateReserv(string UserId, DateTime CheckInDate, DateTime CheckOutDate, [FromBody] List<CreateReservationDto>? entities)
 		{
 			try
 			{
-				await _reservationService.CreateRezerv(CheckInDate,CheckOutDate, UserId, entities);
+				await _reservationService.CreateRezerv(UserId,CheckInDate,CheckOutDate,entities);
 				return Ok("Created");
 			}
 			catch (NotFoundException ex)
@@ -185,7 +185,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPut("UpdateReserv/{Id}")]
-		public async Task<IActionResult> Update(int Id, [FromForm] UpdateReservationDto updateReserv)
+		public async Task<IActionResult> Update(int Id, [FromBody] UpdateReservationDto updateReserv)
 		{
 			try
 			{

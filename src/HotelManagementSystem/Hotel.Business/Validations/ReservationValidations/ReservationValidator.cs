@@ -11,7 +11,6 @@ namespace Hotel.Business.Validations.ReservationValidations
 			RuleFor(r=>r.UserId).NotNull().NotEmpty();
 			RuleFor(r=>r.StartDate).NotNull().NotEmpty();
 			RuleFor(r=>r.EndDate).NotNull().NotEmpty();
-			RuleFor(r=>r.GuestName).NotNull().NotEmpty();
 			RuleFor(r=>r.Children).NotNull().NotEmpty();
 			RuleFor(r=>r.Adults).NotNull().NotEmpty();
 			RuleFor(r=>r.Price).NotNull().NotEmpty();

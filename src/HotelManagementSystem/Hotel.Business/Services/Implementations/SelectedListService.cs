@@ -48,7 +48,14 @@ namespace Hotel.Business.Services.Implementations
 				{
 					selectedList.CatagoryName = flat.RoomCatagory.Name;
 					selectedList.FlatId = flat.Id;
-					selectedList.Price = flat.Price;
+					if(flat.DiscountPercent==0)
+					{
+						selectedList.Price = flat.Price;
+					}
+					else
+					{
+						selectedList.Price = flat.DiscountPrice;
+					}
 					selectedList.Flat = flat;
 					selectedList.CatagoryId = flat.RoomCatagoryId;
 				};
@@ -87,7 +94,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task DeleteOfOneCatagory(int catagoryId)
 		{
 			var listAll = await _repository.GetAll().Include(l => l.Flat).ThenInclude(l => l.RoomCatagory).Where(x => x.Flat != null ? x.Flat.RoomCatagoryId == catagoryId : false).ToListAsync();
-			if (listAll.Count < 0) throw new BadRequestException("there is no element for delete");
+			if (listAll.Count == 0) throw new BadRequestException("there is no element for delete");
 			foreach (var list in listAll)
 			{
 				_repository.Delete(list);
@@ -98,7 +105,16 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<float> GetTotalPrice()
 		{
 			float totalPrice = 0f;
-			await _repository.GetAll().ForEachAsync(x => { totalPrice += x.Price; });
+			await _repository.GetAll().Include(x=>x.Flat).ForEachAsync(x => {
+				if (x.Flat.DiscountPercent == 0)
+				{
+				totalPrice += x.Price; 
+				}
+				else
+				{
+					totalPrice += x.Flat.DiscountPrice;
+				}
+			});
 			return totalPrice;
 		}
 		public async Task DeleteAllListItems()

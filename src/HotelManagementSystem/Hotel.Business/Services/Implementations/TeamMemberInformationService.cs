@@ -43,11 +43,22 @@
 			{
 				throw new IncorrectFormatException("Id format is wrong");
 			}
-			var teamMember = _teamRepo.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			if (id != entity.TeamMemberId) throw new IncorrectIdException("id didnt overlap");
+			var teamMember = await _teamRepo.GetByIdAsync(id);
 			if (teamMember is null) throw new NotFoundException("Didn't find any Team Member for create it's informations");
 
-			var teamInfo = _mapper.Map<TeamMemberInformation>(entity);
-			teamInfo.TeamMember = teamMember;
+			//var teamInfo=_mapper.Map<TeamMemberInformation>(entity);
+			var teamInfo = new TeamMemberInformation()
+			{
+				Id = entity.TeamMemberId,
+				Twitter = entity.Twitter,
+				Facebook = entity.Facebook,
+				Phone = entity.Phone,
+				Instagram = entity.Instagram,
+				Linkedin = entity.Linkedin,
+				TeamMember = teamMember,
+			};
+
 			await _repository.Create(teamInfo);
 			await _repository.SaveChanges();
 
@@ -90,7 +101,7 @@
 				{
 					throw new BadRequestException("file didnt created");
 				}
-				
+
 			}
 			await _repository.Create(teamInfo);
 			await _repository.SaveChanges();

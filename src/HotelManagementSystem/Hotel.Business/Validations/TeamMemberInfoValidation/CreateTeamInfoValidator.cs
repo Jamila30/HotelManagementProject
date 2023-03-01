@@ -2,14 +2,21 @@
 
 namespace Hotel.Business.Validations.TeamMemberInfoValidation
 {
-	public class CreateTeamInfoValidator:AbstractValidator<CreateTeamInfoDto>
+	public class CreateTeamInfoValidator : AbstractValidator<CreateTeamInfoDto>
 	{
 		public CreateTeamInfoValidator()
 		{
+			RuleFor(x => x.TeamMemberId).NotEmpty().NotNull().Custom((Id, context) =>
+			{
+				if(!int.TryParse(Id.ToString(),out int id))
+				{
+					context.AddFailure("Enter valid format");
+				}
+			});
 			RuleFor(x => x.Phone)
-			  .NotEmpty()
-			  .NotNull()
-			  .MaximumLength(70);
+			     .NotEmpty()
+			     .NotNull()
+			     .MaximumLength(70);
 			RuleFor(x => x.Twitter)
 				.NotEmpty()
 				.NotNull()

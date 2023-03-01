@@ -17,6 +17,9 @@
 			RuleFor(f => f.Size)
 				.NotEmpty()
 				.NotNull();
+			RuleFor(f => f.DiscountPercent)
+				.NotEmpty()
+				.NotNull();
 			RuleFor(f => f.BedCount)
 				.NotEmpty()
 				.NotNull();

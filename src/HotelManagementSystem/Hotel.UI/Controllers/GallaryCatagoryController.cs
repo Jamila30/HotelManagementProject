@@ -63,7 +63,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateCatagoryDto createCatagory)
+		public async Task<IActionResult> Post( CreateCatagoryDto createCatagory)
 		{
 			try
 			{
@@ -81,7 +81,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm] UpdateCatagoryDto updateCatagory)
+		public async Task<IActionResult> Put(int id,  UpdateCatagoryDto updateCatagory)
 		{
 			try
 			{

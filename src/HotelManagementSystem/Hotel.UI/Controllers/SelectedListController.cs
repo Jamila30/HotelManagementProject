@@ -109,7 +109,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;	//return StatusCode(500);
+				return StatusCode(500);
 			}
 		}
 

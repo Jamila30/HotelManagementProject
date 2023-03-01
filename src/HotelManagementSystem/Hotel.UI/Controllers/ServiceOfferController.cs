@@ -73,7 +73,7 @@ namespace Hotel.UI.Controllers
 
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateServiceOfferDto createService)
+		public async Task<IActionResult> Post(CreateServiceOfferDto createService)
 		{
 			try
 			{
@@ -88,7 +88,7 @@ namespace Hotel.UI.Controllers
 
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm] UpdateServiceOfferDto updateService)
+		public async Task<IActionResult> Put(int id,UpdateServiceOfferDto updateService)
 		{
 			try
 			{

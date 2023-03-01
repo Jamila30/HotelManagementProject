@@ -1,5 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryImageDTOs;
-using Hotel.Business.DTOs.RoomImageDTOs;
+﻿using Hotel.Business.DTOs.RoomImageDTOs;
 
 namespace Hotel.UI.Controllers
 {
@@ -70,7 +69,6 @@ namespace Hotel.UI.Controllers
 		{
 			try
 			{
-
 				await _roomImageService.Create(createRoomImage);
 				return Ok("Created");
 			}
@@ -102,7 +100,6 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPut]
-
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateRoomImageDto updateRoom)
 		{
 			try

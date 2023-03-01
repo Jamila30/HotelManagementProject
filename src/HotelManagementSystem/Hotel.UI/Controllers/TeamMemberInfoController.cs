@@ -6,7 +6,7 @@ namespace Hotel.UI.Controllers
 	[ApiController]
 	public class TeamMemberInfoController : ControllerBase
 	{
-		private ITeamMemberInfoService _memberInfoService;
+		private readonly ITeamMemberInfoService _memberInfoService;
 		public TeamMemberInfoController(ITeamMemberInfoService memberInfoService)
 		{
 			_memberInfoService = memberInfoService;
@@ -56,7 +56,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost("createInfoForMember/{memberId}")]
-		public async Task<IActionResult> CreateInfoForExistMember(int memberId,[FromForm] CreateTeamInfoDto createTeam)
+		public async Task<IActionResult> CreateInfoForExistMember(int memberId,CreateTeamInfoDto createTeam)
 		{
 			try
 			{
@@ -74,12 +74,12 @@ namespace Hotel.UI.Controllers
 			
 			catch (Exception)
 			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				throw;//return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
 		[HttpPost("createInfoWithNewMember")]
-		public async Task<IActionResult> CreateInfoWithNewMember( [FromForm] CreateWholeInfoDto createWhole)
+		public async Task<IActionResult> CreateInfoWithNewMember([FromForm]CreateWholeInfoDto createWhole)
 		{
 			try
 			{

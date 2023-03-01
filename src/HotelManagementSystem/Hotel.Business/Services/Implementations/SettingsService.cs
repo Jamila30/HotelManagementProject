@@ -83,7 +83,14 @@ namespace Hotel.Business.Services.Implementations
 			_repository.Update(setting);
 			await _repository.SaveChanges();
 		}
-
+		public async Task UpdateKeyAsync(UpdateKeyDto updateKey)
+		{
+			var setting = await _repository.GetAll().FirstOrDefaultAsync(x => x.Key == updateKey.OldKey);
+			if (setting is null) throw new NotFoundException("there is not this key");
+			setting.Key = updateKey.NewKey;
+			_repository.Update(setting);
+			await _repository.SaveChanges();
+		}
 		public async Task Delete(int id)
 		{
 			var setting = await _repository.GetAll().FirstOrDefaultAsync(x => x.Id == id);

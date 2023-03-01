@@ -1,4 +1,5 @@
-﻿using Hotel.DataAccess.Contexts;
+﻿using Hotel.Core.Entities;
+using Hotel.DataAccess.Contexts;
 
 namespace Hotel.Business.Services.Implementations
 {
@@ -37,7 +38,7 @@ namespace Hotel.Business.Services.Implementations
 			var flatDto = _mapper.Map<FlatDto>(flat);
 			return flatDto;
 		}
-		
+
 		public async Task AddAmentityToFlat(int amentityId, int flatId)
 		{
 			var amentity = await _amentRepo.GetByIdAsync(amentityId);
@@ -68,7 +69,7 @@ namespace Hotel.Business.Services.Implementations
 
 			var flat = await _repository.GetAll().Include(x => x.Amentities).FirstOrDefaultAsync(x => x.Id == flatId);
 			if (flat is null) throw new NotFoundException("there is not flat with this id");
-			bool check=false;
+			bool check = false;
 			if (flat.Amentities is null) throw new NotFoundException("there is not any amentity for delete");
 			foreach (var item in flat.Amentities)
 			{
@@ -112,7 +113,14 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var room = _roomCatagoryRepo.GetAll().Include(x => x.Flats).FirstOrDefault(c => c.Id == entity.RoomCatagoryId);
 			if (room is null) throw new IncorrectIdException("there is no catagory with this id for to set");
-			var flat = _mapper.Map<Flat>(entity);
+			var flat = new Flat();
+			flat.DiscountPercent = entity.DiscountPercent;
+			flat.Price = entity.Price;
+			flat.BedCount = entity.BedCount;
+			flat.Description = entity.Description;
+			flat.Name = entity.Name;
+			flat.RoomCatagoryId = entity.RoomCatagoryId;
+			flat.DiscountPrice = entity.Price * (100 - entity.DiscountPercent)/ 100;
 			flat.RoomCatagory = room;
 			if (room.Flats != null)
 			{
@@ -120,19 +128,26 @@ namespace Hotel.Business.Services.Implementations
 			}
 			await _repository.Create(flat);
 			await _repository.SaveChanges();
-
 		}
 		public async Task UpdateAsync(int id, UpdateFlatDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("id didt match another");
-			var flat = _repository.GetByCondition(x => x.Id == id);
+			var flat =await _repository.GetByIdAsync(id);
 			if (flat is null) throw new NotFoundException("there is no flat to update");
-			var roomCatagory = _repository.GetAll().FirstOrDefault(x => x.RoomCatagoryId == entity.RoomCatagoryId);
+			var roomCatagory = _roomCatagoryRepo.GetAll().FirstOrDefault(x => x.Id == entity.RoomCatagoryId);
 			if (roomCatagory is null) throw new NotFoundException("there is no catagory with this id to update");
-			var newFlat = _mapper.Map<Flat>(entity);
-			_repository.Update(newFlat);
+			
+			flat.Size=entity.Size;
+			flat.DiscountPercent= entity.DiscountPercent;
+			flat.Price= entity.Price;
+			flat.BedCount= entity.BedCount;
+			flat.Description= entity.Description;
+			flat.Name= entity.Name;
+			flat.RoomCatagory = roomCatagory;
+			flat.RoomCatagoryId= entity.RoomCatagoryId;
+			flat.DiscountPrice = entity.Price*(100-entity.DiscountPercent) / 100;
+			_repository.Update(flat);
 			await _repository.SaveChanges();
-
 		}
 
 		public async Task Delete(int id)
@@ -142,7 +157,5 @@ namespace Hotel.Business.Services.Implementations
 			_repository.Delete(flat);
 			await _repository.SaveChanges();
 		}
-
-
 	}
 }

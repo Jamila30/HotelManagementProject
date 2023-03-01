@@ -14,8 +14,8 @@ namespace Hotel.Business.Validations.ReservationValidations
 					context.AddFailure("Enter Valid Format");
 				}
 			});
-			RuleFor(r => r.Children).NotNull().NotEmpty();
-			RuleFor(r => r.Adults).NotNull().NotEmpty();
+			RuleFor(r => r.Children).NotNull().NotEmpty().GreaterThanOrEqualTo(0);
+			RuleFor(r => r.Adults).NotNull().NotEmpty().GreaterThanOrEqualTo(1);
 		
 		}
 	}

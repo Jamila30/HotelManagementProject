@@ -107,7 +107,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task UpdateAsync(int id, UpdateGallaryImageDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other");
-			var gallary = _repository.GetAll().Include(x => x.GallaryCatagory).FirstOrDefault(x => x.Id == id);
+			var gallary =await _repository.GetAll().Include(x => x.GallaryCatagory).FirstOrDefaultAsync(x => x.Id == id);
 			if (gallary is null) throw new NotFoundException("There is no Gallary for update");
 			string fileName = string.Empty;
 			if (entity.Image != null)
@@ -125,7 +125,6 @@ namespace Hotel.Business.Services.Implementations
 
 				try
 				{
-
 					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "gallaryImage");
 				}
 				catch (Exception)

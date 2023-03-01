@@ -82,7 +82,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateFlatDto createFlat)
+		public async Task<IActionResult> Post( CreateFlatDto createFlat)
 		{
 			try
 			{
@@ -116,12 +116,11 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode((int)HttpStatusCode.InternalServerError);
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm] UpdateFlatDto updateFlat)
+		public async Task<IActionResult> Put(int id, UpdateFlatDto updateFlat)
 		{
 			try
 			{
@@ -181,8 +180,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode((int)HttpStatusCode.InternalServerError);
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 
@@ -200,8 +198,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode((int)HttpStatusCode.InternalServerError);
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 

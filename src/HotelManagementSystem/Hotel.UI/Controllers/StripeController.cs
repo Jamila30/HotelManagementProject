@@ -23,6 +23,10 @@ namespace Hotel.UI.Controllers
 				var response = await _stripeService.CreateCustomer(resource, cancellationToken);
 				return Ok(response);
 			}
+			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
+			}
 			catch (Exception)
 			{
 				return StatusCode(500);

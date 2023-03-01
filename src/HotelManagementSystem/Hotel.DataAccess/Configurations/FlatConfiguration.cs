@@ -16,6 +16,10 @@
 				.IsRequired();
 			builder.Property(x => x.Description)
 				.IsRequired();
+			builder.Property(x => x.DiscountPercent)
+				.IsRequired();
+			builder.Property(x => x.DiscountPrice)
+				.IsRequired();
 			builder.Property(x => x.Name)
 				.IsRequired()
 				.HasMaxLength(70);

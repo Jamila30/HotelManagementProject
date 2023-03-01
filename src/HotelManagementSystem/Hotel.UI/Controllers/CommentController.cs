@@ -80,7 +80,7 @@
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateCommentDto createComment)
+		public async Task<IActionResult> Post(CreateCommentDto createComment)
 		{
 			try
 			{
@@ -99,7 +99,7 @@
 
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm]UpdateCommentDto updateComment)
+		public async Task<IActionResult> Put(int id,UpdateCommentDto updateComment)
 		{
 			try
 			{

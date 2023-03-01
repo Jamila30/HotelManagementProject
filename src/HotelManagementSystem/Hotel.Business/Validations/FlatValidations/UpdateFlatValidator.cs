@@ -30,6 +30,9 @@
 			RuleFor(f => f.RoomCatagoryId)
 				.NotEmpty()
 				.NotNull();
+			RuleFor(f => f.DiscountPercent)
+				.NotEmpty()
+				.NotNull();
 			RuleFor(x => x.RoomCatagoryId).Custom((Id, context) =>
 			{
 				if (!int.TryParse(Id.ToString(), out int id))

@@ -1,6 +1,4 @@
-﻿
-
-namespace Hotel.Business.DTOs.SliderHomeDTOs
+﻿namespace Hotel.Business.DTOs.SliderHomeDTOs
 {
 	public class UpdateSliderHomeDto : IDto
 	{

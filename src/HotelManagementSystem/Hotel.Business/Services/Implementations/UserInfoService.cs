@@ -40,6 +40,8 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var user = await _userManager.FindByEmailAsync(entity.Email);
 			if (user is null) throw new NotFoundException("there is no user with this email");
+			var emailValue= await _repository.GetAll().FirstOrDefaultAsync(x => x.Email == entity.Email);
+			if (emailValue != null) throw new AlreadyExistException("user already exist.Try to just change information");
 			var userInfo = _mapper.Map<UserInfo>(entity);
 			userInfo.UserId = user.Id;
 			user.PhoneNumber = entity.Phone;

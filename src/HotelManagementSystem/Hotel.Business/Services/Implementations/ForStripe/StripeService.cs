@@ -1,23 +1,26 @@
 ﻿using Hotel.Business.Services.Interfaces.ForStripes;
 using Hotel.Core.Entities.Stripe;
+using Microsoft.Extensions.Options;
 using Stripe;
 
 namespace Hotel.Business.Services.Implementations.ForStripe
 {
-	public class StripeService:IStripeService
-    {
+	public class StripeService : IStripeService
+	{
 		private readonly TokenService _tokenService;
 		private readonly CustomerService _customerService;
 		private readonly ChargeService _chargeService;
-
+		private readonly UserManager<AppUser> _userManager;
 		public StripeService(
 			TokenService tokenService,
 			CustomerService customerService,
-			ChargeService chargeService)
+			ChargeService chargeService,
+			UserManager<AppUser> userManager)
 		{
 			_tokenService = tokenService;
 			_customerService = customerService;
 			_chargeService = chargeService;
+			_userManager = userManager;
 		}
 
 		public async Task<CustomerResource> CreateCustomer(CreateCustomerResource resource, CancellationToken cancellationToken)
@@ -34,14 +37,42 @@ namespace Hotel.Business.Services.Implementations.ForStripe
 				}
 			};
 			var token = await _tokenService.CreateAsync(tokenOptions, null, cancellationToken);
+			var emailCheck = _userManager.FindByEmailAsync(resource.Email);
+			if (emailCheck == null) throw new NotFoundException("There is no user with this email");
 
-			var customerOptions = new CustomerCreateOptions
+			//var cust = new CustomerListOptions()
+			//{
+			//	Email = resource.Email
+			//};
+
+			//var service = new CustomerService();
+			//StripeList<Customer> customers = service.List(cust);
+			var options = new CustomerSearchOptions
 			{
-				Email = resource.Email,
-				Name = resource.Name,
-				Source = token.Id
+				Query = $"email:'{resource.Email}'",
+				
 			};
-			var customer = await _customerService.CreateAsync(customerOptions, null, cancellationToken);
+			var service = new CustomerService();
+			var searchresult=service.Search(options);
+			var result=searchresult.Select(x=>x.Id).ToList().FirstOrDefault();
+
+			Customer customer = new Customer();
+			if(result is null)
+			{
+				var customerOptions = new CustomerCreateOptions
+				{
+					Email = resource.Email,
+					Name = resource.Name,
+					Source = token.Id
+				};
+				 customer = await _customerService.CreateAsync(customerOptions, null, cancellationToken);
+			}
+			else
+			{
+			
+				 customer =await _customerService.GetAsync(result, null, null, cancellationToken);
+			}
+		
 
 			return new CustomerResource(customer.Id, customer.Email, customer.Name);
 		}

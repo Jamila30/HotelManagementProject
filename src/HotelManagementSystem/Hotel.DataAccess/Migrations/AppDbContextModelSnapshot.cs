@@ -121,6 +121,12 @@ namespace Hotel.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DiscountPercent")
+                        .HasColumnType("int");
+
+                    b.Property<float>("DiscountPrice")
+                        .HasColumnType("real");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70)

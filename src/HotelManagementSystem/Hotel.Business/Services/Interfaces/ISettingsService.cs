@@ -11,6 +11,7 @@ namespace Hotel.Business.Services.Interfaces
 		Task<List<string>> AllValues();
 		Task Create(DictionaryDto dictionaryDto);
 		Task UpdateValueAsync(string key, DictionaryDto dictionaryDto);
+		Task UpdateKeyAsync(UpdateKeyDto updateKey);
 		Task Delete(int id);
 	}
 }

@@ -87,12 +87,33 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		[HttpPut("updateByKey/{key}")]
-		public async Task<ActionResult> Update(string key, DictionaryDto dictionaryDto)
+		[HttpPut("updateValue/{key}")]
+		public async Task<ActionResult> UpdateValue(string key, DictionaryDto dictionaryDto)
 		{
 			try
 			{
 				await _settingsService.UpdateValueAsync(key,dictionaryDto);
+				return Ok("updated");
+			}
+			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
+			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+		[HttpPut("updateKey")]
+		public async Task<ActionResult> UpdateKey(UpdateKeyDto updateKey)
+		{
+			try
+			{
+				await _settingsService.UpdateKeyAsync(updateKey);
 				return Ok("updated");
 			}
 			catch (NotFoundException ex)

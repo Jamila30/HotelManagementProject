@@ -71,7 +71,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] CreateUserInfoDto userInfoDto)
+		public async Task<IActionResult> Post(CreateUserInfoDto userInfoDto)
 		{
 			try
 			{
@@ -79,6 +79,10 @@ namespace Hotel.UI.Controllers
 				return Ok($"Created for user : {user} ");
 			}
 			catch (NotFoundException ex)
+			{
+				return NotFound(ex.Message);
+			}
+			catch (AlreadyExistException ex)
 			{
 				return NotFound(ex.Message);
 			}
@@ -90,7 +94,7 @@ namespace Hotel.UI.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm] UpdateUserInfoDto userInfoDto)
+		public async Task<IActionResult> Put(int id,UpdateUserInfoDto userInfoDto)
 		{
 			try
 			{
