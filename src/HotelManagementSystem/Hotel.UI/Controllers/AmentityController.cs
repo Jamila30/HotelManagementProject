@@ -1,4 +1,7 @@
-﻿namespace Hotel.UI.Controllers
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
+
+namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -81,6 +84,7 @@
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<ActionResult> Post([FromForm] CreateAmentityDto createAmentity)
 		{
@@ -111,6 +115,7 @@
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<ActionResult> Put(int id, [FromForm] UpdateAmentityDto updateAmentity)
 		{
@@ -149,6 +154,7 @@
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> Delete(int id)
 		{

@@ -1,24 +1,20 @@
-﻿using Hotel.Core.Entities;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class ServiceImageService : IServiceImageService
 	{
-		private readonly IServiceImageRepository _repository;
-		private readonly IServiceOfferRepository _offerRepo;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public ServiceImageService(IServiceImageRepository repository, IMapper mapper, IWebHostEnvironment env, IServiceOfferRepository offerRepo)
+		public ServiceImageService(IMapper mapper, IWebHostEnvironment env,IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
 			_env = env;
-			_offerRepo = offerRepo;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<ServiceImageDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.serviceImageRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<ServiceImageDto>>(listAll);
 			return listDto;
 		}
@@ -26,7 +22,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<ServiceImageDto>> GetByCondition(Expression<Func<ServiceImage, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.serviceImageRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<ServiceImageDto>>(listAll);
 			return listDto;
 		}
@@ -34,7 +30,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<ServiceImageDto?> GetByIdAsync(int id)
 		{
 
-			var serviceImage = await _repository.GetByIdAsync(id);
+			var serviceImage = await _unitOfWork.serviceImageRepository.GetByIdAsync(id);
 			if (serviceImage is null) throw new NotFoundException("Element not found");
 			var serviceDto = _mapper.Map<ServiceImageDto>(serviceImage);
 			return serviceDto;
@@ -42,7 +38,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task CreateImageForServiceId(int serviceId, CreateServiceImageDto entity)
 		{
-			var serviceOffer = await _offerRepo.GetAll().Include(x => x.ServiceImages).FirstOrDefaultAsync(x => x.Id == serviceId);
+			var serviceOffer = await _unitOfWork.serviceOfferRepository.GetAll().Include(x => x.ServiceImages).FirstOrDefaultAsync(x => x.Id == serviceId);
 			if (serviceOffer is null) throw new BadRequestException("There is no Service for adding image to it");
 			var image = string.Empty;
 			if (entity.Image != null)
@@ -58,11 +54,10 @@ namespace Hotel.Business.Services.Implementations
 				}
 
 				string fileName = string.Empty;
-				fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
 				try
 				{
 
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -85,7 +80,7 @@ namespace Hotel.Business.Services.Implementations
 			string last;
 			string next;
 			bool check = false;
-			var serviceImages = _repository.GetAll().Include(x => x.ServiceOffer).ToList();
+			var serviceImages = _unitOfWork.serviceImageRepository.GetAll().Include(x => x.ServiceOffer).ToList();
 			foreach (var item in serviceImages)
 			{
 				if (item.Image != null && serviceImage.Image != null)
@@ -97,8 +92,8 @@ namespace Hotel.Business.Services.Implementations
 			
 			}
 			if (check == true) throw new RepeatedImageException("this image exists ");
-			await _repository.Create(serviceImage);
-			await _repository.SaveChanges();
+			await _unitOfWork.serviceImageRepository.Create(serviceImage);
+			await _unitOfWork.SaveAsync();
 		}
 		//public async Task UpdateServiceOfferId(int imageId,int serviceId)
 		//{
@@ -112,7 +107,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task UpdateAsync(int id, UpdateServiceImageDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other");
-			var imageService = _repository.GetAll().Include(x => x.ServiceOffer).FirstOrDefault(x => x.Id == id);
+			var imageService = _unitOfWork.serviceImageRepository.GetAll().Include(x => x.ServiceOffer).FirstOrDefault(x => x.Id == id);
 			if (imageService is null) throw new NotFoundException("There is no Image for update");
 			string fileName = string.Empty;
 			if (entity.Image != null)
@@ -130,7 +125,7 @@ namespace Hotel.Business.Services.Implementations
 				try
 				{
 
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "serviceImage");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -140,14 +135,14 @@ namespace Hotel.Business.Services.Implementations
 				imageService.Image = fileName;
 			}
 
-			var offer = _offerRepo.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
+			var offer = _unitOfWork.serviceOfferRepository.GetAll().FirstOrDefault(x => x.Id == entity.ServiceOfferId);
 			if (offer is null) throw new BadRequestException("there is no Service for set Image for this ServiceOfferId");
 			imageService.ServiceOfferId = entity.ServiceOfferId;
 
 			string last;
 			string next;
 			bool checkImage = false;
-			var serviceImages = _repository.GetAll().Include(x => x.ServiceOffer).ToList();
+			var serviceImages = _unitOfWork.serviceImageRepository.GetAll().Include(x => x.ServiceOffer).ToList();
 			foreach (var item in serviceImages)
 			{
 				if (item.Image != null && imageService.Image!=null  )
@@ -160,19 +155,19 @@ namespace Hotel.Business.Services.Implementations
 			}
 			if (checkImage == true) throw new RepeatedImageException("this image exists");
 			
-			_repository.Update(imageService);
-			await _offerRepo.SaveChanges();
+			_unitOfWork.serviceImageRepository.Update(imageService);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Delete(int id)
 		{
-			var image = _repository.GetAll().FirstOrDefault(x => x.Id == id);
+			var image = _unitOfWork.serviceImageRepository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (image is null) throw new NotFoundException("There is no Image for delete");
 			if (image.Image != null)
 			{
-				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "serviceImage", image.Image);
+				Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images", image.Image);
 			}
-			_repository.Delete(image);
-			await _repository.SaveChanges();
+			_unitOfWork.serviceImageRepository.Delete(image);
+			await _unitOfWork.SaveAsync();
 		}
 
 	}

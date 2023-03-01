@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-
-namespace Hotel.Business.Validations.AuthorizationValidations
+﻿namespace Hotel.Business.Validations.AuthorizationValidations
 {
 	public class GeneralResponseValidator:AbstractValidator<GeneralResponseDto>
 	{

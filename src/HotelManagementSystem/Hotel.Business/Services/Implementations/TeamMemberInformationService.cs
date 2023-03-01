@@ -2,21 +2,19 @@
 {
 	public class TeamMemberInformationService : ITeamMemberInfoService
 	{
-		private readonly ITeamMemberInfoRepository _repository;
-		private readonly ITeamMemberRepository _teamRepo;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _env;
 		private readonly IMapper _mapper;
-		public TeamMemberInformationService(ITeamMemberInfoRepository repository, IMapper mapper, ITeamMemberRepository teamRepo, IWebHostEnvironment env)
+		public TeamMemberInformationService( IMapper mapper, IWebHostEnvironment env, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
-			_teamRepo = teamRepo;
 			_env = env;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<TeamMemberInfoDto>> GetAllAsync()
 		{
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.teamMemberInfoRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberInfoDto>>(list);
 			return listDto;
 
@@ -24,14 +22,14 @@
 
 		public async Task<List<TeamMemberInfoDto>> GetByCondition(Expression<Func<TeamMemberInformation, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await		_unitOfWork.teamMemberInfoRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberInfoDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<TeamMemberInfoDto?> GetByIdAsync(int id)
 		{
-			var info = await _repository.GetByIdAsync(id);
+			var info = await _unitOfWork.teamMemberInfoRepository.GetByIdAsync(id);
 			if (info is null) throw new NotFoundException("Element not found");
 			var infoDto = _mapper.Map<TeamMemberInfoDto>(info);
 			return infoDto;
@@ -44,7 +42,7 @@
 				throw new IncorrectFormatException("Id format is wrong");
 			}
 			if (id != entity.TeamMemberId) throw new IncorrectIdException("id didnt overlap");
-			var teamMember = await _teamRepo.GetByIdAsync(id);
+			var teamMember = await _unitOfWork.teamMemberRepository.GetByIdAsync(id);
 			if (teamMember is null) throw new NotFoundException("Didn't find any Team Member for create it's informations");
 
 			//var teamInfo=_mapper.Map<TeamMemberInformation>(entity);
@@ -59,8 +57,8 @@
 				TeamMember = teamMember,
 			};
 
-			await _repository.Create(teamInfo);
-			await _repository.SaveChanges();
+			await _unitOfWork.teamMemberInfoRepository.Create(teamInfo);
+			await	_unitOfWork.SaveAsync();
 
 		}
 
@@ -103,14 +101,14 @@
 				}
 
 			}
-			await _repository.Create(teamInfo);
-			await _repository.SaveChanges();
+			await _unitOfWork.teamMemberInfoRepository.Create(teamInfo);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateTeamMemberInfoDto entity)
 		{
 			if (id != entity.Id) throw new BadRequestException("Id's didn't match each other");
 			//PK ve Fk eynidi deye :
-			var teamMember = _teamRepo.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			var teamMember = _unitOfWork.teamMemberRepository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
 			if (teamMember is null) throw new NotFoundException("There is no suitable Team Member for update it's information");
 
 			if (teamMember.TeamMemberInformation != null)
@@ -123,19 +121,19 @@
 				teamMember.TeamMemberInformation.Phone = entity.Phone;
 			};
 
-			_teamRepo.Update(teamMember);
-			await _repository.SaveChanges();
+			_unitOfWork.teamMemberRepository.Update(teamMember);
+			await _unitOfWork.SaveAsync();
 		}
 
 
 		public async Task Delete(int id)
 		{
-			var teamMember = _teamRepo.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			var teamMember = _unitOfWork.teamMemberRepository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
 			if (teamMember is null) throw new NotFoundException("There is no suitable Team Member for delete it's information");
 
 			if (teamMember.TeamMemberInformation is null) throw new NotFoundException("Didnt find any info for deleting");
-			_repository.Delete(teamMember.TeamMemberInformation);
-			await _repository.SaveChanges();
+			_unitOfWork.teamMemberInfoRepository.Delete(teamMember.TeamMemberInformation);
+			await _unitOfWork.SaveAsync();
 
 		}
 

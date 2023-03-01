@@ -1,33 +1,31 @@
-﻿using Hotel.Business.DTOs.RoomCatagoryDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class RoomCatagoryService : IRoomCatagoryService
 	{
-		private readonly IRoomCatagoryRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mappper;
-		public RoomCatagoryService(IRoomCatagoryRepository repository, IMapper mappper)
+		public RoomCatagoryService(IMapper mappper, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mappper = mappper;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<List<RoomCatagoryDto>> GetAllAsync()
 		{
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.roomCatagoryRepository.GetAll().ToListAsync();
 			var lists = _mappper.Map<List<RoomCatagoryDto>>(list);
 			return lists;
 		}
 
 		public async Task<List<RoomCatagoryDto>> GetByCondition(Expression<Func<RoomCatagory, bool>> expression)
 		{
-			var list = await _repository.GetAll().Where(expression).ToListAsync();
+			var list = await _unitOfWork.roomCatagoryRepository.GetAll().Where(expression).ToListAsync();
 			var lists = _mappper.Map<List<RoomCatagoryDto>>(list);
 			return lists;
 		}
 
 		public async Task<RoomCatagoryDto?> GetByIdAsync(int id)
 		{
-			var catagory = await _repository.GetAll().Include(x=>x.Flats).FirstOrDefaultAsync(x=>x.Id==id);
+			var catagory = await _unitOfWork.roomCatagoryRepository.GetAll().Include(x=>x.Flats).FirstOrDefaultAsync(x=>x.Id==id);
 			var catagoryDto = _mappper.Map<RoomCatagoryDto>(catagory);
 			return catagoryDto;
 		}
@@ -35,30 +33,30 @@ namespace Hotel.Business.Services.Implementations
 		{
 			RoomCatagory catagory = new();
 			catagory.Name = entity.Name;
-			var sameName = _repository.GetByCondition(x => x.Name == entity.Name).ToList();
+			var sameName = _unitOfWork.roomCatagoryRepository.GetByCondition(x => x.Name == entity.Name).ToList();
 			if (sameName.Count >= 1) throw new RepeatedSameCatagoryNameException("Catagory Name exist");
 
-			await _repository.Create(catagory);
-			await _repository.SaveChanges();
+			await _unitOfWork.roomCatagoryRepository.Create(catagory);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateRoomCatagoryDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match another");
-			var catagory = await _repository.GetByIdAsync(id);
+			var catagory = await _unitOfWork.roomCatagoryRepository.GetByIdAsync(id);
 			if (catagory is null) throw new NotFoundException("there is no catagory for update");
 			catagory.Name = entity.Name;
-			var sameNameList = _repository.GetByCondition(x => x.Name == entity.Name).ToList();
+			var sameNameList = _unitOfWork.roomCatagoryRepository.GetByCondition(x => x.Name == entity.Name).ToList();
 			if (sameNameList.Count >= 1) throw new RepeatedSameCatagoryNameException("This catagory name exist");
-			_repository.Update(catagory);
-			await _repository.SaveChanges();
+			_unitOfWork.roomCatagoryRepository.Update(catagory);
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task Delete(int id)
 		{
-			var catagory = await _repository.GetByIdAsync(id);
+			var catagory = await _unitOfWork.roomCatagoryRepository.GetByIdAsync(id);
 			if (catagory is null) throw new NotFoundException("there is no catagory for update");
-			_repository.Delete(catagory);
-			await _repository.SaveChanges();
+			_unitOfWork.roomCatagoryRepository.Delete(catagory);
+			await _unitOfWork.SaveAsync();
 		}
 
 

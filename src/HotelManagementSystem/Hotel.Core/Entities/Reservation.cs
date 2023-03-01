@@ -1,6 +1,4 @@
-﻿using Hotel.Core.Entities.Identity;
-
-namespace Hotel.Core.Entities
+﻿namespace Hotel.Core.Entities
 {
 	public class Reservation:IEntity
 	{

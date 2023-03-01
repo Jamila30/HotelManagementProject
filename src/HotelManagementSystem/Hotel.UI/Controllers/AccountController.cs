@@ -1,9 +1,10 @@
-﻿using Hotel.Business.DTOs.AccountsDTOs;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize("Roles=Admin")]
 	public class AccountController : ControllerBase
 	{
 		private readonly IAccountService _accountService;

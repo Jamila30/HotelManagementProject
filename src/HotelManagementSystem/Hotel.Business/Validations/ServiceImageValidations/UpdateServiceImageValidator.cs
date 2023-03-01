@@ -1,11 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceImageDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Business.Validations.ServiceImageValidations
+﻿namespace Hotel.Business.Validations.ServiceImageValidations
 {
 	public class UpdateServiceImageValidator:AbstractValidator<UpdateServiceImageDto>
 	{

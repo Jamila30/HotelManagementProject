@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
-	
+
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FlatController : ControllerBase
@@ -81,6 +82,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post( CreateFlatDto createFlat)
 		{
@@ -98,6 +100,8 @@ namespace Hotel.UI.Controllers
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPost("AddAmentityWithFlatId")]
 		public async Task<IActionResult> AddAmentityToFlat(int flatId,int amentityId)
 		{
@@ -119,6 +123,8 @@ namespace Hotel.UI.Controllers
 				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
+
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, UpdateFlatDto updateFlat)
 		{
@@ -146,7 +152,7 @@ namespace Hotel.UI.Controllers
 
 
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
@@ -166,6 +172,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut("UpdateAmentityWithFlatId")]
 		public async Task<IActionResult> UpdateAmentityForFlatID(int flatId,int amentityId,int newAmentityId)
 		{
@@ -184,6 +191,8 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("DeleteAmentityForFlatId")]
 		public async Task<IActionResult> DeleteAmentityFromFlat(int flatId, int amentityId)
 		{

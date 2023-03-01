@@ -1,7 +1,6 @@
-﻿
-namespace Hotel.Business.Utilities
+﻿namespace Hotel.Business.Utilities
 {
-	public static class Extensions
+	public static class FileExtensions
 	{
 		public static bool CheckFileSize(this IFormFile file,int kByte)
 		{
@@ -35,5 +34,6 @@ namespace Hotel.Business.Utilities
 			}
 			
 		}
+
 	}
 }

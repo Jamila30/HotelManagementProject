@@ -1,6 +1,4 @@
-﻿
-
-namespace Hotel.Business.Validations.TeamMemberInfoValidation
+﻿namespace Hotel.Business.Validations.TeamMemberInfoValidation
 {
 	public class CreateWholeInfoValidator:AbstractValidator<CreateWholeMemberDto>
 	{

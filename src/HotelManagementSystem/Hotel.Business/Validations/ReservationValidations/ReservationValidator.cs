@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ReservationDTOs;
-
-namespace Hotel.Business.Validations.ReservationValidations
+﻿namespace Hotel.Business.Validations.ReservationValidations
 {
 	public class ReservationValidator:AbstractValidator<ReservationDto>
 	{

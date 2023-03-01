@@ -1,10 +1,10 @@
-﻿using Hotel.Business.Services.Interfaces.ForStripes;
-using Hotel.Core.Entities.Stripe;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles ="Member,Admin")]
 	public class StripeController : ControllerBase
 	{
 		private readonly IStripeService _stripeService;

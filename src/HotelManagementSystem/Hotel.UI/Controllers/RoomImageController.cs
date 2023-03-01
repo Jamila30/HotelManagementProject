@@ -1,4 +1,5 @@
-﻿using Hotel.Business.DTOs.RoomImageDTOs;
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -63,8 +64,8 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
-
 		public async Task<IActionResult> Create([FromForm] CreateRoomImageDto createRoomImage)
 		{
 			try
@@ -99,6 +100,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateRoomImageDto updateRoom)
 		{
@@ -143,6 +145,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

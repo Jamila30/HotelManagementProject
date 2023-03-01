@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceOfferDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class ServiceOfferMapper:Profile
 	{

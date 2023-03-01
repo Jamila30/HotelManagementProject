@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryCatagoryDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class GallaryCatagoryMapper:Profile
 	{

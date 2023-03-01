@@ -1,39 +1,34 @@
-﻿using Hotel.DataAccess.Contexts;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class GallaryImageService : IGallaryImageService
 	{
-		private readonly IGallaryImageRepository _repository;
-		private readonly IGallaryCatagoryRepository _catRepo;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public GallaryImageService(IGallaryImageRepository repository, IMapper mapper, IWebHostEnvironment env, IGallaryCatagoryRepository catRepo)
+		public GallaryImageService(IMapper mapper, IWebHostEnvironment env,IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
 			_env = env;
-			_catRepo = catRepo;
-
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<GallaryImageDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.gallaryImageRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<GallaryImageDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<List<GallaryImageDto>> GetByCondition(Expression<Func<GallaryImage, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Include(x => x.GallaryCatagory).Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.gallaryImageRepository.GetAll().Include(x => x.GallaryCatagory).Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<GallaryImageDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<GallaryImageDto?> GetByIdAsync(int id)
 		{
-			var gallary = await _repository.GetByIdAsync(id);
+			var gallary = await _unitOfWork.gallaryImageRepository.GetByIdAsync(id);
 			if (gallary is null) throw new NotFoundException("Element not found");
 			if (gallary.GallaryCatagory != null && gallary.GallaryCatagory.Images != null)
 				foreach (var item in gallary.GallaryCatagory.Images)
@@ -61,7 +56,7 @@ namespace Hotel.Business.Services.Implementations
 				try
 				{
 
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "gallaryImage");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -70,7 +65,7 @@ namespace Hotel.Business.Services.Implementations
 
 
 			}
-			var catagory = await _catRepo.GetByIdAsync(entity.GallaryCatagoryId);
+			var catagory = await _unitOfWork.gallaryCatagoryRepository.GetByIdAsync(entity.GallaryCatagoryId);
 			if (catagory is null) throw new BadRequestException("there is no catagory to set for this id");
 			GallaryImage gallary = new()
 			{
@@ -83,7 +78,7 @@ namespace Hotel.Business.Services.Implementations
 			{
 				catagory.Images.Add(gallary);
 			}
-			var images = _repository.GetAll().ToList();
+			var images = _unitOfWork.gallaryImageRepository.GetAll().ToList();
 			bool check = false;
 			bool checkCatagory = false;
 			foreach (var item in images)
@@ -101,13 +96,13 @@ namespace Hotel.Business.Services.Implementations
 			if (check == true && checkCatagory == true) throw new RepeatedImageException("this image exist in this gallary ");
 
 
-			await _repository.Create(gallary);
-			await _repository.SaveChanges();
+			await _unitOfWork.gallaryImageRepository.Create(gallary);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateGallaryImageDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other");
-			var gallary =await _repository.GetAll().Include(x => x.GallaryCatagory).FirstOrDefaultAsync(x => x.Id == id);
+			var gallary =await	_unitOfWork.gallaryImageRepository.GetAll().Include(x => x.GallaryCatagory).FirstOrDefaultAsync(x => x.Id == id);
 			if (gallary is null) throw new NotFoundException("There is no Gallary for update");
 			string fileName = string.Empty;
 			if (entity.Image != null)
@@ -125,7 +120,7 @@ namespace Hotel.Business.Services.Implementations
 
 				try
 				{
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "gallaryImage");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -135,7 +130,7 @@ namespace Hotel.Business.Services.Implementations
 					
 				gallary.Image = fileName;
 			}
-			var images = _repository.GetAll().ToList();
+			var images = _unitOfWork.gallaryImageRepository.GetAll().ToList();
 			bool check = false;
 			bool checkCatagory = false;
 			var last = string.Empty;
@@ -157,18 +152,18 @@ namespace Hotel.Business.Services.Implementations
 			if (check == true && checkCatagory == true) throw new RepeatedImageException("this image exist in this gallary ");
 			gallary.GallaryCatagoryId = entity.GallaryCatagoryId;
 
-			_repository.Update(gallary);
-			await _repository.SaveChanges();
+			_unitOfWork.gallaryImageRepository.Update(gallary);
+			await _unitOfWork.SaveAsync();
 
 		}
 		public async Task Delete(int id)
 		{
-			var gallary = _repository.GetAll().FirstOrDefault(x => x.Id == id);
+			var gallary = _unitOfWork.gallaryImageRepository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (gallary is null) throw new NotFoundException("There is no Gallary for delete");
 
-			Helper.DeleteFile(_env.WebRootPath, "assets", "images", "gallaryImage");
-			_repository.Delete(gallary);
-			await _repository.SaveChanges();
+			Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images",gallary.Image);
+			_unitOfWork.gallaryImageRepository.Delete(gallary);
+			await _unitOfWork.SaveAsync();
 
 		}
 	}

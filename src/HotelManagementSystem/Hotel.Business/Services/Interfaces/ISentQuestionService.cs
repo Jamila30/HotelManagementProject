@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SentQuestionDTOs;
-
-namespace Hotel.Business.Services.Interfaces
+﻿namespace Hotel.Business.Services.Interfaces
 {
 	public interface ISentQuestionService
 	{

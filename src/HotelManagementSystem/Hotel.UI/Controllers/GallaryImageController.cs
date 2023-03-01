@@ -1,4 +1,5 @@
-﻿using Hotel.Business.DTOs.GallaryImageDTOs;
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -71,9 +72,8 @@ namespace Hotel.UI.Controllers
 				return NotFound(ex.Message);
 			}
 		}
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
-
 		public async Task<IActionResult> Create([FromForm] CreateGallaryImageDto createGallary)
 		{
 			try
@@ -104,9 +104,8 @@ namespace Hotel.UI.Controllers
 			return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
-
+		[Authorize(Roles = "Admin")]
 		[HttpPut]
-
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateGallaryImageDto updateGallary)
 		{
 			try
@@ -150,6 +149,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

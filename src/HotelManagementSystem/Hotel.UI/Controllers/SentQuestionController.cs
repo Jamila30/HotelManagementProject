@@ -1,4 +1,5 @@
-﻿using Hotel.Business.DTOs.SentQuestionDTOs;
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -70,6 +71,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost("AnswerQuestion")]
 		public async Task<IActionResult> AnswerQuestion([FromForm] AnswerDto answerDto)
 		{
@@ -88,7 +90,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

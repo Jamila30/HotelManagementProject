@@ -40,10 +40,10 @@ namespace Hotel.DataAccess.Repositories.Implementations
 			_table.Remove(entity);
 			_context.SaveChanges();	
 		}
-		public async Task SaveChanges()
-		{
-			 await  _context.SaveChangesAsync();
-		}
+		//public async Task SaveChanges()
+		//{
+		//	 await  _context.SaveChangesAsync();
+		//}
 
 	}
 

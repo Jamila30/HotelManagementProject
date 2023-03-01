@@ -1,9 +1,10 @@
-﻿using Hotel.Business.DTOs.ReservationDTOs;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles="Member,Admin")]
 	public class ReservationController : ControllerBase
 	{
 		private readonly IReservationService _reservationService;

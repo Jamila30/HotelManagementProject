@@ -1,7 +1,5 @@
-﻿using Hotel.Business.DTOs.ServiceImageDTOs;
-using Hotel.Business.DTOs.ServiceOfferDTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -57,7 +55,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost("CreateImageForServiceId/{serviceId}")]
 		public async Task<IActionResult> CreateImageForServiceId(int serviceId, [FromForm] CreateServiceImageDto createService)
 		{
@@ -88,7 +86,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateServiceImageDto updateService)
 		{
@@ -127,13 +125,12 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				throw;
-				//return StatusCode((int)HttpStatusCode.InternalServerError);
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

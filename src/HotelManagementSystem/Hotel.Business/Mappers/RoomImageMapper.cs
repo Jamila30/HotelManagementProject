@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.RoomImageDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class RoomImageMapper:Profile
 	{

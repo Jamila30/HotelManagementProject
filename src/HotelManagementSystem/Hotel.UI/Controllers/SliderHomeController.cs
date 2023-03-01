@@ -1,6 +1,5 @@
-﻿
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -42,6 +41,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
+		
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(int id)
 		{
@@ -57,7 +57,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post([FromForm] CreateSliderHomeDto sliderHomeDto)
 		{
@@ -84,7 +84,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-		
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm]UpdateSliderHomeDto updateSlider)
 		{
@@ -121,7 +121,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
-		
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

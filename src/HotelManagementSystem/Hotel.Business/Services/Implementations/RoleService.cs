@@ -56,7 +56,7 @@ namespace Hotel.Business.Services.Implementations
 		{
 			var existenceCheck = await _roleManager.RoleExistsAsync(roleName);
 			if (existenceCheck) throw new NotFoundException("role name already exists ");
-			Helper.Roles.Add(roleName);
+		//	Helper.Roles.Add(roleName);
 		}
 		public async Task UpdateRole(UpdateRoleDto updateRole)
 		{
@@ -66,8 +66,8 @@ namespace Hotel.Business.Services.Implementations
 			if (newCheck) throw new NotFoundException("new role name already exist");
 			if (updateRole.OldRoleName != null && updateRole.NewRoleName != null)
 			{
-				Helper.Roles.Remove(updateRole.OldRoleName);
-				Helper.Roles.Add(updateRole.NewRoleName);
+				//Helper.Roles.Remove(updateRole.OldRoleName);
+				//Helper.Roles.Add(updateRole.NewRoleName);
 			}
 			
 			

@@ -1,6 +1,4 @@
-﻿
-
-namespace Hotel.Core.Entities
+﻿namespace Hotel.Core.Entities
 {
 	public class ServiceImage:IEntity
 	{

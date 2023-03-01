@@ -9,6 +9,6 @@ namespace Hotel.DataAccess.Repositories.Interfaces
 		Task Create(T entity);
 		void Delete(T entity);
 		void Update(T entity);
-		Task SaveChanges();
+		//Task SaveChanges();
 	}
 }

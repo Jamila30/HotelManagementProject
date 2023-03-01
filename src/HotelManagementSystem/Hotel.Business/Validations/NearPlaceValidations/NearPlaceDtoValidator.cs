@@ -1,5 +1,4 @@
-﻿
-namespace Hotel.Business.Validations.NearPlaceValidations
+﻿namespace Hotel.Business.Validations.NearPlaceValidations
 {
 	public class NearPlaceDtoValidator:AbstractValidator<NearPlaceDto>
 	{

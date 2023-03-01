@@ -1,34 +1,29 @@
-﻿using Hotel.Business.Exceptions;
-using Microsoft.AspNetCore.Identity;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class AccountService : IAccountService
 	{
-		private readonly IAccountRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly UserManager<AppUser> _userManager;
-		private readonly AppDbContext _context;
 		private readonly RoleManager<IdentityRole> _roleManager;
 
-		public AccountService(IAccountRepository repository, IMapper mapper, UserManager<AppUser> userManager, AppDbContext context, RoleManager<IdentityRole> roleManager)
+		public AccountService(IMapper mapper, UserManager<AppUser> userManager,RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
 			_userManager = userManager;
-			_context = context;
 			_roleManager = roleManager;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<List<AppUserDto>> GetAllAccounts()
 		{
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.accountRepository.GetAll().ToListAsync();
 			var userDto = _mapper.Map<List<AppUserDto>>(list);
 			return userDto;
 		}
 		public async Task<AppUserDto> GetAccount(string accountId)
 		{
 			if (accountId is null) throw new BadRequestException("Invalid form of user id");
-			var account = await _repository.GetAll().FirstOrDefaultAsync(x => x.Id == accountId);
+			var account = await _unitOfWork.accountRepository.GetAll().FirstOrDefaultAsync(x => x.Id == accountId);
 			if (account is null) throw new NotFoundException("there is no account for this id");
 			var user = _mapper.Map<AppUserDto>(account);
 			return user;
@@ -62,8 +57,8 @@ namespace Hotel.Business.Services.Implementations
 			var existUsername=await _userManager.FindByNameAsync(createAccount.UserName);
 			if(existUsername !=null) throw new BadRequestException("This username is taken"); 
 			user.UserName = createAccount.UserName;
-			_repository.Update(user);
-			await _repository.SaveChanges();
+			_unitOfWork.accountRepository.Update(user);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task<bool> BlockAccount(BlockAccountDto blockAccount)
 		{
@@ -132,7 +127,7 @@ namespace Hotel.Business.Services.Implementations
 			if (user is null) throw new NotFoundException("There is not account with this email");
 			if (user.IsDeleted == true) throw new BadRequestException("this account doesn't exist,deleted");
 			user.IsDeleted = true;
-			await _repository.SaveChanges();
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task AddUserRole(UserRoleDto addRole)
 		{

@@ -1,38 +1,34 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class AmentityService : IAmentityService
 	{
-		private readonly IAmentityRepository _repository;
-		private readonly IFlatRepository _flatRepo;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public AmentityService(IAmentityRepository repository, IMapper mapper, IWebHostEnvironment env, IFlatRepository flatRepo)
+		public AmentityService(IMapper mapper, IWebHostEnvironment env, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
 			_env = env;
-			_flatRepo = flatRepo;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<AmentityDto>> GetAllAsync()
 		{
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.amentityRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<AmentityDto>>(list);
 			return listDto;
 		}
 
 		public async Task<List<AmentityDto>> GetByCondition(Expression<Func<Amentity, bool>> expression)
 		{
-			var list = await _repository.GetAll().Where(expression).ToListAsync();
+			var list = await _unitOfWork.amentityRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<AmentityDto>>(list);
 			return listDto;
 		}
 		public async Task<List<AmentityDto>> GetAllAmentitiesByFlatId(int flatId)
 		{
 			List<Amentity> MyAmentities=new List<Amentity>();
-			var amentities = await _repository.GetAll().Include(x => x.Flats).ToListAsync();
+			var amentities = await _unitOfWork.amentityRepository.GetAll().Include(x => x.Flats).ToListAsync();
 			if (amentities is null) throw new NotFoundException("Any amentity didnt created");
 			amentities.ForEach(amentity =>
 			{
@@ -50,7 +46,7 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task<AmentityDto?> GetByIdAsync(int id)
 		{
-			var amentity = await _repository.GetByIdAsync(id);
+			var amentity = await _unitOfWork.amentityRepository.GetByIdAsync(id);
 			var amentityDto = _mapper.Map<AmentityDto>(amentity);
 			return amentityDto;
 		}
@@ -75,7 +71,7 @@ namespace Hotel.Business.Services.Implementations
 
 				try
 				{
-					amentity.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "amentityImage");
+					amentity.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro","src","assets","images");
 				}
 				catch (Exception)
 				{
@@ -83,7 +79,7 @@ namespace Hotel.Business.Services.Implementations
 					throw new BadRequestException("file didnt created");
 				}
 			}
-			var listAmentity = _repository.GetAll();
+			var listAmentity = _unitOfWork.amentityRepository.GetAll();
 			if (listAmentity != null)
 			{
 				foreach (var item in listAmentity)
@@ -102,14 +98,14 @@ namespace Hotel.Business.Services.Implementations
 					}
 				}
 			}
-			await _repository.Create(amentity);
-			await _repository.SaveChanges();
+			await _unitOfWork.amentityRepository.Create(amentity);
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task UpdateAsync(int id, UpdateAmentityDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id did match another");
-			var amentity = await _repository.GetByIdAsync(id);
+			var amentity = await _unitOfWork.amentityRepository.GetByIdAsync(id);
 			if (amentity is null) throw new NotFoundException("there is no amentity to update");
 			if (entity.Image != null)
 			{
@@ -125,7 +121,7 @@ namespace Hotel.Business.Services.Implementations
 				//  C:\Users\Asus\Desktop\reactpro\src\assets\images
 				try
 				{
-					amentity.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "amentityImage");
+					amentity.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -136,7 +132,7 @@ namespace Hotel.Business.Services.Implementations
 			}
 			amentity.Title = entity.Title;
 			amentity.Description = entity.Description;
-			var listAmentity = _repository.GetAll();
+			var listAmentity = _unitOfWork.amentityRepository.GetAll();
 			if (listAmentity != null)
 			{
 				foreach (var item in listAmentity)
@@ -155,19 +151,19 @@ namespace Hotel.Business.Services.Implementations
 				}
 			}
 
-			_repository.Update(amentity);
-			await _repository.SaveChanges();
+			_unitOfWork.amentityRepository.Update(amentity);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Delete(int id)
 		{
-			var amentity = await _repository.GetByIdAsync(id);
+			var amentity = await _unitOfWork.amentityRepository.GetByIdAsync(id);
 			if (amentity is null) throw new NotFoundException("there is no amentity to delete");
 			if (amentity.Image != null)
 			{
-				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "amentityImage", amentity.Image);
+				Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images", amentity.Image);
 			}
-			_repository.Delete(amentity);
-			await _repository.SaveChanges();
+			_unitOfWork.amentityRepository.Delete(amentity);
+			await _unitOfWork.SaveAsync();
 		}
 
 	}

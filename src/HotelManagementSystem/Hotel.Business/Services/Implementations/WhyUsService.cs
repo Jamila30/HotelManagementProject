@@ -3,19 +3,19 @@
 	public class WhyUsService : IWhyUsService
 	{
 
-		private readonly IWhyUsRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public WhyUsService(IWhyUsRepository repository, IMapper mapper, IWebHostEnvironment env)
+		public WhyUsService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env)
 		{
-			_repository = repository;
+			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_env = env;
 		}
 
 		public async Task<List<WhyUsDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.whyUsRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 
@@ -23,14 +23,14 @@
 
 		public async Task<List<WhyUsDto>> GetByCondition(Expression<Func<WhyUs, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.whyUsRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<WhyUsDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<WhyUsDto?> GetByIdAsync(int id)
 		{
-			var why = await _repository.GetByIdAsync(id);
+			var why = await _unitOfWork.whyUsRepository.GetByIdAsync(id);
 			if (why is null) throw new NotFoundException("Element not found");
 			var whyDto = _mapper.Map<WhyUsDto>(why);
 			return whyDto;
@@ -57,7 +57,7 @@
 
 				try
 				{
-					why.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "whyUs");
+					why.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -67,13 +67,13 @@
 
 
 			}
-			await _repository.Create(why);
-			await _repository.SaveChanges();
+			await _unitOfWork.whyUsRepository.Create(why);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateWhyUsDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id doesn't match each other");
-			var why = await _repository.GetByIdAsync(id);
+			var why = await _unitOfWork.whyUsRepository.GetByIdAsync(id);
 			if (why is null) throw new NotFoundException("Not Found");
 			why.Description = entity.Description;
 			why.Title = entity.Title;
@@ -93,7 +93,7 @@
 
 				try
 				{
-					why.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "whyUs");
+					why.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -104,21 +104,21 @@
 
 			}
 
-			_repository.Update(why);
-			await _repository.SaveChanges();
+			_unitOfWork.whyUsRepository.Update(why);
+			await _unitOfWork.SaveAsync();
 
 		}
 
 		public async Task Delete(int id)
 		{
-			var why = await _repository.GetByIdAsync(id);
+			var why = await _unitOfWork.whyUsRepository.GetByIdAsync(id);
 			if (why is null) throw new NotFoundException("Not Found");
 			if (why.Image != null)
 			{
-				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "whyUs", why.Image);
+				Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images", why.Image);
 			}
-			_repository.Delete(why);
-			await _repository.SaveChanges();
+			_unitOfWork.whyUsRepository.Delete(why);
+			await _unitOfWork.SaveAsync();
 		}
 
 	}

@@ -1,4 +1,6 @@
 ﻿using Hotel.Business.DTOs.FaqDTOs;
+using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -41,6 +43,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post( CreateFaqDto createFaq)
 		{
@@ -56,6 +59,7 @@ namespace Hotel.UI.Controllers
 		}
 
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, UpdateFaqDto updateFaq)
 		{
@@ -81,7 +85,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

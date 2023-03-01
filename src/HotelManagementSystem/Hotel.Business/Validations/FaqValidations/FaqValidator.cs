@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.FaqDTOs;
-
-namespace Hotel.Business.Validations.FaqValidations
+﻿namespace Hotel.Business.Validations.FaqValidations
 {
 	public class FaqValidator:AbstractValidator<FaqDto>
 	{

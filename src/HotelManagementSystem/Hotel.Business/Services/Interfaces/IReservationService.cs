@@ -1,7 +1,4 @@
-﻿using Auth0.ManagementApi.Models;
-using Hotel.Business.DTOs.ReservationDTOs;
-
-namespace Hotel.Business.Services.Interfaces
+﻿namespace Hotel.Business.Services.Interfaces
 {
 	public interface IReservationService
 	{

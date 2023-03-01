@@ -2,34 +2,34 @@
 {
 	public class TeamMemberService : ITeamMemberService
 	{
-		private readonly ITeamMemberRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
 
-		public TeamMemberService(ITeamMemberRepository repository, IMapper mapper, IWebHostEnvironment env)
+		public TeamMemberService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env)
 		{
-			_repository = repository;
+			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_env = env;
 		}
 
 		public async Task<List<TeamMemberDto>> GetAllAsync()
 		{
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.teamMemberRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberDto>>(list);
 			return listDto;
 		}
 
 		public async Task<List<TeamMemberDto>> GetByCondition(Expression<Func<TeamMember, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.teamMemberRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<TeamMemberDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<OneMemberInfoDto?> GetByIdAsync(int id)
 		{
-			var info = await _repository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefaultAsync(x => x.Id == id);
+			var info = await _unitOfWork.teamMemberRepository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefaultAsync(x => x.Id == id);
 			if (info is null) throw new NotFoundException("Element not found");
 			OneMemberInfoDto oneMember = new()
 			{
@@ -79,7 +79,7 @@
 
 				try
 				{
-					teamMember.Image = await createWholeMember.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+					teamMember.Image = await createWholeMember.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -88,8 +88,8 @@
 
 			}
 
-			await _repository.Create(teamMember);
-			await _repository.SaveChanges();
+			await _unitOfWork.teamMemberRepository.Create(teamMember);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Create(CreateTeamMemberDto createTeam)
 		{
@@ -114,7 +114,7 @@
 
 				try
 				{
-					teamMember.Image = await createTeam.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+					teamMember.Image = await createTeam.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -124,15 +124,15 @@
 
 			}
 
-			await _repository.Create(teamMember);
-			await _repository.SaveChanges();
+			await _unitOfWork.teamMemberRepository.Create(teamMember);
+			await _unitOfWork.SaveAsync();
 
 		}
 
 		public async Task UpdateAsync(int id, UpdateTeamMemberDto entity)
 		{
 			if (id != entity.Id) throw new BadRequestException("Id's didn't match each other");
-			var teamMember = _repository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			var teamMember = _unitOfWork.teamMemberRepository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
 			if (teamMember is null) throw new NotFoundException("There is no suitable Team Member for update");
 			teamMember.Position = entity.Position;
 			teamMember.Fullname = entity.Fullname;
@@ -151,7 +151,7 @@
 				string fileName = string.Empty;
 				try
 				{
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "teamMember");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -160,17 +160,19 @@
 				teamMember.Image = fileName;
 
 			}
-			_repository.Update(teamMember);
-			await _repository.SaveChanges();
+			_unitOfWork.teamMemberRepository.Update(teamMember);
+			await _unitOfWork.SaveAsync();
 		}
 
 
 		public async Task Delete(int id)
 		{
-			var teamMember = _repository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
+			var teamMember = _unitOfWork.teamMemberRepository.GetAll().Include(x => x.TeamMemberInformation).FirstOrDefault(x => x.Id == id);
 			if (teamMember is null) throw new NotFoundException("There is no suitable Team Member for delete");
-			_repository.Delete(teamMember);
-			await _repository.SaveChanges();
+
+			Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images", teamMember.Image);
+			_unitOfWork.teamMemberRepository.Delete(teamMember);
+			await _unitOfWork.SaveAsync();
 		}
 
 	}

@@ -1,7 +1,4 @@
-﻿using Hotel.Business.DTOs.AuthorizationDTOs;
-using Hotel.Core.Entities;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

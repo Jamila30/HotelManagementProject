@@ -1,7 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceImageDTOs;
-using Hotel.Business.DTOs.ServiceOfferDTOs;
-
-namespace Hotel.Business.Services.Interfaces
+﻿namespace Hotel.Business.Services.Interfaces
 {
 	public interface IServiceImageService
 	{

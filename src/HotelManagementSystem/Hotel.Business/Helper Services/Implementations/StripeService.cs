@@ -1,9 +1,4 @@
-﻿using Hotel.Business.Services.Interfaces.ForStripes;
-using Hotel.Core.Entities.Stripe;
-using Microsoft.Extensions.Options;
-using Stripe;
-
-namespace Hotel.Business.Services.Implementations.ForStripe
+﻿namespace Hotel.Business.Helper_Services.Implementations
 {
 	public class StripeService : IStripeService
 	{
@@ -40,24 +35,17 @@ namespace Hotel.Business.Services.Implementations.ForStripe
 			var emailCheck = _userManager.FindByEmailAsync(resource.Email);
 			if (emailCheck == null) throw new NotFoundException("There is no user with this email");
 
-			//var cust = new CustomerListOptions()
-			//{
-			//	Email = resource.Email
-			//};
-
-			//var service = new CustomerService();
-			//StripeList<Customer> customers = service.List(cust);
 			var options = new CustomerSearchOptions
 			{
 				Query = $"email:'{resource.Email}'",
-				
+
 			};
 			var service = new CustomerService();
-			var searchresult=service.Search(options);
-			var result=searchresult.Select(x=>x.Id).ToList().FirstOrDefault();
+			var searchresult = service.Search(options);
+			var result = searchresult.Select(x => x.Id).ToList().FirstOrDefault();
 
 			Customer customer = new Customer();
-			if(result is null)
+			if (result is null)
 			{
 				var customerOptions = new CustomerCreateOptions
 				{
@@ -65,14 +53,14 @@ namespace Hotel.Business.Services.Implementations.ForStripe
 					Name = resource.Name,
 					Source = token.Id
 				};
-				 customer = await _customerService.CreateAsync(customerOptions, null, cancellationToken);
+				customer = await _customerService.CreateAsync(customerOptions, null, cancellationToken);
 			}
 			else
 			{
-			
-				 customer =await _customerService.GetAsync(result, null, null, cancellationToken);
+
+				customer = await _customerService.GetAsync(result, null, null, cancellationToken);
 			}
-		
+
 
 			return new CustomerResource(customer.Id, customer.Email, customer.Name);
 		}
@@ -100,4 +88,3 @@ namespace Hotel.Business.Services.Implementations.ForStripe
 		}
 	}
 }
-

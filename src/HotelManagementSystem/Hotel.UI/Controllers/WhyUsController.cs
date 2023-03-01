@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
+
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
@@ -54,7 +55,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post([FromForm] CreateWhyUsDto createWhyUs)
 		{
@@ -81,7 +82,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[Authorize(Roles ="Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateWhyUsDto updateWhyUs)
 		{
@@ -118,7 +119,7 @@ namespace Hotel.UI.Controllers
 
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

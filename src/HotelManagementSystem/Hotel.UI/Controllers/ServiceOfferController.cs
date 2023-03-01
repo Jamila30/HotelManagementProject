@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceOfferDTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -71,7 +69,7 @@ namespace Hotel.UI.Controllers
 		//	}
 		//}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post(CreateServiceOfferDto createService)
 		{
@@ -86,7 +84,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
-
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id,UpdateServiceOfferDto updateService)
 		{
@@ -113,6 +111,7 @@ namespace Hotel.UI.Controllers
 		}
 
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

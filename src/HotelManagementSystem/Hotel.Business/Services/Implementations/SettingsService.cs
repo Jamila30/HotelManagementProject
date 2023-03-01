@@ -1,15 +1,13 @@
-﻿using Hotel.Business.DTOs.SettingTableDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class SettingsService : ISettingsService
 	{
-		private readonly ISettingTableRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
-		public SettingsService(ISettingTableRepository repository, IMapper mapper)
+		public SettingsService(IMapper mapper, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<Dictionary<string, SettingsTable>> GetAllAsync()
 		{
@@ -22,16 +20,14 @@ namespace Hotel.Business.Services.Implementations
 			//}
 			//return dictionary;
 
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.settingTableRepository.GetAll().ToListAsync();
 			Dictionary<string, SettingsTable> dictionary = list.ToDictionary(x => x.Key);
-
 			return dictionary;
-
 		}
 
 		public async Task<Dictionary<string, SettingsTable>> GetByCondition(Expression<Func<SettingsTable, bool>> expression)
 		{
-			var list = await _repository.GetAll().Where(expression).ToListAsync();
+			var list = await _unitOfWork.settingTableRepository.GetAll().Where(expression).ToListAsync();
 			Dictionary<string, SettingsTable> dictionary = list.ToDictionary(x => x.Key);
 
 			return dictionary;
@@ -41,7 +37,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<List<string>> AllKey()
 		{
 			List<string> allKeys = new List<string>();
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await _unitOfWork.settingTableRepository.GetAll().ToListAsync();
 			Dictionary<string, SettingsTable> dictionary = list.ToDictionary(x => x.Key);
 			Dictionary<string, SettingsTable>.KeyCollection keys = dictionary.Keys;
 			foreach (var key in keys)
@@ -54,7 +50,7 @@ namespace Hotel.Business.Services.Implementations
 		public async Task<List<string>> AllValues()
 		{
 			List<string> allValues = new List<string>();
-			var list = await _repository.GetAll().ToListAsync();
+			var list = await	_unitOfWork.settingTableRepository.GetAll().ToListAsync();
 			Dictionary<string, SettingsTable> dictionary = list.ToDictionary(x => x.Key);
 			Dictionary<string, SettingsTable>.ValueCollection values = dictionary.Values;
 			foreach (var settings in values)
@@ -70,33 +66,33 @@ namespace Hotel.Business.Services.Implementations
 			{
 				 setting = new SettingsTable() { Key = dictionaryDto.Key, Value = dictionaryDto.Value };
 			}
-			await _repository.Create(setting);
-			await _repository.SaveChanges();
+			await _unitOfWork.settingTableRepository.Create(setting);
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task UpdateValueAsync(string key, DictionaryDto dictionaryDto)
 		{
 			if (key != dictionaryDto.Key) throw new BadRequestException("key must be same");
-			var setting = await _repository.GetAll().SingleOrDefaultAsync(x => x.Key == key);
+			var setting = await _unitOfWork.settingTableRepository.GetAll().SingleOrDefaultAsync(x => x.Key == key);
 			if (setting is null) throw new NotFoundException("there is not this key");
 			setting.Value = dictionaryDto.Value;
-			_repository.Update(setting);
-			await _repository.SaveChanges();
+			_unitOfWork.settingTableRepository.Update(setting);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateKeyAsync(UpdateKeyDto updateKey)
 		{
-			var setting = await _repository.GetAll().FirstOrDefaultAsync(x => x.Key == updateKey.OldKey);
+			var setting = await _unitOfWork.settingTableRepository.GetAll().FirstOrDefaultAsync(x => x.Key == updateKey.OldKey);
 			if (setting is null) throw new NotFoundException("there is not this key");
 			setting.Key = updateKey.NewKey;
-			_repository.Update(setting);
-			await _repository.SaveChanges();
+			_unitOfWork.settingTableRepository.Update(setting);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Delete(int id)
 		{
-			var setting = await _repository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+			var setting = await _unitOfWork.settingTableRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
 			if (setting is null) throw new NotFoundException("there is not setting with this id ");
-			_repository.Delete(setting);
-			await _repository.SaveChanges();
+			_unitOfWork.settingTableRepository.Delete(setting);
+			await _unitOfWork.SaveAsync();
 		}
 
 	}

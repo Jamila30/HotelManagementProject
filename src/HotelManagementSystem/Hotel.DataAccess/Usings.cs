@@ -13,4 +13,6 @@ global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.Extensions.Configuration;
 global using Hotel.Business.Utilities.Enums;
+global using Hotel.DataAccess.Repositories.Implementations;
+global using Hotel.DataAccess.UnitOfWorks.Interfaces;
 

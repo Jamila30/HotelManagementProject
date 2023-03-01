@@ -1,36 +1,33 @@
-﻿using Hotel.Business.DTOs.ServiceOfferDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class ServiceOfferService : IServiceOfferService
 	{
-		private readonly IServiceOfferRepository _repository;
-		
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
-		
-		public ServiceOfferService(IServiceOfferRepository repository, IMapper mapper)
+
+		public ServiceOfferService(IMapper mapper, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<ServiceOfferDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.serviceOfferRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<ServiceOfferDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<List<ServiceOfferDto>> GetByCondition(Expression<Func<ServiceOffer, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.serviceOfferRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<ServiceOfferDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<ServiceOfferDto?> GetByIdAsync(int id)
 		{
-			var service = await _repository.GetByIdAsync(id);
+			var service = await _unitOfWork.serviceOfferRepository.GetByIdAsync(id);
 			if (service is null) throw new NotFoundException("Element not found");
 			var serviceDto = _mapper.Map<ServiceOfferDto>(service);
 			return serviceDto;
@@ -67,30 +64,30 @@ namespace Hotel.Business.Services.Implementations
 		public async Task Create(CreateServiceOfferDto entity)
 		{
 			var service = _mapper.Map<ServiceOffer>(entity);
-			await _repository.Create(service);
-			await _repository.SaveChanges();
+			await _unitOfWork.serviceOfferRepository.Create(service);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Update(int id, UpdateServiceOfferDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other ");
-			var offer=_repository.GetAll().FirstOrDefault(x => x.Id == id);
+			var offer=_unitOfWork.serviceOfferRepository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (offer is null) throw new NotFoundException("There is no Service for update");
 			offer.Title=entity.Title;
 			offer.Description=entity.Description;
 			offer.IsFree=entity.IsFree;
 			offer.Price=entity.Price;
 			
-			_repository.Update(offer);
-			 await _repository.SaveChanges();
+			_unitOfWork.serviceOfferRepository.Update(offer);
+			 await _unitOfWork.SaveAsync();
 
 		}
 
 		public async Task Delete(int id)
 		{
-			var offer=_repository.GetAll().FirstOrDefault(x => x.Id == id);
+			var offer=_unitOfWork.serviceOfferRepository.GetAll().FirstOrDefault(x => x.Id == id);
 			if (offer is null) throw new NotFoundException("There is no Service for to delete");
-			_repository.Delete(offer);
-			 await _repository.SaveChanges();
+			_unitOfWork.serviceOfferRepository.Delete(offer);
+			 await _unitOfWork.SaveAsync();
 		}
 
 

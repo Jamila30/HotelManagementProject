@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.GallaryImageDTOs;
-
-namespace Hotel.Business.Validations.GallaryImageValidations
+﻿namespace Hotel.Business.Validations.GallaryImageValidations
 {
 	public class UpdateGallaryImageValidator:AbstractValidator<UpdateGallaryImageDto>
 	{

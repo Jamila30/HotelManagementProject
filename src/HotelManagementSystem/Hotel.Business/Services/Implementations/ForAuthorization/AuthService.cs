@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Hotel.Business.Services.Implementations.ForAuthorization
+﻿namespace Hotel.Business.Services.Implementations.ForAuthorization
 {
 	public class AuthService : IAutService
 	{
@@ -83,7 +81,7 @@ namespace Hotel.Business.Services.Implementations.ForAuthorization
 			var resultSign = await _userManager.CheckPasswordAsync(user, login.Password);
 			if (!resultSign) throw new NotFoundException("Username or Password are Invalid");
 
-			var response = await _tokenCreator.CreateTokenForUser(user, 10);
+			var response = await _tokenCreator.CreateTokenForUser(user,20);
 			var refreshToken = _tokenCreator.GenerateRefreshToken();
 
 			_ = int.TryParse(_configuration["JwtSettings:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);

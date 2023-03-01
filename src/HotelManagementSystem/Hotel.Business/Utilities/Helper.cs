@@ -9,14 +9,14 @@
 			{
 				result = Path.Combine(result, path);
 			}
-			if(File.Exists(result))
+			if(System.IO.File.Exists(result))
 			{
-				File.Delete(result);
+				System.IO.File.Delete(result);
 				return true;
 			}
 			return false;
 		}
 
-		public static HashSet<string> Roles= new HashSet<string>();
+	//	public static HashSet<string> Roles= new HashSet<string>();
 	}
 }

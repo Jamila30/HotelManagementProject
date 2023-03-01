@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SettingTableDTOs;
-
-namespace Hotel.Business.Validations.SettingsTableValidations
+﻿namespace Hotel.Business.Validations.SettingsTableValidations
 {
 	public class UpdateKeyValidator:AbstractValidator<UpdateKeyDto>
 	{

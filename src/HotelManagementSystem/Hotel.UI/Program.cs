@@ -1,6 +1,4 @@
-using Hotel.Business.Services.Implementations.ForStripe;
-using Hotel.Business.Services.Interfaces.ForStripes;
-using Stripe;
+using Hotel.Business.Utilities.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +26,6 @@ builder.Services.AddCors(options =>
 						  policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
 					  });
 });
-//Adding Fluent Validations
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
-builder.Services.AddValidatorsFromAssemblyContaining<SliderHomeValidator>();
 
 //Adding AppDbContextInitializer
 IServiceCollection serviceCollection = builder.Services.AddScoped<AppDbContextInitializer>();
@@ -40,69 +34,11 @@ IServiceCollection serviceCollection = builder.Services.AddScoped<AppDbContextIn
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailService>();
 
-//Adding Repository injections
-builder.Services.AddScoped<ISliderHomeRepository, SliderHomeRepository>();
-builder.Services.AddScoped<IWhyUsRepository, WhyUsRepository>();
-builder.Services.AddScoped<INearPlaceRepository, NearPlaceRepository>();
-builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
-builder.Services.AddScoped<ITeamMemberInfoRepository, TeamMemberInfoRepository>();
-builder.Services.AddScoped<IServiceOfferRepository, ServiceOfferRepository>();
-builder.Services.AddScoped<IServiceImageRepository, ServiceImageRepository>();
-builder.Services.AddScoped<IGallaryImageRepository, GallaryImageRepository>();
-builder.Services.AddScoped<IGallaryCatagoryRepository, GallaryCatagoryRepository>();
-builder.Services.AddScoped<IFlatRepository, FlatRepository>();
-builder.Services.AddScoped<IRoomImageRepository, RoomImageRepository>();
-builder.Services.AddScoped<IRoomCatagoryRepository, RoomCatagoryRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IAmentityRepository, AmentityRepository>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<ISentQuestionRepository, SentQuestionRepository>();
-builder.Services.AddScoped<IFAQRepository,FAQRepository>();
-builder.Services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddScoped<ISelectedListRepository, SelectedListRepository>();
-builder.Services.AddScoped<ISettingTableRepository, SettingsTableRepository>();
-
-
-
-
-
-//Adding Service Injections
-builder.Services.AddScoped<ISliderHomeService, SliderHomeService>();
-builder.Services.AddScoped<IWhyUsService, WhyUsService>();
-builder.Services.AddScoped<INearPlaceService, NearPlaceService>();
-builder.Services.AddScoped<ITeamMemberInfoService, TeamMemberInformationService>();
-builder.Services.AddScoped<ITeamMemberService, TeamMemberService>();
-builder.Services.AddScoped<IServiceOfferService, ServiceOfferService>();
-builder.Services.AddScoped<IServiceImageService, ServiceImageService>();
-builder.Services.AddScoped<IGallaryCatagoryService, GallaryCatagoryService>();
-builder.Services.AddScoped<IGallaryImageService, GallaryImageService>();
-builder.Services.AddScoped<IFlatService, FlatService>();
-builder.Services.AddScoped<IRoomImageService, RoomImageService>();
-builder.Services.AddScoped<IRoomCatagoryService, RoomCatagoryService>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<IAmentityService, AmentityService>();
-builder.Services.AddScoped<IAutService, AuthService>();
-builder.Services.AddScoped<ITokenCreatorService,TokenCreatorService>();
-builder.Services.AddScoped<IAccountService, Hotel.Business.Services.Implementations.AccountService>();
-builder.Services.AddScoped<ISentQuestionService, SentQuestionService>();
-builder.Services.AddScoped<IFaqService, FaqService>();
-builder.Services.AddScoped<IUserInfoService, UserInfoService>();
-builder.Services.AddScoped<IReservationService, ReservationService>();
-builder.Services.AddScoped<ISelectedListService,SelectedListService>();
-builder.Services.AddScoped<ISettingsService, SettingsService>();
+//Adding Repository and Services injections
+builder.AddAllServices();
 
 //Adding Mapper configuration
 builder.Services.AddAutoMapper(typeof(SliderHomeMapper).Assembly);
-
-//Stripe Cinfiguration
-builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<ChargeService>();
-StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("Stripe:SecretKey");//4242424242424242
-
-builder.Services.AddScoped<IStripeService, StripeService>();
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -132,6 +68,8 @@ builder.Services.AddAuthentication(option =>
 	};
 });
 builder.Services.AddAuthorization();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

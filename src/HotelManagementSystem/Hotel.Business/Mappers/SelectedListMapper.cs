@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SelectedListDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class SelectedListMapper:Profile
 	{

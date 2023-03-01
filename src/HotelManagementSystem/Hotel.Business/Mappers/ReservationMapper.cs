@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ReservationDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class ReservationMapper:Profile
 	{

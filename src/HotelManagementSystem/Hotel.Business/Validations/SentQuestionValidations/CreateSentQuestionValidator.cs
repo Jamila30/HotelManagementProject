@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SentQuestionDTOs;
-
-namespace Hotel.Business.Validations.SentQuestionValidations
+﻿namespace Hotel.Business.Validations.SentQuestionValidations
 {
 	public class CreateSentQuestionValidator:AbstractValidator<CreateSentQuestionDto>
 	{

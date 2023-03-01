@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.RoomCatagoryDTOs;
-
-namespace Hotel.Business.Services.Interfaces
+﻿namespace Hotel.Business.Services.Interfaces
 {
 	public interface IRoomCatagoryService
 	{

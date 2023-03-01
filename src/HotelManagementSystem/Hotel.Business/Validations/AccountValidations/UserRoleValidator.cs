@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.AccountsDTOs;
-
-namespace Hotel.Business.Validations.AccountValidations
+﻿namespace Hotel.Business.Validations.AccountValidations
 {
 	public class UserRoleValidator:AbstractValidator<UserRoleDto>
 	{

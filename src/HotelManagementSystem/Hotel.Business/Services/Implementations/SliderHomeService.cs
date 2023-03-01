@@ -2,19 +2,19 @@
 {
 	public class SliderHomeService : ISliderHomeService
 	{
-		private readonly ISliderHomeRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _env;
-		public SliderHomeService(ISliderHomeRepository repository, IMapper mapper, IWebHostEnvironment env)
+		public SliderHomeService( IMapper mapper, IWebHostEnvironment env, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_mapper = mapper;
 			_env = env;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<List<SliderHomeDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.sliderHomeRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
 			return listDto;
 
@@ -22,14 +22,14 @@
 
 		public async Task<List<SliderHomeDto>> GetByCondition(Expression<Func<SliderHome, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.sliderHomeRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<SliderHomeDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<SliderHomeDto?> GetByIdAsync(int id)
 		{
-			var slider = await _repository.GetByIdAsync(id);
+			var slider = await _unitOfWork.sliderHomeRepository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Element not found");
 			var sliderDto = _mapper.Map<SliderHomeDto>(slider);
 			return sliderDto;
@@ -54,7 +54,7 @@
 				}
 				try
 				{
-					slider.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "sliderHome");
+					slider.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -64,13 +64,13 @@
 
 				
 			}
-			await _repository.Create(slider);
-			await _repository.SaveChanges();
+			await _unitOfWork.sliderHomeRepository.Create(slider);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateSliderHomeDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id doesn't overlap");
-			var slider = await _repository.GetByIdAsync(id);
+			var slider = await _unitOfWork.sliderHomeRepository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Not Found");
 			slider.Description = entity.Description;
 			slider.Title = entity.Title;
@@ -89,7 +89,7 @@
 			
 				try
 				{
-					slider.Image = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "sliderHome");
+					slider.Image = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -99,22 +99,22 @@
 
 			}
 
-			_repository.Update(slider);
-			await _repository.SaveChanges();
+			_unitOfWork.sliderHomeRepository.Update(slider);
+			await _unitOfWork.SaveAsync();
 
 		}
 
 		public async Task Delete(int id)
 		{
-			var slider = await _repository.GetByIdAsync(id);
+			var slider = await _unitOfWork.sliderHomeRepository.GetByIdAsync(id);
 			if (slider is null) throw new NotFoundException("Not Found");
 			if (slider.Image != null)
 			{
-				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "sliderHome", slider.Image);
+				Helper.DeleteFile(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images", slider.Image);
 			}
 			
-			_repository.Delete(slider);
-			await _repository.SaveChanges();
+			_unitOfWork.sliderHomeRepository.Delete(slider);
+			await _unitOfWork.SaveAsync();
 		}
 
 

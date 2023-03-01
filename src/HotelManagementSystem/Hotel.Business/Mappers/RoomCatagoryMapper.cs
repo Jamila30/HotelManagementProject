@@ -1,5 +1,4 @@
-﻿
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class RoomCatagoryMapper:Profile
 	{

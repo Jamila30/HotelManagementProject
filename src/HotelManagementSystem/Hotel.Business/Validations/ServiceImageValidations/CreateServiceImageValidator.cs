@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceImageDTOs;
-
-namespace Hotel.Business.Validations.ServiceImageValidations
+﻿namespace Hotel.Business.Validations.ServiceImageValidations
 {
 	public class CreateServiceImagevalidator:AbstractValidator<CreateServiceImageDto>
 	{

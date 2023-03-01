@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Hotel.Business.Services.Interfaces.ForAuthorizations
+﻿namespace Hotel.Business.Services.Interfaces.ForAuthorizations
 {
     public interface IAutService
     {

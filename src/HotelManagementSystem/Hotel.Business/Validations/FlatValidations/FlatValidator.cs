@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.FlatDTOs;
-
-namespace Hotel.Business.Validations.FlatValidations
+﻿namespace Hotel.Business.Validations.FlatValidations
 {
 	public class FlatValidator:AbstractValidator<FlatDto>
 	{

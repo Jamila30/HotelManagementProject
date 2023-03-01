@@ -1,4 +1,6 @@
-﻿namespace Hotel.UI.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -79,6 +81,8 @@
 
 		}
 
+
+		[Authorize(Roles = "Member,Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Post(CreateCommentDto createComment)
 		{
@@ -98,6 +102,7 @@
 		}
 
 
+		[Authorize(Roles = "Member,Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id,UpdateCommentDto updateComment)
 		{
@@ -123,7 +128,7 @@
 
 		}
 
-
+		[Authorize(Roles = "Member,Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

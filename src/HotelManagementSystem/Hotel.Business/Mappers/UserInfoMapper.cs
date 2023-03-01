@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.UserInfoDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class UserInfoMapper:Profile
 	{

@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.ServiceOfferDTOs;
-
-namespace Hotel.Business.Validations.ServiceOfferValidations
+﻿namespace Hotel.Business.Validations.ServiceOfferValidations
 {
 	public class UpdateServiceOfferValidator:AbstractValidator<UpdateServiceOfferDto>
 	{

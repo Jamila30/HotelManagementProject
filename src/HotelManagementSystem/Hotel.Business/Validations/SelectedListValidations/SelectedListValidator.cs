@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SelectedListDTOs;
-
-namespace Hotel.Business.Validations.SelectedListValidations
+﻿namespace Hotel.Business.Validations.SelectedListValidations
 {
 	public class SelectedListValidator:AbstractValidator<SelectedListDto>
 	{

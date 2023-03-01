@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Hotel.Business.Validations.RoomCatagoryValidations
+﻿namespace Hotel.Business.Validations.RoomCatagoryValidations
 {
 	public class RoomCatagoryValidator:AbstractValidator<RoomCatagory>
 	{

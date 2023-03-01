@@ -1,4 +1,4 @@
-﻿using Hotel.Business.DTOs.SettingTableDTOs;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -69,6 +69,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<ActionResult> Create(DictionaryDto dictionaryDto)
 		{
@@ -87,6 +88,8 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+
+		[Authorize(Roles = "Admin")]
 		[HttpPut("updateValue/{key}")]
 		public async Task<ActionResult> UpdateValue(string key, DictionaryDto dictionaryDto)
 		{
@@ -108,6 +111,7 @@ namespace Hotel.UI.Controllers
 				return StatusCode(500);
 			}
 		}
+		[Authorize(Roles = "Admin")]
 		[HttpPut("updateKey")]
 		public async Task<ActionResult> UpdateKey(UpdateKeyDto updateKey)
 		{
@@ -130,6 +134,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> Delete(int id)
 		{

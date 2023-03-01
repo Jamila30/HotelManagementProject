@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.RoomImageDTOs;
-
-namespace Hotel.Business.Validations.RoomImageValidations
+﻿namespace Hotel.Business.Validations.RoomImageValidations
 {
 	public class CreateRoomImageValidator:AbstractValidator<CreateRoomImageDto>
 	{

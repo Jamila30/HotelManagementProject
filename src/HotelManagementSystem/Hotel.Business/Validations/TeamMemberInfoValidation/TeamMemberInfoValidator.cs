@@ -1,5 +1,4 @@
-﻿
-namespace Hotel.Business.Validations.TeamMemberInfoValidation
+﻿namespace Hotel.Business.Validations.TeamMemberInfoValidation
 {
 	public class TeamMemberInfoValidator : AbstractValidator<TeamMemberInfoDto>
 	{

@@ -1,5 +1,4 @@
-﻿
-namespace Hotel.Business.Validations.WhyUsValidations
+﻿namespace Hotel.Business.Validations.WhyUsValidations
 {
 	public class WhyUsValidator:AbstractValidator<WhyUsDto>
 	{

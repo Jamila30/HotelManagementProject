@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.UserInfoDTOs;
-
-namespace Hotel.Business.Validations.UserInfoValidations
+﻿namespace Hotel.Business.Validations.UserInfoValidations
 {
 	public class CreateUserInfoValidator:AbstractValidator<CreateUserInfoDto>
 	{

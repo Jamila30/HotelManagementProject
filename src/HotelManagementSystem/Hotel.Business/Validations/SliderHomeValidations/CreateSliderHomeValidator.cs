@@ -1,6 +1,4 @@
-﻿
-
-namespace Hotel.Business.Validations.SliderHomeValidations
+﻿namespace Hotel.Business.Validations.SliderHomeValidations
 {
 	public class CreateSliderHomeValidator:AbstractValidator<CreateSliderHomeDto>
 	{

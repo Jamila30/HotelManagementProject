@@ -1,6 +1,4 @@
-﻿using Hotel.Business.DTOs.SentQuestionDTOs;
-
-namespace Hotel.Business.Mappers
+﻿namespace Hotel.Business.Mappers
 {
 	public class SentQuestionMapper:Profile
 	{

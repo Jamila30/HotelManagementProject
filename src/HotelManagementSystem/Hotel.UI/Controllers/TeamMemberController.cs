@@ -1,4 +1,6 @@
-﻿
+﻿using Hotel.Business.Utilities.Enums;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
@@ -53,7 +55,7 @@ namespace Hotel.UI.Controllers
 			}
 
 		}
-
+		[Authorize(Roles = "Admin")]
 		[HttpPost("CreateTeamWithInfo")]
 		public async Task<IActionResult> CreateTeamWithInfo([FromForm] CreateWholeMemberDto createWhole)
 		{
@@ -76,6 +78,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> Create([FromForm] CreateTeamMemberDto  createTeam)
 		{
@@ -102,6 +105,7 @@ namespace Hotel.UI.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromForm] UpdateTeamMemberDto updateTeam)
 		{
@@ -139,7 +143,7 @@ namespace Hotel.UI.Controllers
 			}
 
 		}
-
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{

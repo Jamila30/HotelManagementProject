@@ -1,24 +1,20 @@
-﻿using Hotel.Business.DTOs.ReservationDTOs;
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class ReservationService : IReservationService
 	{
-		private readonly IReservationRepository _repository;
-		private readonly IFlatRepository _flatRepository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly UserManager<AppUser> _userManager;
 
-		public ReservationService(IMapper mapper, IReservationRepository repository, IFlatRepository flatRepository, UserManager<AppUser> userManager)
+		public ReservationService(IMapper mapper,UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
 		{
 			_mapper = mapper;
-			_repository = repository;
-			_flatRepository = flatRepository;
 			_userManager = userManager;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<List<ReservationDto>> GetAllAsync()
 		{
-			var list = await _repository.GetAll().Include(x => x.Flat).Include(y => y.AppUser).ToListAsync();
+			var list = await _unitOfWork.reservationRepository.GetAll().Include(x => x.Flat).Include(y => y.AppUser).ToListAsync();
 			List<ReservationDto> listDto = new();
 			foreach (var item in list)
 			{
@@ -46,7 +42,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<ReservationDto>> GetByCondition(Expression<Func<Reservation, bool>> expression)
 		{
-			var list = await _repository.GetAll().Include(x => x.Flat).Where(expression).ToListAsync();
+			var list = await _unitOfWork.reservationRepository.GetAll().Include(x => x.Flat).Where(expression).ToListAsync();
 			List<ReservationDto> listDto = new();
 			foreach (var item in list)
 			{
@@ -71,7 +67,7 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<ReservationDto?> GetByIdAsync(int reservId)
 		{
-			var list = await _repository.GetAll().Include(x => x.Flat).Include(y => y.AppUser).FirstOrDefaultAsync(x => x.Id == reservId);
+			var list = await _unitOfWork.reservationRepository.GetAll().Include(x => x.Flat).Include(y => y.AppUser).FirstOrDefaultAsync(x => x.Id == reservId);
 			ReservationDto reserv = null;
 			if (list != null && list.Flat != null && list.AppUser != null)
 			{
@@ -104,7 +100,7 @@ namespace Hotel.Business.Services.Implementations
 			if (entities is null) throw new NotFoundException("reservation can not exist without flatId,adults,children elements ");
 			foreach (var entity in entities)
 			{
-				var flat = await _flatRepository.GetByIdAsync(entity.FlatId);
+				var flat = await _unitOfWork.flatRepository.GetByIdAsync(entity.FlatId);
 				if (flat is null) throw new NotFoundException("there is no flat with this id");
 				float lastPrice = 0f;
 				if (flat.DiscountPercent != 0)
@@ -132,17 +128,17 @@ namespace Hotel.Business.Services.Implementations
 					IsDeleted = false,
 					IsFinished = false
 				};
-				await _repository.Create(reservation);
+				await _unitOfWork.reservationRepository.Create(reservation);
 			}
-			await _repository.SaveChanges();
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task UpdateAsync(int id, UpdateReservationDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("id didnt overlap");
-			var reserv = _repository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).Single(r => r.Id == id);
+			var reserv = _unitOfWork.reservationRepository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).Single(r => r.Id == id);
 			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
-			var flat = await _flatRepository.GetByIdAsync(entity.FlatId);
+			var flat = await _unitOfWork.flatRepository.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("there is no flat with this id");
 			var user = await _userManager.FindByIdAsync(entity.UserId);
 			if (user is null) throw new NotFoundException("there is no user with this id");
@@ -166,35 +162,35 @@ namespace Hotel.Business.Services.Implementations
 			reserv.Children = entity.Children;
 			reserv.Price = entity.Price;
 
-			_repository.Update(reserv);
-			await _repository.SaveChanges();
+			_unitOfWork.reservationRepository.Update(reserv);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task Delete(int id)
 		{
-			var reserv = await _repository.GetAll().FirstOrDefaultAsync(r => r.Id == id);
+			var reserv = await _unitOfWork.reservationRepository.GetAll().FirstOrDefaultAsync(r => r.Id == id);
 			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
 			reserv.IsDeleted = true;
 			reserv.IsFinished = true;
-			await _repository.SaveChanges();
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task CancelReservation(int reservId)
 		{
-			var reserv = await _repository.GetAll().FirstOrDefaultAsync(r => r.Id == reservId);
+			var reserv = await _unitOfWork.reservationRepository.GetAll().FirstOrDefaultAsync(r => r.Id == reservId);
 			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
 			reserv.IsCanceled = true;
 			reserv.IsFinished = true;
 			reserv.IsDeleted = true;
-			_repository.Update(reserv);
-			await _repository.SaveChanges();
+			_unitOfWork.reservationRepository.Update(reserv);
+			await _unitOfWork.SaveAsync();
 		}
 
 		public async Task<bool> IsReserve(int flatId, DateDto date)
 		{
 			bool available = true;
-			var flat = await _flatRepository.GetByIdAsync(flatId);
+			var flat = await _unitOfWork.flatRepository.GetByIdAsync(flatId);
 			if (flat is null) throw new NotFoundException("there is no flat with this id");
-			var reservs = await _repository.GetByCondition(r => r.FlatId == flatId).ToListAsync();
+			var reservs = await _unitOfWork.reservationRepository.GetByCondition(r => r.FlatId == flatId).ToListAsync();
 			if (reservs is null || reservs.Count == 0) { available = true; }
 			else
 			{
@@ -217,11 +213,11 @@ namespace Hotel.Business.Services.Implementations
 		{
 			bool isAvailable = false;
 			List<AvailableFlatsDto> availableFlats = new();
-			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();//5 
+			var flats = await _unitOfWork.flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();//5 
 			foreach (var flat in flats)
 			{
 
-				var listReserv = await _repository.GetAll().Where(x => x.FlatId == flat.Id).ToListAsync();
+				var listReserv = await _unitOfWork.reservationRepository.GetAll().Where(x => x.FlatId == flat.Id).ToListAsync();
 				if (listReserv.Count == 0) { availableFlats.Add(new() { CatagoryId = flat.RoomCatagoryId, FlatId = flat.Id }); }
 				else
 				{
@@ -257,7 +253,7 @@ namespace Hotel.Business.Services.Implementations
 		}
 		public async Task FinishEndedReservations()
 		{
-			var reservs = await _repository.GetAll().Where(e => e.EndDate < DateTime.Now).ToListAsync();
+			var reservs = await _unitOfWork.reservationRepository.GetAll().Where(e => e.EndDate < DateTime.Now).ToListAsync();
 			foreach (var item in reservs)
 			{
 				item.IsFinished = true;
@@ -268,7 +264,7 @@ namespace Hotel.Business.Services.Implementations
 			var totalPrice = 0f;
 			foreach (var id in reservIds)
 			{
-				var reserv = await _repository.GetByIdAsync(id.ReservId);
+				var reserv = await _unitOfWork.reservationRepository.GetByIdAsync(id.ReservId);
 				if (reserv is null) throw new NotFoundException("there is no reserv with this id");
 				totalPrice += reserv.Price;
 			}
@@ -284,11 +280,11 @@ namespace Hotel.Business.Services.Implementations
 			List<RecomendedFlatDto> recomendedFlats = new();
 			List<RecomendedFlatDto> availableFlats = new();
 			var total = adults + children;
-			var flats = await _flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
+			var flats = await _unitOfWork.flatRepository.GetAll().Include(f => f.RoomCatagory).ToListAsync();
 			foreach (var flat in flats)
 			{
 				isEqual = (flat.BedCount == total);
-				isAvailable = _repository.GetAll().Where(x => x.FlatId == flat.Id).All(x => (x.IsCanceled == false && x.IsFinished == false && x.IsDeleted == false) && ((x.StartDate <= dateDto.CheckOutDate && x.EndDate >= dateDto.CheckInDate) == false));
+				isAvailable = _unitOfWork.reservationRepository.GetAll().Where(x => x.FlatId == flat.Id).All(x => (x.IsCanceled == false && x.IsFinished == false && x.IsDeleted == false) && ((x.StartDate <= dateDto.CheckOutDate && x.EndDate >= dateDto.CheckInDate) == false));
 				isLess = (flat.BedCount < total);
 				if (isAvailable && isEqual)
 				{

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace Hotel.Business.Validations.RoomImageValidations
+﻿namespace Hotel.Business.Validations.RoomImageValidations
 {
 	public class RoomImageValidator :AbstractValidator<RoomImage>
 	{

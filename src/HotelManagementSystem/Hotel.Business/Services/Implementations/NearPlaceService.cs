@@ -1,22 +1,20 @@
-﻿
-
-namespace Hotel.Business.Services.Implementations
+﻿namespace Hotel.Business.Services.Implementations
 {
 	public class NearPlaceService:INearPlaceService
 	{
-		private readonly INearPlaceRepository _repository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _env;
 		private readonly IMapper _mapper;
 
-		public NearPlaceService(INearPlaceRepository repository, IWebHostEnvironment env, IMapper mapper)
+		public NearPlaceService(IWebHostEnvironment env, IMapper mapper, IUnitOfWork unitOfWork)
 		{
-			_repository = repository;
 			_env = env;
 			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<List<NearPlaceDto>> GetAllAsync()
 		{
-			var listAll = await _repository.GetAll().ToListAsync();
+			var listAll = await _unitOfWork.nearPlaceRepository.GetAll().ToListAsync();
 			var listDto = _mapper.Map<List<NearPlaceDto>>(listAll);
 			return listDto;
 
@@ -24,14 +22,14 @@ namespace Hotel.Business.Services.Implementations
 
 		public async Task<List<NearPlaceDto>> GetByCondition(Expression<Func<NearPlace, bool>> expression)
 		{
-			var listAll = await _repository.GetAll().Where(expression).ToListAsync();
+			var listAll = await _unitOfWork.nearPlaceRepository.GetAll().Where(expression).ToListAsync();
 			var listDto = _mapper.Map<List<NearPlaceDto>>(listAll);
 			return listDto;
 		}
 
 		public async Task<NearPlaceDto?> GetByIdAsync(int id)
 		{
-			var place = await _repository.GetByIdAsync(id);
+			var place = await _unitOfWork.nearPlaceRepository.GetByIdAsync(id);
 			if (place is null) throw new NotFoundException("Element not found");
 			var placeDto = _mapper.Map<NearPlaceDto>(place);
 			return placeDto;
@@ -58,7 +56,7 @@ namespace Hotel.Business.Services.Implementations
 				string fileName = string.Empty;
 				try
 				{
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "nearPlace");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
@@ -69,13 +67,13 @@ namespace Hotel.Business.Services.Implementations
 				place.Image = fileName;
 
 			}
-			await _repository.Create(place);
-			await _repository.SaveChanges();
+			await _unitOfWork.nearPlaceRepository.Create(place);
+			await _unitOfWork.SaveAsync();
 		}
 		public async Task UpdateAsync(int id, UpdateNearPlaceDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id doesn't match each other");
-			var place = await _repository.GetByIdAsync(id);
+			var place = await _unitOfWork.nearPlaceRepository.GetByIdAsync(id);
 			if (place is null) throw new NotFoundException("Not Found");
 			place.Description = entity.Description;
 			place.Title = entity.Title;
@@ -95,34 +93,31 @@ namespace Hotel.Business.Services.Implementations
 				string fileName = string.Empty;
 				try
 				{
-					fileName = await entity.Image.CopyFileToAsync(_env.WebRootPath, "assets", "images", "nearPlace");
+					fileName = await entity.Image.CopyFileToAsync(@"C:\Users\Asus\Desktop\", "reactpro", "src", "assets", "images");
 				}
 				catch (Exception)
 				{
 
 					throw new BadRequestException(" file didnt created");
 				}
-
-				
 				place.Image = fileName;
-
 			}
 
-			_repository.Update(place);
-			await _repository.SaveChanges();
+			_unitOfWork.nearPlaceRepository.Update(place);
+			await _unitOfWork.SaveAsync();
 
 		}
 
 		public async Task Delete(int id)
 		{
-			var place = await _repository.GetByIdAsync(id);
+			var place = await _unitOfWork.nearPlaceRepository.GetByIdAsync(id);
 			if (place is null) throw new NotFoundException("Not Found");
 			if (place.Image != null)
 			{
-				Helper.DeleteFile(_env.WebRootPath, "assets", "images", "nearPlace", place.Image);
+				Helper.DeleteFile(@"C:\Users\Asus\Desktop\","reactpro", "src", "assets", "images", place.Image);
 			}
-			_repository.Delete(place);
-			await _repository.SaveChanges();
+			_unitOfWork.nearPlaceRepository.Delete(place);
+			await _unitOfWork.SaveAsync();
 		}
 	}
 }
