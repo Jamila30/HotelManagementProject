@@ -11,6 +11,7 @@
 		IGallaryImageRepository gallaryImageRepository { get; }
 		INearPlaceRepository nearPlaceRepository { get; } 
 		IReservationRepository reservationRepository { get; } 
+		IReviewRepository reviewRepository { get; }
 		IRoomCatagoryRepository roomCatagoryRepository { get; }
 		IRoomImageRepository roomImageRepository { get;}
 		ISelectedListRepository selectedListRepository { get; }

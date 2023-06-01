@@ -56,3 +56,4 @@ global using Hotel.Business.DTOs.SentQuestionDTOs;
 global using Hotel.Business.DTOs.UserInfoDTOs;
 global using Hotel.Business.DTOs.SettingTableDTOs;
 global using Hotel.Core.Entities.Stripe;
+global using Hotel.Business.DTOs.ReviewDTOs;

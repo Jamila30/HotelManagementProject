@@ -73,10 +73,13 @@ namespace Hotel.UI.Controllers
 			{
 				return BadRequest(ex.Message);
 			}
-			
+			catch(IncorrectIdException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception)
 			{
-				throw;//return StatusCode((int)HttpStatusCode.InternalServerError);
+				return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 

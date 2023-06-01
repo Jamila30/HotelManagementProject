@@ -21,6 +21,7 @@
 			builder.Services.AddScoped<IAmentityRepository, AmentityRepository>();
 			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 			builder.Services.AddScoped<ISentQuestionRepository, SentQuestionRepository>();
+			builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 			builder.Services.AddScoped<IFAQRepository, FAQRepository>();
 			builder.Services.AddScoped<IUserInfoRepository, UserInfoRepository>();
 			builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
@@ -51,7 +52,9 @@
 			builder.Services.AddScoped<IUserInfoService, UserInfoService>();
 			builder.Services.AddScoped<IReservationService, ReservationService>();
 			builder.Services.AddScoped<ISelectedListService, SelectedListService>();
-			builder.Services.AddScoped<ISettingsService, SettingsService>();
+			builder.Services.AddScoped<ISettingsService, SettingsService>(); 
+			builder.Services.AddScoped<IReviewService, Services.Implementations.ReviewService>();
+
 			#endregion
 
 			#region Adding Stripe Injections

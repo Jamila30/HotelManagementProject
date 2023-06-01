@@ -87,7 +87,7 @@
 				}
 				if (!entity.Image.CheckFileFormat("image/"))
 				{
-					throw new IncorrectFileSizeException("Enter Suitable File Format");
+					throw new IncorrectFileFormatException("Enter Suitable File Format");
 				}
 
 

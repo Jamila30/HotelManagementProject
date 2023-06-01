@@ -1,8 +1,4 @@
-﻿using Hotel.Business.DTOs.SelectedListDTOs;
-using Hotel.Business.Utilities.Enums;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Hotel.UI.Controllers
+﻿namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -106,6 +102,10 @@ namespace Hotel.UI.Controllers
 				return NotFound(ex.Message);
 			}
 			catch (IncorrectIdException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch(BadRequestException ex)
 			{
 				return BadRequest(ex.Message);
 			}

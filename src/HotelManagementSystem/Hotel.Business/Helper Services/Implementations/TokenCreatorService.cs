@@ -38,7 +38,7 @@ namespace Hotel.Business.Helper_Services.Implementations
 				audience: _configuration["JwtSettings:Audience"],
 				claims: claims,
 				notBefore: DateTime.UtcNow,
-				expires: DateTime.UtcNow.AddMinutes(3),
+				expires: DateTime.UtcNow.AddMinutes(minute),
 				signingCredentials: signingCredentials
 				);
 

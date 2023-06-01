@@ -11,6 +11,7 @@
 		public float DiscountPrice { get; set; }
 		public string? Description { get; set; }
 		public int RoomCatagoryId { get; set; }
+		public float Rating { get; set; }
 	
 	}
 }
