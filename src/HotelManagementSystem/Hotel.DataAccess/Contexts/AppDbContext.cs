@@ -113,6 +113,21 @@
 				.WithMany(c => c.SelectedLists)
 				.HasForeignKey(s => s.FlatId);
 			#endregion
+
+			#region 1-to-many relationship between  AppUser and Review
+			modelBuilder.Entity<Review>()
+				.HasOne(r => r.User)
+				.WithMany(u => u.Reviews)
+				.HasForeignKey(r=> r.UserId);
+			#endregion
+
+			#region 1-to-many relationship between Flat and Review
+			modelBuilder.Entity<Review>()
+				.HasOne(r => r.Flat)
+				.WithMany(f => f.Reviews)
+				.HasForeignKey(r => r.FlatId);
+
+			#endregion
 		}
 
 		public DbSet<SliderHome> SliderHomes { get; set; } = null!;
@@ -135,6 +150,7 @@
 		public DbSet<Reservation> Reservations { get; set; } = null!;
 		public DbSet<SelectedList> SelectedLists { get; set; } = null!;
 		public DbSet<SettingsTable> SettingsTables { get; set; } = null!;
+		public DbSet<Review> Reviews { get; set; } = null!;
 
 
 	}

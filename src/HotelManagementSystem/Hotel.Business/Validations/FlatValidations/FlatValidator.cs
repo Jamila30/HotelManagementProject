@@ -32,7 +32,9 @@
 			RuleFor(f => f.RoomCatagoryId)
 				.NotEmpty()
 				.NotNull();
-
+			RuleFor(f => f.Rating)
+				.NotEmpty()
+				.NotNull();
 		}
 	}
 }

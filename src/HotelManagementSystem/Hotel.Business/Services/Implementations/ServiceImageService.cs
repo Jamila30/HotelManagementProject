@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class ServiceImageService : IServiceImageService
 	{
@@ -31,11 +33,11 @@
 		{
 
 			var serviceImage = await _unitOfWork.serviceImageRepository.GetByIdAsync(id);
-			if (serviceImage is null) throw new NotFoundException("Element not found");
 			var serviceDto = _mapper.Map<ServiceImageDto>(serviceImage);
 			return serviceDto;
 		}
 
+		
 		public async Task CreateImageForServiceId(int serviceId, CreateServiceImageDto entity)
 		{
 			var serviceOffer = await _unitOfWork.serviceOfferRepository.GetAll().Include(x => x.ServiceImages).FirstOrDefaultAsync(x => x.Id == serviceId);
@@ -104,6 +106,7 @@
 		//	_repository.Update(imageService);
 		//	 await _repository.SaveChanges();
 		//}
+
 		public async Task UpdateAsync(int id, UpdateServiceImageDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other");
@@ -158,6 +161,8 @@
 			_unitOfWork.serviceImageRepository.Update(imageService);
 			await _unitOfWork.SaveAsync();
 		}
+
+		
 		public async Task Delete(int id)
 		{
 			var image = _unitOfWork.serviceImageRepository.GetAll().FirstOrDefault(x => x.Id == id);

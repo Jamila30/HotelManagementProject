@@ -6,6 +6,7 @@
         {
             Comments= new HashSet<Comment>();
             Reservations = new HashSet<Reservation>();
+            Reviews= new HashSet<Review>();
 
 		}
         public string? Fullname { get; set; }
@@ -17,6 +18,7 @@
 		//Navigation Property
 		public ICollection<Comment>? Comments { get; set; }
         public ICollection<Reservation>? Reservations { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
         public UserInfo? UserInfo { get; set; }  
 	}
 }

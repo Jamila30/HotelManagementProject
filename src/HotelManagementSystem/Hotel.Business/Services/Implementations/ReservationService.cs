@@ -6,7 +6,7 @@
 		private readonly IMapper _mapper;
 		private readonly UserManager<AppUser> _userManager;
 
-		public ReservationService(IMapper mapper,UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
+		public ReservationService(IMapper mapper, UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
 		{
 			_mapper = mapper;
 			_userManager = userManager;
@@ -136,7 +136,7 @@
 		public async Task UpdateAsync(int id, UpdateReservationDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("id didnt overlap");
-			var reserv = _unitOfWork.reservationRepository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).Single(r => r.Id == id);
+			var reserv = _unitOfWork.reservationRepository.GetAll().Include(r => r.AppUser).Include(r => r.Flat).FirstOrDefault(r => r.Id == id);
 			if (reserv is null) throw new NotFoundException("there is no reservation with this id");
 			var flat = await _unitOfWork.flatRepository.GetByIdAsync(entity.FlatId);
 			if (flat is null) throw new NotFoundException("there is no flat with this id");
@@ -165,6 +165,7 @@
 			_unitOfWork.reservationRepository.Update(reserv);
 			await _unitOfWork.SaveAsync();
 		}
+
 		public async Task Delete(int id)
 		{
 			var reserv = await _unitOfWork.reservationRepository.GetAll().FirstOrDefaultAsync(r => r.Id == id);
@@ -318,7 +319,7 @@
 							gettedList.Remove(recommend);
 							neededCount = neededCount - recommend.BedCount;
 						}
-						if (neededCount < 0)
+						if (neededCount <= 0)
 						{
 							return recomendedFlats;
 						}

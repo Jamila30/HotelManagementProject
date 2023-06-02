@@ -28,7 +28,6 @@
 		public async Task<ServiceOfferDto?> GetByIdAsync(int id)
 		{
 			var service = await _unitOfWork.serviceOfferRepository.GetByIdAsync(id);
-			if (service is null) throw new NotFoundException("Element not found");
 			var serviceDto = _mapper.Map<ServiceOfferDto>(service);
 			return serviceDto;
 		}
@@ -45,7 +44,7 @@
 		//		IsFree = serviceOffer.IsFree,
 		//		Price = serviceOffer.Price,
 		//		Title = serviceOffer.Title,
-				
+
 		//	};
 		//	var images = _imageRepo.GetAll().Include(x => x.ServiceOffer).Where(x => x.ServiceOfferId == id).ToList();
 		//	if (images != null)
@@ -61,12 +60,15 @@
 		//	return result;
 		//}
 
+
+		
 		public async Task Create(CreateServiceOfferDto entity)
 		{
 			var service = _mapper.Map<ServiceOffer>(entity);
 			await _unitOfWork.serviceOfferRepository.Create(service);
 			await _unitOfWork.SaveAsync();
 		}
+		
 		public async Task Update(int id, UpdateServiceOfferDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("Id didnt match each other ");
@@ -82,6 +84,7 @@
 
 		}
 
+		
 		public async Task Delete(int id)
 		{
 			var offer=_unitOfWork.serviceOfferRepository.GetAll().FirstOrDefault(x => x.Id == id);

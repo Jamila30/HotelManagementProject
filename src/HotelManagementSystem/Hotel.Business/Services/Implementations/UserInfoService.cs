@@ -1,4 +1,6 @@
-﻿namespace Hotel.Business.Services.Implementations
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Hotel.Business.Services.Implementations
 {
 	public class UserInfoService : IUserInfoService
 	{
@@ -50,8 +52,8 @@
 		public async Task UpdateAsync(int id, UpdateUserInfoDto entity)
 		{
 			if (id != entity.Id) throw new IncorrectIdException("id didnt overlap");
-			var userInfo = _unitOfWork.userInfoRepository.GetByCondition(x => x.Id == id);
-			if (userInfo is null) throw new NotFoundException("there is no user info with this id");
+			var userInfo = _unitOfWork.userInfoRepository.GetByCondition(x => x.Id == id).ToList();
+			if (userInfo.Count==0) throw new NotFoundException("there is no user info with this id");
 			var updatedUser = _mapper.Map<UserInfo>(entity);
 			var user = await _userManager.FindByEmailAsync(entity.Email);
 			if (user is null) throw new NotFoundException("there is no user info with this email");
@@ -67,5 +69,6 @@
 			_unitOfWork.userInfoRepository.Delete(userInfo);
 			await _unitOfWork.SaveAsync();
 		}
+
 	}
 }

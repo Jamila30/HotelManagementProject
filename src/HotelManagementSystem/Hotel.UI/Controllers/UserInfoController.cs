@@ -1,5 +1,4 @@
-﻿using Hotel.Business.Utilities.Enums;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.UI.Controllers
 {
@@ -141,5 +140,6 @@ namespace Hotel.UI.Controllers
 
 			}
 		}
+
 	}
 }

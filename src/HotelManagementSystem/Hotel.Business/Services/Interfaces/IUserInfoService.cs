@@ -8,5 +8,6 @@
 		Task<string> Create(CreateUserInfoDto entity);
 		Task UpdateAsync(int id, UpdateUserInfoDto entity);
 		Task Delete(int id);
+		
 	}
 }

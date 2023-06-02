@@ -38,7 +38,7 @@
 				if (flat is null) throw new NotFoundException("There is no flat with this id");
 				var existFlats = _unitOfWork.selectedListRepository.GetByCondition(l => l.FlatId == id);
 				var existId = id;
-				if (existFlats.Count() > 0) throw new AlreadyExistException($" flat with {existId} already exists in selected list");
+				if (existFlats.Count() > 0) throw new AlreadyExistException($" flat with {existId} id already exists in selected list");
 				SelectedList selectedList = new();
 				if (flat.RoomCatagory != null && flat.Images != null)
 				{
@@ -65,9 +65,15 @@
 			List<int> nextFlats = new ();
 			if (catagoryId != updateList.CatagoryId) throw new IncorrectIdException("id didn't overlap");
 			var list = await _unitOfWork.selectedListRepository.GetAll().Where(l => l.Flat != null ? l.Flat.RoomCatagoryId == catagoryId : false).ToListAsync();
-			if (list.Count() == 0) throw new NotFoundException("There is no selected element for this catagory");
+			//if (list.Count() == 0) throw new NotFoundException("There is no selected element for this catagory");
+
+			foreach (var item in updateList.FlatIds)
+			{
+				var check=_unitOfWork.flatRepository.GetAll().Any(f =>f.Id==item && f.RoomCatagoryId != catagoryId);
+				if (check) throw new BadRequestException("flat belongs to another catagory");
+			}
 			var listCount = list.Count();
-			if (updateList.FlatIds is null) throw new BadRequestException("updated list must contains at least 1 element");
+			if (updateList.FlatIds is null && updateList.FlatIds.Count is 0) throw new BadRequestException("updated list must contains at least 1 element");
 			int flatIdCount = updateList.FlatIds.Count();
 			
 			if (flatIdCount > listCount)
@@ -78,10 +84,11 @@
 					await AddToList(nextFlats);
 				}
 			}
-			else
+			else if(flatIdCount < listCount)
 			{
 				for (int i = flatIdCount; i < listCount; i++)
 				{
+					
 					_unitOfWork.selectedListRepository.Delete(list[i]);
 				}
 			}

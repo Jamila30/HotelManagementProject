@@ -115,6 +115,7 @@
 			flat.RoomCatagoryId = entity.RoomCatagoryId;
 			flat.DiscountPrice = entity.Price * (100 - entity.DiscountPercent)/ 100;
 			flat.RoomCatagory = room;
+			flat.Rating = 5;
 			if (room.Flats != null)
 			{
 				room.Flats.Add(flat);

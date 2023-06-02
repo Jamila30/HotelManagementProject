@@ -32,8 +32,9 @@
 				}
 			};
 			var token = await _tokenService.CreateAsync(tokenOptions, null, cancellationToken);
-			var emailCheck = _userManager.FindByEmailAsync(resource.Email);
-			if (emailCheck == null) throw new NotFoundException("There is no user with this email");
+			
+			//var emailCheck = _userManager.FindByEmailAsync(resource.Email);
+			//if (emailCheck == null) throw new NotFoundException("There is no user with this email");
 
 			var options = new CustomerSearchOptions
 			{

@@ -152,7 +152,7 @@
 					checkCatagory = true;
 				}
 			}
-			if (checkImage == true && checkCatagory == true) throw new RepeatedImageException("this image exist in another catagory");
+			if (checkImage == true && checkCatagory == true) throw new RepeatedImageException("this image exist in another flat ID");
 			roomImage.FlatId = entity.FlatId;
 			_unitOfWork.roomImageRepository.Update(roomImage);
 			await _unitOfWork.SaveAsync();

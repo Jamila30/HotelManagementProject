@@ -4,7 +4,7 @@ namespace Hotel.UI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize("Roles=Admin")]
+	[Authorize(Roles="Admin")]
 	public class AccountController : ControllerBase
 	{
 		private readonly IAccountService _accountService;
@@ -34,6 +34,14 @@ namespace Hotel.UI.Controllers
 			{
 				var account = await _accountService.GetAccount(userId);
 				return Ok(account);
+			}
+			catch (BadRequestException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch(NotFoundException ex)
+			{
+				return NotFound(ex.Message);
 			}
 			catch (Exception)
 			{
@@ -194,7 +202,7 @@ namespace Hotel.UI.Controllers
 			}
 			catch (Exception)
 			{
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				throw;//return StatusCode((int)HttpStatusCode.InternalServerError);
 			}
 		}
 

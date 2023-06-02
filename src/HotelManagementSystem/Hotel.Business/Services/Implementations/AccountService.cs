@@ -31,6 +31,8 @@
 		public async Task CreateAccount(CreateAccountDto createAccount)
 		{
 			var account = _mapper.Map<AppUser>(createAccount);
+		 //   var user =await _userManager.ex(account.Email);
+			//if (user != null) throw new BadRequestException("Email is exist");
 			account.EmailConfirmed = true;
 			var identityResult = await _userManager.CreateAsync(account, createAccount.Password);
 			string errors = string.Empty;

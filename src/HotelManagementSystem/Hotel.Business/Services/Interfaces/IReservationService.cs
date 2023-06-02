@@ -14,6 +14,6 @@
 		Task<List<RecomendedFlatDto>> RecomendedFlats(DateDto dateDto, int adults = 1, int children = 0);
 		Task<float> GetTotalPrice(List<StabilPropertirsDto> reservId);
 		Task FinishEndedReservations();
-
+	
 	}
 }

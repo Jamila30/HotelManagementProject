@@ -12,6 +12,7 @@
 		private readonly GallaryImageRepository _gallaryImageRepository = null!;
 		private	readonly NearPlaceRepository _nearPlaceRepository = null!;
 		private readonly ReservationRepository _reservationRepository = null!;
+		private readonly ReviewRepository _reviewRepository=null!;
 		private readonly RoomCatagoryRepository _roomCatagoryRepository = null!;
 		private readonly RoomImageRepository _roomImageRepository = null! ;
 		private readonly SelectedListRepository _selectedListRepository = null! ;
@@ -38,6 +39,7 @@
 		public IGallaryImageRepository gallaryImageRepository => _gallaryImageRepository ?? new GallaryImageRepository(_context);
 		public INearPlaceRepository nearPlaceRepository =>_nearPlaceRepository?? new NearPlaceRepository(_context);
 		public IReservationRepository reservationRepository =>_reservationRepository?? new ReservationRepository(_context);
+		public IReviewRepository reviewRepository=> _reviewRepository?? new ReviewRepository(_context);
 		public IRoomCatagoryRepository roomCatagoryRepository => _roomCatagoryRepository ?? new RoomCatagoryRepository(_context);
 		public IRoomImageRepository roomImageRepository=>_roomImageRepository ?? new RoomImageRepository(_context);
 		public ISelectedListRepository selectedListRepository => _selectedListRepository?? new SelectedListRepository(_context);
@@ -50,6 +52,7 @@
 		public ITeamMemberInfoRepository  teamMemberInfoRepository =>_teamMemberInfoRepository ?? new TeamMemberInfoRepository(_context);
 		public IUserInfoRepository userInfoRepository =>_userInfoRepository?? new UserInfoRepository(_context);
 		public IWhyUsRepository whyUsRepository =>_whyUsRepository ?? new WhyUsRepository(_context);
+
 
 		public int Save()
 		{

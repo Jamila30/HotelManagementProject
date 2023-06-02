@@ -4,6 +4,7 @@ using Hotel.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230307194251_FlatRating")]
+    partial class FlatRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,38 +358,6 @@ namespace Hotel.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("Hotel.Core.Entities.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("FlatId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Opinions")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("Rate")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FlatId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.RoomCatagory", b =>
@@ -949,25 +919,6 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("Flat");
                 });
 
-            modelBuilder.Entity("Hotel.Core.Entities.Review", b =>
-                {
-                    b.HasOne("Hotel.Core.Entities.Flat", "Flat")
-                        .WithMany("Reviews")
-                        .HasForeignKey("FlatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hotel.Core.Entities.Identity.AppUser", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Flat");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Hotel.Core.Entities.RoomImage", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.Flat", "Flat")
@@ -1089,8 +1040,6 @@ namespace Hotel.DataAccess.Migrations
 
                     b.Navigation("Reservations");
 
-                    b.Navigation("Reviews");
-
                     b.Navigation("SelectedLists");
                 });
 
@@ -1104,8 +1053,6 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Reservations");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("UserInfo");
                 });
